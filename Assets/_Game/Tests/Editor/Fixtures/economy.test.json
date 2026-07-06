@@ -7,6 +7,7 @@
     "difficile": { "name": "Difficile", "enemyHp": 1.4, "enemyDmg": 1.5, "money": 0.9 }
   },
   "rarities": {
+    "_doc": "Paliers partagés par toutes les vitrines.",
     "commun":     { "name": "Commun",     "color": "#9aa3b2", "tier": 0 },
     "rare":       { "name": "Rare",       "color": "#4f9dff", "tier": 1 },
     "epique":     { "name": "Épique",     "color": "#b066ff", "tier": 2 },
