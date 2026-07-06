@@ -110,4 +110,4 @@ MonoBehaviour:
   economyConfig: {fileID: 11400000, guid: 428599d74f62f6e4f8c20a383e6ea78b, type: 2}
   upgradeConfig: {fileID: 11400000, guid: a024955bdb51de243acd140a45989803, type: 2}
   powerUpConfig: {fileID: 11400000, guid: 2503ddeb72088fc45ba0bee8b3700374, type: 2}
-  placeholders: {fileID: 0}
+  placeholders: {fileID: 11400000, guid: 3a305334aa4200a4e89d848797d74727, type: 2}
