@@ -1,3 +1,4 @@
+using System;
 using Game.Data;
 using UnityEngine;
 using UnityEngine.AI;
@@ -25,6 +26,9 @@ namespace Game.Runtime
 
         public EnemyState State => brain != null ? brain.State : EnemyState.Idle;
 
+        /// Levé à chaque coup tiré (rafale ranged) : muzzle flash côté visuel.
+        public event Action Fired;
+
         public void Init(EnemyData data, EnemyCombatConfig combat, Transform player, DifficultySettings difficulty)
         {
             this.data = data;
@@ -46,9 +50,21 @@ namespace Game.Runtime
             agent.stoppingDistance = Mathf.Max(0f, attackRange - 0.5f);
         }
 
+        /// Mort (parité web killEnemy) : FSM figée, plus de navigation ni de cible.
+        /// Le collider est coupé (cadavre traversable, non ciblable) ; le corps reste
+        /// jusqu'à la purge de la vague suivante (WaveManager).
+        public void EnterDeath()
+        {
+            if (brain != null) brain.Kill();
+            if (agent != null && agent.enabled) { agent.isStopped = true; agent.enabled = false; }
+            var capsule = GetComponent<CapsuleCollider>();
+            if (capsule != null) capsule.enabled = false;
+        }
+
         void Update()
         {
             if (player == null || brain == null) return;
+            if (brain.State == EnemyState.Dead) return;
             float dt = Time.deltaTime;
             float dist = Vector3.Distance(transform.position, player.position);
             var state = brain.Tick(dt, dist);
@@ -86,7 +102,7 @@ namespace Game.Runtime
             {
                 if (attackTimer <= 0f)
                 {
-                    playerHealth.TakeDamage(attackDamage);
+                    playerHealth.TakeDamage(attackDamage, transform.position);
                     attackTimer = attackCooldown;
                 }
                 return;
@@ -96,7 +112,9 @@ namespace Game.Runtime
                 burstTimer -= dt;
                 if (burstTimer <= 0f)
                 {
-                    if (Random.value <= stats.accuracy) playerHealth.TakeDamage(attackDamage);
+                    Fired?.Invoke();
+                    if (UnityEngine.Random.value <= stats.accuracy)
+                        playerHealth.TakeDamage(attackDamage, transform.position); // position source : indicateur directionnel
                     burstRemaining--;
                     burstTimer = stats.burstGap;
                 }

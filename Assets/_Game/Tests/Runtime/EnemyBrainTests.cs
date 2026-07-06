@@ -53,6 +53,24 @@ namespace Game.Runtime.Tests
         }
 
         [Test]
+        public void Kill_ForcesDeadState()
+        {
+            var b = Brain();
+            b.Tick(0.1f, 8f);
+            b.Kill();
+            Assert.AreEqual(EnemyState.Dead, b.State);
+        }
+
+        [Test]
+        public void Tick_FromDead_StaysDead()
+        {
+            var b = Brain();
+            b.Kill();
+            Assert.AreEqual(EnemyState.Dead, b.Tick(1f, 2f));   // joueur au contact : reste mort
+            Assert.AreEqual(EnemyState.Dead, b.Tick(10f, 50f));
+        }
+
+        [Test]
         public void SniperRange_UsesOverride()
         {
             var sniper = new EnemyBrain(12f, 18f, 3f, 28f); // shootRangeOverride 28

@@ -23,6 +23,8 @@ namespace Game.Runtime
 
         public event Action<float, float> HealthChanged;
         public event Action Died;
+        public event Action<float, Vector3> DamagedFrom; // dégâts subis + position monde de l'attaquant (indicateurs directionnels)
+        public event Action SecondWind;                   // « dernier souffle » : flash de soin HUD
 
         public void Init(CharacterData character, MovementConfig movement)
         {
@@ -33,6 +35,13 @@ namespace Game.Runtime
             secondWindInvulnSeconds = movement.secondWindInvulnSeconds;
             fallDamage = movement.fallDamage;
             HealthChanged?.Invoke(Health, MaxHealth);
+        }
+
+        public void TakeDamage(float amount, Vector3 sourceWorldPos)
+        {
+            float before = Health;
+            TakeDamage(amount);
+            if (Health < before) DamagedFrom?.Invoke(amount, sourceWorldPos);
         }
 
         public void TakeDamage(float amount)
@@ -48,6 +57,7 @@ namespace Game.Runtime
                     secondWindRemaining--;
                     Health = 1f;
                     invulnerableUntil = now + secondWindInvulnSeconds;
+                    SecondWind?.Invoke();
                 }
                 else
                 {

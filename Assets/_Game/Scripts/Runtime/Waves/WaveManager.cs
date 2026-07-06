@@ -13,6 +13,7 @@ namespace Game.Runtime
         public Transform[] spawnPoints = Array.Empty<Transform>();
 
         readonly List<EnemyHealth> alive = new List<EnemyHealth>();
+        readonly List<GameObject> corpses = new List<GameObject>(); // cadavres gardés jusqu'à la vague suivante (parité web)
         Dictionary<string, EnemyData> byId;
 
         public int CurrentWave { get; private set; }
@@ -54,6 +55,10 @@ namespace Game.Runtime
                 Debug.LogError("WaveManager: no spawn points assigned.");
                 return;
             }
+            foreach (var corpse in corpses)
+                if (corpse != null) Destroy(corpse);
+            corpses.Clear();
+
             string[] plan = WaveComposition.ForWave(wave);
             for (int i = 0; i < plan.Length; i++)
             {
@@ -73,6 +78,7 @@ namespace Game.Runtime
         void OnEnemyDied(EnemyHealth enemy)
         {
             alive.Remove(enemy);
+            if (enemy != null) corpses.Add(enemy.gameObject);
             var eco = context.database.economyConfig;
             if (eco != null) Money += eco.perKillMoney;
             AliveCountChanged?.Invoke(alive.Count);

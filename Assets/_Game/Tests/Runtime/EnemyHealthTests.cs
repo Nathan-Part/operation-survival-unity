@@ -69,5 +69,46 @@ namespace Game.Runtime.Tests
             Assert.AreEqual(1, deaths);
             Assert.LessOrEqual(health.Health, 0);
         }
+
+        [Test]
+        public void TakeHit_LethalDoesNotDestroyGameObject()
+        {
+            health.Init(shooter, 1, 1f, Zones());
+            health.TakeHit(new Vector3(0f, 1.6f, 0f), 3f);    // mort
+            Assert.IsTrue(health.IsDead);
+            Assert.IsNotNull(health.gameObject);              // le cadavre reste (phase 3)
+        }
+
+        [Test]
+        public void Damaged_RaisedOnEachValidHit()
+        {
+            health.Init(shooter, 1, 1f, Zones());
+            int damaged = 0;
+            health.Damaged += _ => damaged++;
+            health.TakeHit(new Vector3(0f, 1f, 0f), 1f);      // torse 25
+            health.TakeHit(new Vector3(0f, 1f, 0f), 1f);
+            Assert.AreEqual(2, damaged);
+        }
+
+        [Test]
+        public void MaxHealth_SetOnInit()
+        {
+            health.Init(shooter, 1, 1f, Zones());
+            Assert.AreEqual(100, health.MaxHealth);
+        }
+
+        [Test]
+        public void TakeHit_ReturnsZoneAndKilled()
+        {
+            health.Init(shooter, 1, 1f, Zones());
+            var hit = health.TakeHit(new Vector3(0f, 1.6f, 0f), 1f); // tête 60
+            Assert.IsTrue(hit.valid);
+            Assert.AreEqual(HitZone.Head, hit.zone);
+            Assert.IsFalse(hit.killed);
+            var kill = health.TakeHit(new Vector3(0f, 1.6f, 0f), 1f); // 60 : 40 restants -> mort
+            Assert.IsTrue(kill.killed);
+            var ignored = health.TakeHit(new Vector3(0f, 1.6f, 0f), 1f);
+            Assert.IsFalse(ignored.valid);                     // déjà mort
+        }
     }
 }

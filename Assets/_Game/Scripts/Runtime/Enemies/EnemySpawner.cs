@@ -43,6 +43,8 @@ namespace Game.Runtime
             var controller = root.AddComponent<EnemyController>();
             controller.Init(data, db.enemyCombatConfig, player, difficulty);
 
+            health.Died += _ => controller.EnterDeath();
+
             var model = context.ResolveEnemyModel(data);
             if (model != null)
             {
@@ -50,6 +52,19 @@ namespace Game.Runtime
                 visual.transform.localPosition = Vector3.zero; // pivot GLB aux pieds
                 visual.transform.localRotation = Quaternion.identity;
                 visual.transform.localScale = Vector3.one * data.scale;
+
+                var library = db.animationLibrary;
+                if (library != null)
+                {
+                    // Les clips adressent les os par chemin depuis la racine du GLB (« Armature/... ») :
+                    // l'Animator doit vivre sur cette racine, on l'ajoute si l'import ne l'a pas fait.
+                    var animator = visual.GetComponent<Animator>();
+                    if (animator == null) animator = visual.AddComponent<Animator>();
+                    var driver = visual.AddComponent<AnimationDriver>();
+                    driver.Bind(animator, library);
+                    var enemyAnimator = root.AddComponent<EnemyAnimator>();
+                    enemyAnimator.Init(controller, driver);
+                }
             }
             else
             {
