@@ -33,7 +33,7 @@ namespace Game.Runtime
             this.waves = waves;
             this.motor = motor;
 
-            if (FindFirstObjectByType<UnityEngine.EventSystems.EventSystem>() == null)
+            if (FindAnyObjectByType<UnityEngine.EventSystems.EventSystem>() == null)
             {
                 var es = new GameObject("EventSystem");
                 es.AddComponent<UnityEngine.EventSystems.EventSystem>();
