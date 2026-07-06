@@ -43,8 +43,9 @@ namespace Game.Data.Tests
         [Test]
         public void WaveMoneyBonus_RoundsToNearestInt()
         {
-            Assert.AreEqual(25, WaveRules.WaveMoneyBonus(1, 1.0f));
-            Assert.AreEqual(22, WaveRules.WaveMoneyBonus(1, 0.9f));
+            Assert.AreEqual(25, WaveRules.WaveMoneyBonus(1, 1.0f));   // 25.0 exact
+            Assert.AreEqual(33, WaveRules.WaveMoneyBonus(1, 1.33f));  // 33.25 -> 33 (rounds down)
+            Assert.AreEqual(34, WaveRules.WaveMoneyBonus(1, 1.35f));  // 33.75 -> 34 (rounds up)
         }
     }
 }
