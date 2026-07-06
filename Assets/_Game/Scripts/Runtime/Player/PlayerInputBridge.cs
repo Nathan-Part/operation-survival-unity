@@ -10,9 +10,10 @@ namespace Game.Runtime
         public PlayerMotor motor;
         public PlayerLook look;
         public WeaponController weapon;
+        public PlayerViewController viewController;
 
         InputActionMap map;
-        InputAction move, lookAction, jump, dash, reload, sprint;
+        InputAction move, lookAction, jump, dash, reload, sprint, aim, fire, toggleView;
 
         void Awake()
         {
@@ -40,6 +41,16 @@ namespace Game.Runtime
             sprint = map.AddAction("Sprint", binding: "<Keyboard>/leftShift");
             sprint.AddBinding("<Keyboard>/rightShift");
             sprint.AddBinding("<Keyboard>/r"); // le web accepte Shift OU R pour courir
+
+            aim = map.AddAction("Aim", binding: "<Keyboard>/q"); // web: Q (A sur AZERTY) = viser
+            aim.AddBinding("<Gamepad>/leftTrigger");
+            aim.AddBinding("<Mouse>/rightButton");               // le web accepte aussi clic droit
+
+            fire = map.AddAction("Fire", binding: "<Keyboard>/e"); // web: E = tirer (manuel)
+            fire.AddBinding("<Gamepad>/rightTrigger");
+            fire.AddBinding("<Mouse>/leftButton");                 // le web accepte aussi clic gauche
+
+            toggleView = map.AddAction("ToggleView", binding: "<Keyboard>/v"); // web: V = vue 1re/3e
         }
 
         void OnEnable() { map.Enable(); }
@@ -55,6 +66,16 @@ namespace Game.Runtime
             if (jump.WasPressedThisFrame()) motor.RequestJump();
             if (dash.WasPressedThisFrame()) motor.RequestDash();
             if (reload.WasPressedThisFrame() && weapon != null) weapon.RequestReload();
+            if (weapon != null)
+            {
+                weapon.FireHeld = fire.IsPressed();
+                weapon.AimHeld = aim.IsPressed();
+            }
+            if (viewController != null)
+            {
+                viewController.AimHeld = aim.IsPressed();
+                if (toggleView.WasPressedThisFrame()) viewController.ToggleView();
+            }
         }
     }
 }

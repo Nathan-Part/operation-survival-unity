@@ -24,6 +24,7 @@ namespace Game.Runtime
         public event Action<float> FellFrom;
 
         public bool IsRunning { get; private set; }
+        public bool IsMoving => moveInput.sqrMagnitude > 0.01f;
         public float StaminaCurrent => stamina != null ? stamina.Current : 0f;
         public float StaminaMax => config != null ? config.stamina.max : 0f;
 

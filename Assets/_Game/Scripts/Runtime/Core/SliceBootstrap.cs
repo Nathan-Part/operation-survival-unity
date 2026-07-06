@@ -45,9 +45,37 @@ namespace Game.Runtime
             weapon.Init(weaponData);
             motor.FellFrom += health.ApplyFallDamage;
 
+            // Avatar 3ᵉ personne (modèle du perso + anims + arme en main)
+            var avatar = motor.gameObject.AddComponent<PlayerAvatar>();
+            avatar.Init(context.ResolveCharacterModel(character), db.animationLibrary, motor, weaponData);
+
+            // Feedback de tir : tracers partagés + viewmodel 1ʳᵉ personne
+            var tracers = new GameObject("Tracers").AddComponent<TracerPool>();
+            ViewmodelController viewmodel = null;
+            if (weapon.aimCamera != null)
+            {
+                viewmodel = new GameObject("Viewmodel").AddComponent<ViewmodelController>();
+                viewmodel.Init(weaponData, weapon.aimCamera, weapon, look, tracers);
+            }
+
+            // Vue 1ʳᵉ/3ᵉ personne (V) + visée (Q) + séquence de mort
+            var view = motor.gameObject.AddComponent<PlayerViewController>();
+            view.playerCamera = weapon.aimCamera;
+            view.cameraPivot = look != null ? look.cameraPivot : null;
+            view.look = look;
+            view.avatar = avatar;
+            view.viewmodel = viewmodel;
+            view.weapon = weapon;
+            view.health = health;
+            view.motor = motor;
+            view.inputBridge = motor.GetComponent<PlayerInputBridge>();
+            if (view.inputBridge != null) view.inputBridge.viewController = view;
+            if (viewmodel != null) viewmodel.BindView(view);
+
             var hudGo = new GameObject("HUD");
             var hud = hudGo.AddComponent<HudController>();
-            hud.Init(health, weapon, waveManager, motor, motor.transform);
+            hud.Init(health, weapon, waveManager, motor, motor.transform, weapon.aimCamera, view);
+            view.hud = hud;
 
             TouchControlsRoot.CreateIfNeeded(look);
 

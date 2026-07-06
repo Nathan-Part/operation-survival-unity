@@ -65,6 +65,16 @@ namespace Game.Runtime
                     var enemyAnimator = root.AddComponent<EnemyAnimator>();
                     enemyAnimator.Init(controller, driver);
                 }
+
+                if (!data.melee)
+                {
+                    // flash de bouche : dans la main si le rig en a une, sinon hauteur poitrine
+                    var hand = PlayerAvatar.FindHandBone(visual.transform);
+                    var flash = hand != null
+                        ? MuzzleFlash.Create(hand, new Vector3(0f, 0.02f, 0.3f), 0.25f)
+                        : MuzzleFlash.Create(root.transform, new Vector3(0f, ReferenceHeight * data.scale * 0.75f, 0.4f), 0.25f);
+                    controller.Fired += flash.Flash;
+                }
             }
             else
             {
