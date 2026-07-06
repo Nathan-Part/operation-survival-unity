@@ -27,7 +27,8 @@ Sur mobile/tactile (Device Simulator ou build Android) : joystick virtuel à gau
 - ✅ Phase 1 faite (projet Unity créé, données importées).
 - ✅ Phase 2 faite dans sa version minimale et **mergée dans `main`** : le jeu est jouable.
 - ✅ **Phase 3, chantiers 1 et 2 FAITS (2026-07-07, branche `feat/phase3-anims-player-hud`, en attente du test visuel de Nathan)** : ennemis animés (idle/course/attaque/**mort** avec cadavre conservé jusqu'à la vague suivante), vue 1ʳᵉ/3ᵉ personne (V), visée Q (sight + lunette sniper), tir manuel E, arme en main (1ʳᵉ ET 3ᵉ personne + ennemis), muzzle flash/tracers/recul/kick caméra, mort du joueur animée, HUD de combat parité web (hitmarker, kill feed, barres de vie ennemis, barre boss, indicateurs directionnels, blood screen/heal flash, callouts, sight/scope). 129 tests EditMode + 4 PlayMode verts. Spec/plan : `docs/superpowers/{specs,plans}/2026-07-07-*`.
-- ⬅️ **Prochaine action : chantier 3 de la Phase 3** (un modèle par type d'ennemi — copier les GLB `perso/enemie-*` du web et les brancher sur les fiches EnemyData), puis chantier 4 (maps utopia/urban). En parallèle : Nathan vérifie visuellement les chantiers 1–2 (liste des vérifs manuelles ci-dessous).
+- ⚠️ **Chantier 3 bloqué** : les dossiers `perso/enemie-*` du web sont **vides** (modèles à produire, Phase 0). **Chantier 4 (maps)** : dépend des `.blend` de Nathan.
+- ⬅️ **En cours (2026-07-07, pendant que Nathan dort) : le reste de la Phase 2** — comportements spéciaux des types d'ennemis (bomber, medic, shielder, toxic, cryo, grenadier, commander, ghost, stunner, berserker), VIP doré, combo — logique pure pilotée par les données, aucun asset requis. Nathan vérifie visuellement les chantiers 1–2 à son réveil (liste ci-dessous).
 
 ---
 
@@ -73,7 +74,7 @@ Geler le design du jeu web pour que Unity ait une référence stable : refactors
    - ✅ **Vue commutable 1ʳᵉ/3ᵉ personne (touche V)** — avatar visible et animé en 3ᵉ (le réglage persistant arrivera avec l'écran réglages, phase 4).
    - ✅ **Visée manuelle** : Q = viser (sight + lunette sniper plein écran + FOV 55→42→20), E = tir manuel — coexiste avec le tir auto mobile.
    - ✅ HUD de cette phase : hitmarker (variante headshot), kill feed, barres de vie au-dessus des ennemis, barre de boss, indicateurs directionnels de dégâts (4 secteurs), effets écran (sang/soin), callouts (HEADSHOT/DOUBLE/TRIPLE/MULTI KILL/BOSS DOWN).
-3. **Un modèle par type d'ennemi** au fur et à mesure : copier le GLB du web → le glisser dans la fiche `EnemyData` (ou via `Tools → Game → Assign Imported Art`).
+3. **Un modèle par type d'ennemi** au fur et à mesure : copier le GLB du web → le glisser dans la fiche `EnemyData` (ou via `Tools → Game → Assign Imported Art`). ⚠️ **BLOQUÉ (constaté 2026-07-07) : les dossiers `perso/enemie-*` du jeu web sont vides** — ces modèles restent à produire (Phase 0, côté web). Dès qu'un GLB apparaît là-bas, le copier dans `Assets/_Game/Art/Enemies/` et étendre la table de `AssignImportedArt`. En attendant, tous les types utilisent `enemie-generic.glb` (animé).
 4. **Les maps, EN DERNIER (le plus lourd)** : **utopia puis urban — portal est ABANDONNÉE (décision actée 2026-07-07)**. Import direct depuis les `.blend` de Nathan (`Desktop\3D\map_utopia\map_utopia_export.blend`) en pleine qualité — PAS les GLB web (dégradés). Colliders posés dans l'éditeur, éclairage cuit (lightmaps + probes) + post-processing URP, LOD/occlusion culling, NavMesh bakée par map.
 
 *(À caser pendant cette phase ou la suivante : le reste de la Phase 2 — comportements spéciaux des types d'ennemis, VIP, combo.)*
