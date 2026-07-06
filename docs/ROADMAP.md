@@ -90,9 +90,9 @@ Geler le design du jeu web pour que Unity ait une référence stable : refactors
 
 *Première moitié de l'ancienne « Phase 4 », divisée en deux (décision 2026-07-07) : d'abord la mécanique, ensuite l'interface (Phase 5) — parce que reproduire l'accueil sans la logique derrière donnerait des boutons vides.*
 
-- **Sauvegarde** : structure du save web (`cod-save-v1`) → JSON local (solo), cloud plus tard (multi).
-- **Économie/boutique (logique)** : catalogues, coûts croissants, achats, upgrades — formules déjà importées.
-- **Progression** : XP, niveaux, rangs, succès, contrats quotidiens, stats lifetime, prestige.
+- ✅ **Sauvegarde (lot 1, FAIT 2026-07-07)** : miroir exact du schéma `cod-save-v1` (`SaveData`/`SaveMigration`, Newtonsoft, mêmes migrations que le web : knife/medkit/merge sur défauts) → `persistentDataPath/cod-save-v1.json` via `MetaProgress` (persist à la mort/pause/quit). **La save pilote déjà le jeu** : perso/arme sélectionnés, upgrades d'arme (chargeur/cadence/dégâts/recul) et joueur (PV/régén/vitesse), sensibilité, vue par défaut.
+- ✅ **Économie/boutique (logique, lot 1)** : `ShopRules` (achats armes/persos, upgrades à coût croissant) testée ; argent de kill = perKill × combo × difficulté × VIP (correctif parité au passage). L'UI attendra la Phase 5.
+- **Progression** : ✅ XP/niveaux (`ProgressionRules` : 25/kill, +25 headshot, 100/vague, niveaux 1→50, HUD argent+niveau+barre XP). Restent : rangs, succès, contrats quotidiens, prestige (extraction JSON à faire).
 - **Gameplay annexe** : consommables/grenades, power-ups complets, mêlée joueur, chien de guerre, loadout, killstreaks.
 - **Audio** : la synthèse Web Audio du jeu web → AudioSources Unity (+ touche M mute).
 - **Ce que l'analyse du web a révélé en plus (2026-07-07, à ne pas oublier)** : ramassage d'armes sur les cadavres (G), modes de tir auto/burst/semi (T/P), bouclier (barre séparée de la vie), pause (Échap) + game over + réglages en jeu (sensibilité/volume/difficulté/hardcore/pluie/vue), modes **hardcore** et **entraînement**, adrénaline/surchauffe/longshot/précision (mécaniques annexes visibles au HUD), tourelle/claymore/frappe aérienne avec ciblage sur carte/caisse de ravitaillement (= le loadout), barre de vie du chien.
@@ -210,5 +210,8 @@ Unity 6 + C#, URP (pas Built-in/HDRP/Unreal) · Android + iOS · solo d'abord (v
 | 2026-07-06 | Pipeline d'import JSON → ScriptableObjects (91 assets, 31 tests) | mergé dans `main` |
 | 2026-07-06 | Vertical slice solo jouable (83 + 2 tests) | mergé dans `main` |
 | 2026-07-07 | Phase 3 chantiers 1–2 : animations ennemis + mort, vues V, visée Q/tir E, arme en main, feedback tir, HUD combat parité web (129 + 4 tests) | branche `feat/phase3-anims-player-hud` |
+| 2026-07-07 | Reste Phase 2 : comportements spéciaux des 10 types, VIP doré, combo + HUD | même branche |
+| 2026-07-07 | Map utopia jouable (GLB pleine qualité du .blend, colliders, NavMesh, smoke test) | même branche |
+| 2026-07-07 | Phase 4 lot 1 : save `cod-save-v1` + XP/niveaux + boutique (logique) + save→gameplay + HUD argent/XP (150 + 5 tests) | même branche |
 
 Détails d'archive : specs dans `docs/superpowers/specs/`, plans dans `docs/superpowers/plans/`, journal de l'import dans `.superpowers/sdd/progress.md`, dette technique de l'import dans `docs/superpowers/tech-debt-import-pipeline.md`.
