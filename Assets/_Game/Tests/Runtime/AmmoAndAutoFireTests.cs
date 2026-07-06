@@ -35,6 +35,14 @@ namespace Game.Runtime.Tests
             Assert.AreEqual(3, a.InMag);
         }
 
+        [TestCase(false, true, 0f, true, ExpectedResult = true)]   // E maintenu : tire même sans cible
+        [TestCase(false, true, 0.4f, true, ExpectedResult = false)] // cadence non prête
+        [TestCase(false, true, 0f, false, ExpectedResult = false)]  // pas de munitions
+        [TestCase(true, false, 0f, true, ExpectedResult = true)]    // auto seul inchangé
+        [TestCase(false, false, 0f, true, ExpectedResult = false)]
+        public bool ManualFire_CoexistsWithAuto(bool auto, bool manualHeld, float cooldown, bool ammoReady) =>
+            AutoFireDecider.ShouldFireWithManual(auto, manualHeld, cooldown, ammoReady);
+
         [TestCase(true, 5f, 60f, 0f, true, ExpectedResult = true)]
         [TestCase(false, 5f, 60f, 0f, true, ExpectedResult = false)]  // rien sous le viseur
         [TestCase(true, 70f, 60f, 0f, true, ExpectedResult = false)]  // hors portée

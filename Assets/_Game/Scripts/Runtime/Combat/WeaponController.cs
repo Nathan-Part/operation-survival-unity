@@ -4,12 +4,16 @@ using UnityEngine;
 
 namespace Game.Runtime
 {
-    /// Tir automatique (D1) : tire quand le réticule est sur un ennemi à portée.
-    /// Raycast hitscan depuis le centre caméra, pellets indépendants pour les shotguns.
+    /// Tir automatique (D1) + tir manuel E (parité web, coexistence actée) :
+    /// raycast hitscan depuis le centre caméra, pellets indépendants pour les shotguns.
     public class WeaponController : MonoBehaviour
     {
         public Camera aimCamera;
         public LayerMask hitMask = ~0;
+
+        /// Posés chaque frame par PlayerInputBridge (E maintenu / Q maintenu).
+        [NonSerialized] public bool FireHeld;
+        [NonSerialized] public bool AimHeld;
 
         AmmoModel ammo;
         float cooldownRemaining;
@@ -19,6 +23,9 @@ namespace Game.Runtime
 
         public event Action<int, int> AmmoChanged;
         public event Action<bool> ReloadingChanged;
+        public event Action Fired;                                       // chaque coup parti : recul, muzzle flash, kick caméra
+        public event Action<HitZone, bool, EnemyHealth> HitConfirmed;    // zone, killed, cible : hitmarker/kill feed/callouts
+        public event Action<Vector3> TracerRequested;                    // point d'impact ou fin de portée (l'origine vient du viewmodel)
 
         public void Init(WeaponData weapon)
         {
@@ -56,7 +63,8 @@ namespace Game.Runtime
             }
 
             bool ammoReady = !ammo.IsReloading && ammo.InMag > 0;
-            if (AutoFireDecider.ShouldFire(onTarget, distance, Weapon.range, cooldownRemaining, ammoReady))
+            bool auto = AutoFireDecider.ShouldFire(onTarget, distance, Weapon.range, cooldownRemaining, ammoReady);
+            if (AutoFireDecider.ShouldFireWithManual(auto, FireHeld, cooldownRemaining, ammoReady))
                 Fire();
 
             if (ammo.InMag == 0 && !ammo.IsReloading)
@@ -73,8 +81,21 @@ namespace Game.Runtime
                 Vector2 spread = UnityEngine.Random.insideUnitCircle * Weapon.recoil * 0.01f;
                 Ray ray = aimCamera.ViewportPointToRay(new Vector3(0.5f + spread.x, 0.5f + spread.y, 0f));
                 if (Physics.Raycast(ray, out RaycastHit hit, Weapon.range, hitMask))
-                    hit.collider.GetComponentInParent<EnemyHealth>()?.TakeHit(hit.point, Weapon.dmgMult);
+                {
+                    TracerRequested?.Invoke(hit.point);
+                    var enemy = hit.collider.GetComponentInParent<EnemyHealth>();
+                    if (enemy != null)
+                    {
+                        var result = enemy.TakeHit(hit.point, Weapon.dmgMult);
+                        if (result.valid) HitConfirmed?.Invoke(result.zone, result.killed, enemy);
+                    }
+                }
+                else
+                {
+                    TracerRequested?.Invoke(ray.origin + ray.direction * Weapon.range);
+                }
             }
+            Fired?.Invoke();
             AmmoChanged?.Invoke(ammo.InMag, ammo.MagSize);
         }
     }
