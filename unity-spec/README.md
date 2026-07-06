@@ -42,7 +42,7 @@ Le jeu web est équilibré **contre des bots**. Chaque power-up porte une recomm
 - Killstreaks/bonus de kill (#139/#149/#161/#166/#182/#187/#190) — les valeurs sont dans main.js.
 - Consommables : les stats détaillées (dégâts/rayon/durée des grenades, molotov, EMP…) — seuls les prix sont extraits pour l'instant.
 - Chien de guerre (pet.js) : PV 150, despawn 30 s, taille = moitié du joueur — à formaliser.
-- Maps : la géométrie vient des `.blend` (voir `docs/migration-unity.md`), pas de ce dossier.
+- Maps : la géométrie vient des `.blend` (voir `docs/ROADMAP.md`, Phase 3), pas de ce dossier.
 
 ## Rappel
 
