@@ -28,8 +28,8 @@ Rien n'est encore jouable ni visible à l'écran — c'est de la plomberie de do
 
 1. ✅ Squelette du projet (dossiers de code, catégories d'armes/raretés, système de "placeholder" pour les modèles 3D manquants) — **fait**
 2. ✅ Formules de jeu (calcul des vagues, de l'argent, des upgrades, des stats) — **fait** (15 tests passent)
-3. 🔄 Import des **armes** (15 armes du JSON → fiches Unity) — **en cours**
-4. ⬜ Import des **ennemis** (16 types)
+3. ✅ Import des **armes** (WeaponData + toute la plomberie d'import partagée) — **fait**
+4. 🔄 Import des **ennemis** (16 types) — **en cours**
 5. ⬜ Import des **personnages** jouables (3 persos + réglages de déplacement)
 6. ⬜ Import de l'**économie** (prix, gains...)
 7. ⬜ Import des **objets** (accessoires, boosts, consommables, danses)
