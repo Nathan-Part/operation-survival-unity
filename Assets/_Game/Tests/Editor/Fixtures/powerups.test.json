@@ -1,0 +1,12 @@
+{
+  "dropChance": 0.12,
+  "dropChanceLootMaster": 0.24,
+  "pickupRadius": 1.6,
+  "defaultDuration": 8,
+  "powerups": {
+    "dmgx2":        { "name": "×2 Dégâts",     "color": "#ff8a2a", "duration": 8, "effect": "Dégâts × 2", "pvp": "rebalance" },
+    "shield_orb":   { "name": "Bouclier Max",  "color": "#4488ff", "instant": true, "effect": "Bouclier rechargé au max", "pvp": "allowed" },
+    "slowmo":       { "name": "Slow-mo",       "color": "#9a6aff", "duration": 8, "effect": "Ennemis ralentis à 40%", "pvp": "exclude" }
+  },
+  "instantConstants": { "instantHealAmount": 40, "novaRadius": 8, "novaDamage": 80 }
+}
