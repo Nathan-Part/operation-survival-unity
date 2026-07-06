@@ -12,15 +12,19 @@ Le jeu web sert de **spécification** (les valeurs d'équilibrage, les formules,
 
 ## Où on en est (résumé plain-language)
 
-Le plan de migration a 6 grandes phases (voir `docs/migration-unity.md`). On est au **tout début de la partie code**, précisément à l'**étape 3 de `unity-spec/NEXT-STEPS.md`** : écrire le script qui lit les JSON de `unity-spec/` et génère automatiquement les « fiches de données » Unity (ScriptableObjects : armes, ennemis, persos, etc.).
+Le plan de migration a 6 grandes phases (voir `docs/migration-unity.md`).
 
-⚠️ **À ce stade il n'y a encore RIEN de visuel / jouable.** On construit la plomberie de données invisible. Le premier truc jouable à l'écran arrivera à l'**étape 4** (contrôleur du joueur, tir, ennemis, vagues).
+- ✅ **Étape 3 de `unity-spec/NEXT-STEPS.md` TERMINÉE (2026-07-06) et mergée dans `main`** : le pipeline d'import est fini. Le menu **`Tools/Game/Import Spec from JSON`** lit `unity-spec/*.json` et génère toutes les « fiches de données » Unity (91 assets : armes, ennemis, persos, power-ups, items, configs) + un `GameDatabase.asset` qui référence tout. 10 tâches en TDD, 31/31 tests verts, revue finale « ready to merge ».
+- ⬅️ **PROCHAINE ÉTAPE = étape 4** (vertical slice solo jouable) : contrôleur du joueur, tir, ennemis, vagues, HUD. **C'est là que le jeu devient enfin visible et jouable à l'écran** (jusqu'ici tout était de la plomberie de données invisible). Plus grosse étape → refaire un brainstorm dédié avant de coder.
+
+⚠️ **Un seul TODO manuel laissé de l'étape 3 :** remplir le `PlaceholderLibrary` dans l'Inspector Unity (voir plus bas). Rien ne le presse tant qu'on n'affiche pas les objets en jeu.
 
 ## Par où reprendre (les fichiers à lire, dans l'ordre)
 
-1. **`unity-spec/NEXT-STEPS.md`** — le suivi d'avancement global de la migration. LE fichier de référence pour savoir quelle est la prochaine grande action.
-2. **`.superpowers/sdd/progress.md`** — le journal détaillé de la tâche en cours (le pipeline d'import). Il liste les tâches déjà terminées (avec leur commit) et donc où reprendre. **Les tâches marquées « complete » sont finies — ne pas les refaire.**
-3. **`docs/superpowers/plans/2026-07-06-spec-import-scriptableobjects.md`** — le plan détaillé (10 tâches) du pipeline d'import en cours. La spec de design associée est `docs/superpowers/specs/2026-07-06-spec-import-scriptableobjects-design.md`.
+1. **`unity-spec/NEXT-STEPS.md`** — le suivi d'avancement global de la migration. LE fichier de référence pour savoir quelle est la prochaine grande action (aujourd'hui : l'étape 4).
+2. **`docs/ROADMAP.md`** — la vue d'ensemble simple, une ligne par étape, pour situer où on en est d'un coup d'œil.
+3. **`.superpowers/sdd/progress.md`** — l'archive détaillée du pipeline d'import (étape 3, terminée) : chaque tâche et son commit. Utile seulement pour comprendre ce qui a déjà été fait, pas pour la suite.
+4. **`docs/superpowers/plans/…-spec-import-scriptableobjects.md`** + `…/specs/…-design.md` — le plan et la spec de l'étape 3 (terminée), pour référence.
 
 Pour comprendre le contenu du jeu (les données) : `unity-spec/README.md` explique comment sont structurés les 7 fichiers JSON (`weapons.json`, `enemies.json`, `player.json`, `economy.json`, `items.json`, `powerups.json`, `waves.json`).
 
@@ -39,12 +43,18 @@ Pour comprendre le contenu du jeu (les données) : `unity-spec/README.md` expliq
 | `.superpowers/sdd/task-N-brief.md` | Pour chaque tâche du plan : les instructions données à l'agent qui l'exécute (extrait du plan). |
 | `.superpowers/sdd/task-N-report.md` | Pour chaque tâche du plan : le rapport de ce qui a été fait une fois la tâche terminée. |
 
-## Travail en cours : pipeline d'import JSON → ScriptableObjects
+## Dernier travail terminé : pipeline d'import JSON → ScriptableObjects (mergé dans `main`)
 
-- **Branche git :** `feat/spec-import-scriptableobjects`
-- **Plan :** 10 tâches, exécutées en TDD (test qui échoue → code → test qui passe → commit), une par une, chacune avec sa revue.
-- **Avancement exact :** voir `.superpowers/sdd/progress.md` (mis à jour à chaque tâche terminée).
-- **Ce que ça produit :** des fichiers `.asset` dans `Assets/_Game/Data/` (données pures : dégâts, PV, prix…). Aucune dépendance dure à un asset d'art : les modèles 3D / icônes s'assignent à la main plus tard, un `PlaceholderLibrary` sert de secours.
+- **Statut :** ✅ terminé et mergé dans `main` (la branche `feat/spec-import-scriptableobjects` a été fusionnée puis supprimée). Journal détaillé des 10 tâches + commits : `.superpowers/sdd/progress.md`.
+- **Ce que ça produit :** des fichiers `.asset` dans `Assets/_Game/Data/` (données pures : dégâts, PV, prix…), déjà générés et commités. Point d'entrée runtime : `Assets/_Game/Data/GameDatabase.asset`.
+- **Ré-générer après un changement de JSON :** menu Unity **Tools → Game → Import Spec from JSON** (idempotent, ne touche jamais aux assets d'art assignés à la main).
+- **Dette technique connue (non bloquante) :** `docs/superpowers/tech-debt-import-pipeline.md`.
+
+### C'est quoi le `PlaceholderLibrary` (le TODO manuel)
+
+Les fiches de données (`WeaponData`, `EnemyData`, `CharacterData`…) ne contiennent que des **chiffres et du texte** — pas de modèle 3D ni d'icône (ces assets d'art arrivent plus tard, au fur et à mesure). Pour que le jeu ne plante jamais quand un objet n'a pas encore son modèle, la règle est : **la logique n'exige jamais un asset**. Le `PlaceholderLibrary` est un ScriptableObject unique qui contient les **modèles/icônes de secours par défaut** (un cube générique par catégorie d'arme, un ennemi générique, etc.). Quand un `WeaponData` n'a pas de modèle assigné, le code affiche le placeholder à la place.
+
+**Le TODO manuel :** créer l'asset (clic droit dans `Assets/_Game/Data/` → Create → Game → Config → Placeholder Library) et y glisser quelques prefabs/sprites de secours dans l'Inspector. Ça ne se génère pas automatiquement — c'est un choix d'art. Tant que le runtime n'affiche rien à l'écran (avant l'étape 4), ce n'est pas urgent.
 
 ## Comment on vérifie le code (important)
 
