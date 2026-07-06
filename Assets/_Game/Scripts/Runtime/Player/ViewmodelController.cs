@@ -69,7 +69,7 @@ namespace Game.Runtime
 
         void OnFired()
         {
-            Recoil.Kick(weapon.Weapon != null ? weapon.Weapon.recoil : 1f);
+            Recoil.Kick(weapon.Weapon != null ? weapon.EffectiveRecoil : 1f);
             if (muzzleFlash != null && gameObject.activeInHierarchy) muzzleFlash.Flash();
             float adsT = view != null ? view.Ads.AdsT : 0f;
             look?.Kick(KickPitchDeg * (adsT > 0.5f ? 0.5f : 1f), KickDuration); // web: cameraKick ×0.5 en visée

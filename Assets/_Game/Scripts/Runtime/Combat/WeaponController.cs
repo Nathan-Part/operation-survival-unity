@@ -1,5 +1,6 @@
 using System;
 using Game.Data;
+using Game.Data.Rules;
 using UnityEngine;
 
 namespace Game.Runtime
@@ -21,16 +22,24 @@ namespace Game.Runtime
 
         public WeaponData Weapon { get; private set; }
 
+        // Stats effectives = fiche × formules d'upgrade (niveau depuis la save) — la fiche SO n'est jamais mutée
+        public float EffectiveCooldown { get; private set; }
+        public float EffectiveDmgMult { get; private set; }
+        public float EffectiveRecoil { get; private set; }
+
         public event Action<int, int> AmmoChanged;
         public event Action<bool> ReloadingChanged;
         public event Action Fired;                                       // chaque coup parti : recul, muzzle flash, kick caméra
         public event Action<HitZone, bool, EnemyHealth> HitConfirmed;    // zone, killed, cible : hitmarker/kill feed/callouts
         public event Action<Vector3> TracerRequested;                    // point d'impact ou fin de portée (l'origine vient du viewmodel)
 
-        public void Init(WeaponData weapon)
+        public void Init(WeaponData weapon, int upgradeLevel = 0)
         {
             Weapon = weapon;
-            ammo = new AmmoModel(weapon.mag, weapon.reload);
+            EffectiveCooldown = UpgradeFormulas.WeaponCooldown(weapon.cooldown, upgradeLevel);
+            EffectiveDmgMult = UpgradeFormulas.WeaponDamageMult(weapon.dmgMult, upgradeLevel);
+            EffectiveRecoil = UpgradeFormulas.WeaponRecoil(weapon.recoil, upgradeLevel);
+            ammo = new AmmoModel(UpgradeFormulas.WeaponMag(weapon.mag, upgradeLevel), weapon.reload);
             AmmoChanged?.Invoke(ammo.InMag, ammo.MagSize);
         }
 
@@ -74,11 +83,11 @@ namespace Game.Runtime
         void Fire()
         {
             if (!ammo.TryConsume()) return;
-            cooldownRemaining = Weapon.cooldown;
+            cooldownRemaining = EffectiveCooldown;
             int pellets = Mathf.Max(1, Weapon.pellets);
             for (int i = 0; i < pellets; i++)
             {
-                Vector2 spread = UnityEngine.Random.insideUnitCircle * Weapon.recoil * 0.01f;
+                Vector2 spread = UnityEngine.Random.insideUnitCircle * EffectiveRecoil * 0.01f;
                 Ray ray = aimCamera.ViewportPointToRay(new Vector3(0.5f + spread.x, 0.5f + spread.y, 0f));
                 if (Physics.Raycast(ray, out RaycastHit hit, Weapon.range, hitMask))
                 {
@@ -86,7 +95,7 @@ namespace Game.Runtime
                     var enemy = hit.collider.GetComponentInParent<EnemyHealth>();
                     if (enemy != null)
                     {
-                        var result = enemy.TakeHit(hit.point, Weapon.dmgMult, ray.origin);
+                        var result = enemy.TakeHit(hit.point, EffectiveDmgMult, ray.origin);
                         if (result.blocked) CalloutEvents.Raise("BLOQUÉ!"); // bouclier frontal (web #119)
                         else if (result.valid) HitConfirmed?.Invoke(result.zone, result.killed, enemy);
                     }

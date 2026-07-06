@@ -26,10 +26,10 @@ namespace Game.Runtime
         public event Action<float, Vector3> DamagedFrom; // dégâts subis + position monde de l'attaquant (indicateurs directionnels)
         public event Action SecondWind;                   // « dernier souffle » : flash de soin HUD
 
-        public void Init(CharacterData character, MovementConfig movement)
+        public void Init(CharacterData character, MovementConfig movement, int healthUpgradeLevel = 0, int regenUpgradeLevel = 0)
         {
-            MaxHealth = StatFormulas.MaxHealth(character.baseHealth, 0, 0f);
-            regenRate = StatFormulas.RegenRate(character.baseRegen, 0, 0f);
+            MaxHealth = StatFormulas.MaxHealth(character.baseHealth, healthUpgradeLevel, 0f);
+            regenRate = StatFormulas.RegenRate(character.baseRegen, regenUpgradeLevel, 0f);
             Health = MaxHealth;
             secondWindRemaining = movement.secondWindUsesPerRun;
             secondWindInvulnSeconds = movement.secondWindInvulnSeconds;

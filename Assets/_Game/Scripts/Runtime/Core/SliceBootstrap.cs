@@ -24,14 +24,21 @@ namespace Game.Runtime
             }
             var db = context.database;
 
+            // Save chargée d'abord : perso/arme sélectionnés + niveaux d'upgrade en dépendent
+            var meta = gameObject.AddComponent<MetaProgress>();
+            meta.LoadOrCreate();
+            var save = meta.Data;
+
+            string wantedCharacter = string.IsNullOrEmpty(save.selectedCharacterId) ? "perso:blue-soldier" : save.selectedCharacterId;
             CharacterData character = null;
             foreach (var c in db.characters)
-                if (c != null && c.id == "perso:blue-soldier") { character = c; break; }
+                if (c != null && c.id == wantedCharacter) { character = c; break; }
             if (character == null && db.characters.Length > 0) character = db.characters[0];
 
+            string wantedWeapon = string.IsNullOrEmpty(save.selectedWeapon) ? "default" : save.selectedWeapon;
             WeaponData weaponData = null;
             foreach (var w in db.weapons)
-                if (w != null && w.id == "default") { weaponData = w; break; }
+                if (w != null && w.id == wantedWeapon) { weaponData = w; break; }
             if (weaponData == null && db.weapons.Length > 0) weaponData = db.weapons[0];
 
             if (character == null || weaponData == null || db.movementConfig == null)
@@ -40,18 +47,18 @@ namespace Game.Runtime
                 return;
             }
 
-            motor.Init(db.movementConfig, StatFormulas.SpeedMult(character.baseSpeed, 0, 0f));
-            health.Init(character, db.movementConfig);
-            weapon.Init(weaponData);
+            int UpgLevel(string key) => save.playerUpgrades.TryGetValue(key, out int lvl) ? lvl : 0;
+            motor.Init(db.movementConfig, StatFormulas.SpeedMult(character.baseSpeed, UpgLevel("speed"), 0f));
+            health.Init(character, db.movementConfig, UpgLevel("health"), UpgLevel("regen"));
+            weapon.Init(weaponData, ShopRules.WeaponUpgradeLevel(save, weaponData.id));
             motor.FellFrom += health.ApplyFallDamage;
+            if (look != null) look.sensitivity = 0.12f * save.settings.sensitivity; // réglage web × base slice
 
             // Effets de statut (stun du stunner, gel des zones cryo)
             var status = motor.gameObject.AddComponent<PlayerStatusEffects>();
             status.motor = motor;
 
-            // Progression persistante (save cod-save-v1, argent/XP/records)
-            var meta = gameObject.AddComponent<MetaProgress>();
-            meta.LoadOrCreate();
+            // Progression persistante : argent/XP/records alimentés par les vagues
             waveManager.EnemyKilled += (enemy, money) =>
                 meta.OnKill(enemy != null && enemy.LastHitHead, enemy != null && enemy.IsVip, money);
             waveManager.WaveCleared += _ => meta.OnWaveCleared();
@@ -88,6 +95,8 @@ namespace Game.Runtime
             var hud = hudGo.AddComponent<HudController>();
             hud.Init(health, weapon, waveManager, motor, motor.transform, weapon.aimCamera, view);
             view.hud = hud;
+
+            if (save.settings.defaultView == "third") view.SetMode(ViewMode.Third); // réglage « vue » du web
 
             TouchControlsRoot.CreateIfNeeded(look);
 

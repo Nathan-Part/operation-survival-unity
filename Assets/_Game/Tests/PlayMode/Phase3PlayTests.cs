@@ -57,15 +57,15 @@ namespace Game.Runtime.PlayTests
             yield return null;
             var view = Object.FindAnyObjectByType<PlayerViewController>();
             Assert.IsNotNull(view, "PlayerViewController créé par le bootstrap");
-            Assert.AreEqual(ViewMode.First, view.Mode, "défaut = 1ʳᵉ personne");
+            var initial = view.Mode; // dépend du réglage `defaultView` de la save (défaut web : third)
 
             view.ToggleView();
             yield return null;
-            Assert.AreEqual(ViewMode.Third, view.Mode);
+            Assert.AreNotEqual(initial, view.Mode, "V doit changer de vue");
 
             view.ToggleView();
             yield return null;
-            Assert.AreEqual(ViewMode.First, view.Mode);
+            Assert.AreEqual(initial, view.Mode, "V doit revenir à la vue initiale");
         }
     }
 }
