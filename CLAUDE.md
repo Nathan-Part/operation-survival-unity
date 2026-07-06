@@ -10,6 +10,8 @@ Le jeu web sert de **spécification** (les valeurs d'équilibrage, les formules,
 
 **Règle importante :** le jeu web n'est PAS dans ce dépôt et on n'y touche pas depuis ici. Ici c'est **uniquement** le projet Unity.
 
+**📁 Référence : le jeu web est sur cette machine, à `C:\wamp64\www\projet\games`** (lecture seule — ne JAMAIS le modifier depuis ce projet). À consulter quand on a besoin de vérifier un comportement/une valeur non extraite dans les JSON : code source `src/game/main.js`, modèles 3D `perso/` (persos GLB), `artefact/` (armes/objets), `animation/` (animations), `pets/`, `decor/`. Des GLB en sont déjà copiés ici dans `Assets/_Game/Art/` (3 persos + 1 ennemi générique) et branchés via le menu **Tools → Game → Assign Imported Art** (idempotent, n'écrase jamais une assignation manuelle) — copier d'autres assets du web au fur et à mesure des besoins.
+
 ## Où on en est (résumé)
 
 Le plan complet (7 phases, 0 à 6, du gel du jeu web jusqu'à la sortie sur les stores) est dans **`docs/ROADMAP.md`** — c'est le fichier de suivi unique, il contient aussi « comment tester le jeu » et les TODO ouverts.
