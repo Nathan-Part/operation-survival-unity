@@ -14,10 +14,11 @@ Le jeu web sert de **spécification** (les valeurs d'équilibrage, les formules,
 
 Le plan de migration a 6 grandes phases (voir `docs/migration-unity.md`).
 
-- ✅ **Étape 3 de `unity-spec/NEXT-STEPS.md` TERMINÉE (2026-07-06) et mergée dans `main`** : le pipeline d'import est fini. Le menu **`Tools/Game/Import Spec from JSON`** lit `unity-spec/*.json` et génère toutes les « fiches de données » Unity (91 assets : armes, ennemis, persos, power-ups, items, configs) + un `GameDatabase.asset` qui référence tout. 10 tâches en TDD, 31/31 tests verts, revue finale « ready to merge ».
-- ⬅️ **PROCHAINE ÉTAPE = étape 4** (vertical slice solo jouable) : contrôleur du joueur, tir, ennemis, vagues, HUD. **C'est là que le jeu devient enfin visible et jouable à l'écran** (jusqu'ici tout était de la plomberie de données invisible). Plus grosse étape → refaire un brainstorm dédié avant de coder.
+- ✅ **Étape 3 (pipeline d'import) terminée et mergée dans `main`** : menu **`Tools/Game/Import Spec from JSON`** → 91 ScriptableObjects + `GameDatabase.asset`. 31/31 tests verts.
+- ✅ **Étape 4 (vertical slice solo) TERMINÉE (2026-07-06), branche `feat/vertical-slice-solo` (pas encore mergée)** : **le jeu est jouable** — vue FPS, tir automatique (façon Guns of Boom, décision actée), vagues fidèles à `waves.json`, ennemi générique data-driven (NavMesh + FSM, ranged/mêlée), HUD complet (vie/stamina/munitions/vague/radar/mort), joysticks virtuels. Scène : menu **`Tools/Game/Build Slice Scene`** → `Assets/_Game/Scenes/Slice.unity`. 83 tests EditMode + 2 PlayMode verts. Spec : `docs/superpowers/specs/2026-07-06-vertical-slice-solo-design.md`, plan : `docs/superpowers/plans/2026-07-06-vertical-slice-solo.md`.
+- ⬅️ **PROCHAINE ÉTAPE : à décider avec Nathan** — merger la branche, puis Phase 3 (maps Blender + visuel) OU compléter la slice (comportements spéciaux des ennemis, valeurs `TODO(spec-web)` à extraire du web).
 
-⚠️ **Un seul TODO manuel laissé de l'étape 3 :** remplir le `PlaceholderLibrary` dans l'Inspector Unity (voir plus bas). Rien ne le presse tant qu'on n'affiche pas les objets en jeu.
+⚠️ **TODO manuels ouverts :** remplir le `PlaceholderLibrary` dans l'Inspector (non bloquant : le runtime génère des capsules colorées en secours) ; vérifier côté web les 4 valeurs marquées `// TODO(spec-web)` dans le code (mult. d'armure, délai de régén, réserve de munitions, portée radar) puis les reporter dans les JSON.
 
 ## Par où reprendre (les fichiers à lire, dans l'ordre)
 
@@ -37,8 +38,10 @@ Pour comprendre le contenu du jeu (les données) : `unity-spec/README.md` expliq
 | `docs/migration-unity.md` | Le plan complet et détaillé des 6 phases de migration (web → Unity). Référence complète, plus détaillée que la roadmap. |
 | `unity-spec/README.md` | Explique la structure des 7 fichiers JSON de spec gameplay (armes, ennemis, persos, économie...). |
 | `unity-spec/NEXT-STEPS.md` | Suivi d'avancement global de la migration : où on en est et la prochaine action à faire. Le fichier à relire à chaque reprise. |
-| `docs/superpowers/specs/2026-07-06-spec-import-scriptableobjects-design.md` | La spec de design de la tâche en cours (pipeline d'import JSON → ScriptableObjects) : ce qu'on construit et pourquoi. |
-| `docs/superpowers/plans/2026-07-06-spec-import-scriptableobjects.md` | Le plan d'implémentation détaillé (10 tâches) de ce pipeline, écrit pour être exécuté en TDD étape par étape. |
+| `docs/superpowers/specs/2026-07-06-spec-import-scriptableobjects-design.md` | La spec de design de l'étape 3 (pipeline d'import JSON → ScriptableObjects), terminée. |
+| `docs/superpowers/plans/2026-07-06-spec-import-scriptableobjects.md` | Le plan d'implémentation (10 tâches) du pipeline d'import, terminé. |
+| `docs/superpowers/specs/2026-07-06-vertical-slice-solo-design.md` | La spec de design de l'étape 4 (vertical slice solo) : les 14 décisions actées (D1 tir auto…), architecture, trous de spec. |
+| `docs/superpowers/plans/2026-07-06-vertical-slice-solo.md` | Le plan d'implémentation (14 tâches) de la slice, exécuté sur `feat/vertical-slice-solo`. |
 | `.superpowers/sdd/progress.md` | Journal d'avancement de la tâche en cours : quelles tâches du plan sont terminées (avec leur commit) et où reprendre. |
 | `.superpowers/sdd/task-N-brief.md` | Pour chaque tâche du plan : les instructions données à l'agent qui l'exécute (extrait du plan). |
 | `.superpowers/sdd/task-N-report.md` | Pour chaque tâche du plan : le rapport de ce qui a été fait une fois la tâche terminée. |
