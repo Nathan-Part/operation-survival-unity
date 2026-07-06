@@ -26,7 +26,7 @@ namespace Game.Data.Tests
 
             var result = WeaponImporter.Import(FixturePath, OutputFolder, UpgradeConfigPath, report);
 
-            Assert.AreEqual(3, result.Weapons.Count);
+            Assert.AreEqual(4, result.Weapons.Count);
             var jackal = result.Weapons.Find(w => w.id == "jackal");
             Assert.IsNotNull(jackal);
             Assert.AreEqual("Jackal-45", jackal.displayName);
@@ -35,7 +35,7 @@ namespace Game.Data.Tests
             Assert.IsTrue(jackal.semiAuto);
             Assert.AreEqual(12, jackal.mag);
             Assert.AreEqual(1.3f, jackal.dmgMult, 0.0001f);
-            Assert.AreEqual(3, report.Created.Count);
+            Assert.AreEqual(4, report.Created.Count);
 
             Assert.AreEqual(4, result.UpgradeConfig.weaponUpgrades.Length);
             var damageSpec = System.Array.Find(result.UpgradeConfig.weaponUpgrades, s => s.statKey == "damage");
@@ -72,7 +72,7 @@ namespace Game.Data.Tests
 
             Assert.AreEqual(0, secondReport.Created.Count);
             Assert.AreEqual(0, secondReport.Updated.Count);
-            Assert.AreEqual(3, secondReport.Unchanged.Count);
+            Assert.AreEqual(4, secondReport.Unchanged.Count);
         }
 
         [Test]
