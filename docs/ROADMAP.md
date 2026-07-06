@@ -25,12 +25,14 @@ Sur mobile/tactile (Device Simulator ou build Android) : joystick virtuel à gau
 ## 📍 Où on en est (résumé)
 
 - ✅ Phase 1 faite (projet Unity créé, données importées).
-- ✅ Phase 2 faite dans sa version minimale : **le jeu est jouable** (branche `feat/vertical-slice-solo`, **pas encore mergée dans `main`** — en attente du test de Nathan).
-- ⬅️ **Prochaine action : Nathan teste la slice, on merge, puis on décide : attaquer la Phase 3 (vraies maps + visuel) ou compléter d'abord la Phase 2 (comportements spéciaux des ennemis).**
+- ✅ Phase 2 faite dans sa version minimale : **le jeu est jouable** (branche `feat/vertical-slice-solo`, **pas encore mergée dans `main`** — en attente du test de Nathan). Les GLB de persos + ennemi générique sont déjà branchés.
+- ⬅️ **Prochaine action : Nathan teste la slice et on merge. Ensuite : Phase 3, en commençant par les animations** (brainstorm + spec + plan dédiés en début de phase, comme d'habitude).
 
 ---
 
-## Les 7 phases, du début à la fin
+## Les 8 phases, du début à la fin
+
+> Restructuré le 2026-07-07 avec Nathan : l'ancienne « Phase 4 » est divisée en deux (systèmes puis interface), la Phase 3 est réordonnée (animations d'abord, maps en dernier, **portal abandonnée**), et la **reproduction à l'identique de la page d'accueil web** devient un jalon central du projet. Chaque phase aura sa propre spec + plan au moment de l'attaquer.
 
 ### Phase 0 — Finir le jeu web ⏳ (en cours, ailleurs)
 
@@ -61,30 +63,46 @@ Geler le design du jeu web pour que Unity ait une référence stable : refactors
 
 **Jalon (atteint pour la version minimale) :** tuer des vagues d'ennemis. **Jalon complet :** pareil sur un téléphone à 60 fps.
 
-### Phase 3 — Maps & vrai visuel ⬅️ PROBABLE PROCHAINE PHASE
+### Phase 3 — Faire vivre le jeu : animations d'abord, maps en dernier ⬅️ PROCHAINE PHASE
 
-- Import des maps **directement depuis les `.blend` de Nathan** (`Desktop\3D\map_utopia\map_utopia_export.blend`), ré-export pleine qualité FBX/glTF — **PAS les GLB du web** (volontairement dégradés).
-- Colliders posés dans l'éditeur Unity (fini les tables de colliders en code).
-- **Éclairage cuit** (lightmaps + light probes) + post-processing URP (bloom, AO, tone mapping) = le vrai bond visuel.
-- LOD, occlusion culling. Ordre des maps : utopia d'abord, puis portal, urban.
-- Modèles 3D persos/armes au fur et à mesure (en attendant : capsules colorées générées par le code + `PlaceholderLibrary`).
+*Ordre voulu : du plus léger au plus lourd. Le jeu web (`C:\wamp64\www\projet\games`) est la référence exacte du comportement attendu.*
 
-**Jalon :** utopia jouable en solo sur mobile, visuel nettement au-dessus du web.
+1. **Animations des ennemis** (les clips existent déjà dans les GLB, dossier `animation/` du web en renfort) : idle, marche/course, attaque, **mort** — branchées sur la FSM existante. ⚠️ Changement induit : aujourd'hui l'ennemi disparaît instantanément à 0 PV ; il faudra un état « mort » qui joue l'animation avant de retirer le corps (collider désactivé pendant l'anim).
+2. **Côté joueur, comme sur le web** : animation/séquence de mort, **arme visible en main** (vue FPS), feedback de tir (flash, tracers, recul visuel), animations de déplacement partout où c'est visible (le modèle complet du joueur resservira en multi et dans les menus).
+3. **Un modèle par type d'ennemi** au fur et à mesure : copier le GLB du web → le glisser dans la fiche `EnemyData` (ou via `Tools → Game → Assign Imported Art`).
+4. **Les maps, EN DERNIER (le plus lourd)** : **utopia puis urban — portal est ABANDONNÉE (décision actée 2026-07-07)**. Import direct depuis les `.blend` de Nathan (`Desktop\3D\map_utopia\map_utopia_export.blend`) en pleine qualité — PAS les GLB web (dégradés). Colliders posés dans l'éditeur, éclairage cuit (lightmaps + probes) + post-processing URP, LOD/occlusion culling, NavMesh bakée par map.
 
-### Phase 4 — Systèmes méta (le solo complet) 🔜
+*(À caser pendant cette phase ou la suivante : le reste de la Phase 2 — comportements spéciaux des types d'ennemis, VIP, combo.)*
 
-- **Sauvegarde** : structure du save web → JSON local (solo), cloud plus tard (multi).
-- **Boutique/économie** : catalogues, coûts croissants, upgrades — formules déjà importées. UI en UI Toolkit.
-- **Progression** : XP, niveaux, succès, contrats quotidiens, stats.
-- **Gameplay annexe** : consommables, power-ups, grenades, mêlée joueur, chien de guerre, loadout, killstreaks.
-- Extraction JSON restante à faire au fil de cette phase (même méthode que les 7 JSON existants) : succès, contrats, killstreaks, stats consommables, chien (pet.js), prestige.
-- ⚠️ Marquer dès maintenant ce qui est solo-only (slow-mo, invincibilité… toxiques en PvP) : prévoir tables `PvE` et `PvP` séparées.
+**Jalon :** jouer des vagues d'ennemis **animés**, arme en main, sur utopia — visuel nettement au-dessus du web.
 
-**Jalon :** parité fonctionnelle solo avec le jeu web → **c'est la v1 publiable**.
+### Phase 4 — Systèmes méta : toute la LOGIQUE du solo complet 🔜
 
-### Phase 5 — Multijoueur 🔜
+*Première moitié de l'ancienne « Phase 4 », divisée en deux (décision 2026-07-07) : d'abord la mécanique, ensuite l'interface (Phase 5) — parce que reproduire l'accueil sans la logique derrière donnerait des boutons vides.*
 
-Netcode : **Photon Fusion** (décidé). Dans l'ordre :
+- **Sauvegarde** : structure du save web (`cod-save-v1`) → JSON local (solo), cloud plus tard (multi).
+- **Économie/boutique (logique)** : catalogues, coûts croissants, achats, upgrades — formules déjà importées.
+- **Progression** : XP, niveaux, rangs, succès, contrats quotidiens, stats lifetime, prestige.
+- **Gameplay annexe** : consommables/grenades, power-ups complets, mêlée joueur, chien de guerre, loadout, killstreaks.
+- **Audio** : la synthèse Web Audio du jeu web → AudioSources Unity.
+- Extraction JSON restante (même méthode que les 7 JSON existants) : succès, contrats, killstreaks, stats consommables, chien (pet.js), prestige.
+- ⚠️ Marquer ce qui est solo-only (slow-mo, invincibilité… toxiques en PvP) : tables `PvE` et `PvP` séparées.
+
+**Jalon :** toute la logique du solo complet existe et est testée (même si l'interface finale n'est pas encore là).
+
+### Phase 5 — L'interface : reproduction EXACTE de la page d'accueil web ⭐ 🔜
+
+**Décision actée (2026-07-07, très important pour Nathan) : la page d'accueil du jeu web est reproduite À L'IDENTIQUE — mêmes boutons, mêmes fonctionnalités, même comportement, tout pareil.** La référence : l'accueil du jeu web (`C:\wamp64\www\projet\games`, HTML/CSS dans `styles/` et `src/`).
+
+- Étape 1 du brainstorm de cette phase : **inventaire exhaustif écran par écran, bouton par bouton** de l'accueil web (jouer, boutique, persos, armes, loadout, réglages, stats, succès, contrats, danses… tout), pour en faire la checklist de parité.
+- Refaire en **UI Toolkit**, branché sur les systèmes de la Phase 4.
+- Vérification de parité **bouton par bouton** contre le web avant de clore la phase.
+
+**Jalon :** un joueur du jeu web retrouve exactement son accueil sur mobile → **c'est la v1 publiable**.
+
+### Phase 6 — Multijoueur 🔜
+
+Netcode : **Photon Fusion** (décidé, rien à coder avant cette phase). Dans l'ordre :
 
 1. **Coop contre vagues** (2–4 joueurs) : l'hôte fait autorité sur les ennemis.
 2. **PvP** (deathmatch par équipes) : prédiction client + compensation de lag (fournies par Fusion), matchmaking/lobbies, **rééquilibrage obligatoire** (le TTK actuel est pensé contre des bots), anti-triche (dégâts validés côté serveur).
@@ -93,7 +111,7 @@ La save passe côté serveur (sinon triche triviale). Options : Unity Cloud Save
 
 **Jalon :** un match PvP complet entre deux téléphones réels.
 
-### Phase 6 — Qualité & sortie 🔜
+### Phase 7 — Qualité & sortie 🔜
 
 - **Tests** : porter les invariants critiques de la suite Playwright du web (jamais d'argent négatif, XP monotone, vagues jamais vides, armure torse vs intégrale…).
 - **Perf** : Profiler, cible 60 fps sur un Android milieu de gamme.
@@ -102,7 +120,7 @@ La save passe côté serveur (sinon triche triviale). Options : Unity Cloud Save
 
 **Jalon :** le jeu est sur les stores. 🎉
 
-**Ordre global : le solo complet (phases 2–4) sort AVANT le réseau.**
+**Ordre global : le solo complet (phases 2–5) sort AVANT le réseau (phase 6).**
 
 ---
 
@@ -123,7 +141,7 @@ La save passe côté serveur (sinon triche triviale). Options : Unity Cloud Save
 
 ## ✅ Décisions actées (ne pas re-débattre)
 
-Unity 6 + C#, URP (pas Built-in/HDRP/Unreal) · Android + iOS · solo d'abord (v1 publiable), puis coop, puis PvP · Photon Fusion pressenti · tir automatique façon Guns of Boom (bouton manuel possible plus tard en option) · uGUI pour le HUD in-game de la slice, UI Toolkit pour les menus/boutique en phase 4 · le code web = spec fonctionnelle, pas une base à traduire ligne à ligne.
+Unity 6 + C#, URP (pas Built-in/HDRP/Unreal) · Android + iOS · solo d'abord (v1 publiable), puis coop, puis PvP · Photon Fusion pressenti (phase 6) · tir automatique façon Guns of Boom (bouton manuel possible plus tard en option) · uGUI pour le HUD in-game, UI Toolkit pour les menus/accueil (phase 5) · **la page d'accueil web est reproduite à l'identique — boutons, fonctionnalités, comportement (phase 5)** · **maps : utopia + urban seulement, portal abandonnée** · dans la phase 3 : animations d'abord, maps en dernier · le code web = spec fonctionnelle, pas une base à traduire ligne à ligne.
 
 ## 🗄️ Historique des livraisons
 

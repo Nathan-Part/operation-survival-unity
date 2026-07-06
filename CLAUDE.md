@@ -14,11 +14,11 @@ Le jeu web sert de **spécification** (les valeurs d'équilibrage, les formules,
 
 ## Où on en est (résumé)
 
-Le plan complet (7 phases, 0 à 6, du gel du jeu web jusqu'à la sortie sur les stores) est dans **`docs/ROADMAP.md`** — c'est le fichier de suivi unique, il contient aussi « comment tester le jeu » et les TODO ouverts.
+Le plan complet (8 phases, 0 à 7, du gel du jeu web jusqu'à la sortie sur les stores) est dans **`docs/ROADMAP.md`** — c'est le fichier de suivi unique, il contient aussi « comment tester le jeu » et les TODO ouverts.
 
 - ✅ **Phase 1 (fondations + import des données)** : mergée dans `main`. Menu **`Tools/Game/Import Spec from JSON`** → 91 ScriptableObjects + `GameDatabase.asset`.
 - ✅ **Phase 2 (slice solo jouable, version minimale)** : terminée le 2026-07-06 sur la branche **`feat/vertical-slice-solo`** (pas encore mergée — en attente du test de Nathan). **Le jeu est jouable** : scène `Assets/_Game/Scenes/Slice.unity`, vue FPS, tir automatique, vagues fidèles au web, HUD, joysticks virtuels. 83 tests EditMode + 2 PlayMode verts.
-- ⬅️ **Prochaine étape :** Nathan teste et on merge, puis Phase 3 (maps + visuel) OU compléter la Phase 2 (comportements spéciaux des ennemis). Voir la roadmap.
+- ⬅️ **Prochaine étape :** Nathan teste et on merge, puis **Phase 3 en commençant par les animations** (ennemis : marche/attaque/mort ; joueur : arme en main, feedback, mort). Maps en dernier (utopia puis urban, portal abandonnée). Chaque phase démarre par son brainstorm + spec + plan. Voir la roadmap.
 
 ## Tous les fichiers `.md` du projet, à quoi ils servent
 
@@ -51,8 +51,9 @@ L'Unity Editor 6 est ouvert sur ce projet avec un **pont MCP for Unity** connect
 
 - Unity 6 + C#, pipeline **URP** (mobile). Pas Built-in, pas HDRP, pas Unreal, pas de moteur maison.
 - Android + iOS. Le **solo complet sort en premier** (v1 publiable), le réseau ensuite (coop avant PvP).
-- Multi pressenti : **Photon Fusion** (rien à coder avant la phase 5).
+- Multi pressenti : **Photon Fusion** (rien à coder avant la phase 6).
 - **Tir automatique** façon Guns of Boom (un bouton manuel optionnel pourra s'ajouter plus tard).
-- Les maps viennent des `.blend` de Nathan, pas des JSON ni des GLB web.
+- Les maps viennent des `.blend` de Nathan, pas des JSON ni des GLB web. **Utopia + urban seulement, portal abandonnée.**
+- **La page d'accueil du jeu web sera reproduite à l'identique** (phase 5) : mêmes boutons, mêmes fonctionnalités — le web est la spec visuelle ET fonctionnelle.
 - Convention de code : identifiants en **anglais**, contenu affiché (noms, descriptions) en **français** tel qu'extrait des JSON.
 - Architecture du code runtime : logique pure (classes C# testées en EditMode) séparée des MonoBehaviours fins ; aucune valeur d'équilibrage en dur (tout vient de `GameDatabase.asset`).
