@@ -1,0 +1,26 @@
+{
+    "name": "Game.Data.Tests",
+    "rootNamespace": "Game.Data.Tests",
+    "references": [
+        "Game.Data",
+        "Game.Data.Editor",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "Newtonsoft.Json"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
