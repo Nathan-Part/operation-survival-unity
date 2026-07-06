@@ -1,0 +1,36 @@
+{
+  "accessories": {
+    "helmets": [
+      { "id": "helm:none", "name": "Aucun", "price": 0, "rarity": "commun", "desc": "Visage à découvert.", "bonuses": [],
+        "assets": { "image": null, "model": null } },
+      { "id": "helm:insect", "name": "Insectoïde", "price": 400, "rarity": "rare",
+        "desc": "Masque de chasse aux reflets chitineux.",
+        "bonuses": [
+          { "icon": "eye", "name": "Vision de traque", "desc": "Repère ta cible dans le chaos." }
+        ],
+        "assets": { "image": "artefact/accessory/mask/insect-viber/insect-viber.png", "model": null } }
+    ],
+    "costumes": [
+      { "id": "cost:none", "name": "Aucun", "price": 0, "rarity": "commun", "desc": "Tenue standard.", "bonuses": [],
+        "assets": { "image": null, "model": null } }
+    ]
+  },
+  "boosts": {
+    "items": [
+      { "id": "boost:vest1", "slot": "vest", "name": "Gilet léger", "stat": "health", "bonus": 25, "price": 400, "rarity": "rare" },
+      { "id": "boost:boots1", "slot": "boots", "name": "Bottes", "stat": "speed", "bonus": 0.08, "price": 400, "rarity": "rare" }
+    ]
+  },
+  "consumables": {
+    "items": [
+      { "key": "frag", "name": "Grenade frag", "price": 50, "assets": { "icon": "grenade" } },
+      { "key": "medkit", "name": "Trousse de soin", "price": 80, "assets": { "icon": "heart" } }
+    ]
+  },
+  "dances": {
+    "items": [
+      { "id": "dance:all_night", "name": "All Night", "clip": "All_Night_Dance", "price": 0, "rarity": "commun" },
+      { "id": "dance:skill1", "name": "Skill I", "clip": "Skill_01", "price": 500, "rarity": "rare" }
+    ]
+  }
+}
