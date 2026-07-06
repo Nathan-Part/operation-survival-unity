@@ -1,0 +1,10 @@
+{
+    "name": "Game.Runtime.Editor",
+    "rootNamespace": "Game.Runtime.Editor",
+    "references": [
+        "Game.Runtime",
+        "Game.Data",
+        "Unity.AI.Navigation"
+    ],
+    "includePlatforms": ["Editor"]
+}

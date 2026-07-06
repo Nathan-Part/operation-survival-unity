@@ -1,0 +1,13 @@
+{
+    "name": "Game.Runtime.Tests",
+    "rootNamespace": "Game.Runtime.Tests",
+    "references": [
+        "Game.Runtime",
+        "Game.Data"
+    ],
+    "includePlatforms": ["Editor"],
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "defineConstraints": ["UNITY_INCLUDE_TESTS"],
+    "optionalUnityReferences": ["TestAssemblies"]
+}

@@ -30,5 +30,5 @@ MonoBehaviour:
   - icon: medal
     name: Sentinelle
     desc: "Tient sa position co\xFBte que co\xFBte."
-  modelPrefab: {fileID: 0}
+  modelPrefab: {fileID: 8771091787928289351, guid: f3bb041f743b74642a736fb01c938c75, type: 3}
   icon: {fileID: 0}

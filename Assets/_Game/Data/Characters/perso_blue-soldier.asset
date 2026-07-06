@@ -30,5 +30,5 @@ MonoBehaviour:
   - icon: medal
     name: Polyvalence
     desc: "\xC0 l'aise dans toutes les situations."
-  modelPrefab: {fileID: 0}
+  modelPrefab: {fileID: 8771091787928289351, guid: f2e48d4d61522a94393e740759f5a4b0, type: 3}
   icon: {fileID: 0}
