@@ -1,0 +1,3 @@
+{
+  "constants": { "maxEnemiesPerWave": 7, "intermissionSeconds": 2.5, "bossEvery": 5 }
+}
