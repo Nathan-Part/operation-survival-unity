@@ -25,18 +25,18 @@ Unity Hub → **Unity 6 LTS** + modules **Android Build Support** (SDK/NDK/OpenJ
 - Réglages initiaux : Build Profiles → Android en plateforme active ; Player Settings → orientation paysage ; Quality → cible 60 fps.
 - Structure de dossiers suggérée : `Assets/_Game/{Scripts,Data,Prefabs,Scenes,Art,UI}`.
 
-### 3. Importer la spec (première tâche de code)
+### 3. Importer la spec (première tâche de code) — ✅ FAIT (2026-07-06)
 
-Écrire un petit script Editor qui lit les JSON de ce dossier et génère les **ScriptableObjects** :
+Pipeline d'import complet livré et mergé dans `main` (10 tâches TDD, 31/31 tests, revue finale « ready to merge »). Le menu **`Tools/Game/Import Spec from JSON`** lit `unity-spec/*.json` et génère les ScriptableObjects dans `Assets/_Game/Data/` :
 
-- `weapons.json` → `WeaponData` (15 armes)
-- `enemies.json` → `EnemyData` (16 types)
-- `player.json` → `CharacterData` (3 persos) + constantes de mouvement
-- `economy.json`, `waves.json`, `powerups.json`, `items.json` → idem
+- `weapons.json` → `WeaponData` (15) · `enemies.json` → `EnemyData` (16) · `player.json` → `CharacterData` (3) + `MovementConfig`
+- `economy.json`/`waves.json`/`powerups.json`/`items.json` → `EconomyConfig`, `WaveConfig`, `PowerUpData` (24), accessoires/boosts/consommables/danses
+- `GameDatabase.asset` (point d'entrée runtime) référence tout ; 91 assets générés et commités.
+- Champs d'art (`model`/`icon`/`image`) jamais écrits par l'import → assignation manuelle + `PlaceholderLibrary` en secours. Formules (vagues/éco/upgrades/stats) écrites à la main en C# et testées.
 
-Règle : les champs `assets.model/icon/image` à `null` = utiliser un **prefab/sprite placeholder** par catégorie. La logique ne doit JAMAIS exiger un asset.
+Détail : plan `docs/superpowers/plans/2026-07-06-spec-import-scriptableobjects.md`, dette technique connue `docs/superpowers/tech-debt-import-pipeline.md`. **À faire avant de dépendre du runtime :** remplir `PlaceholderLibrary` (prefabs/sprites de secours) à la main dans l'Inspector.
 
-### 4. Phase 2 du plan : vertical slice solo
+### 4. Phase 2 du plan : vertical slice solo — ⬅️ PROCHAINE ÉTAPE
 
 Dans l'ordre (détail dans `docs/migration-unity.md`) :
 
