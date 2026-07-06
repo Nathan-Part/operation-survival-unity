@@ -12,7 +12,7 @@ namespace Game.Runtime
         public int Count { get; private set; }
         public int Multiplier => MultiplierFor(Count);
 
-        public static int MultiplierFor(int count) => Mathf.Min(5, 1 + count / 3); // web: comboMultiplier
+        public static int MultiplierFor(int count) => Game.Data.Rules.EconomyRules.ComboMultiplier(count); // formule importée (DRY)
 
         /// Enregistre un kill au temps `now` et retourne le multiplicateur courant.
         public int RegisterKill(float now)

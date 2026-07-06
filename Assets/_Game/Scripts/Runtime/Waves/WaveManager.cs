@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Game.Data;
+using Game.Data.Rules;
 using UnityEngine;
 
 namespace Game.Runtime
@@ -25,6 +26,10 @@ namespace Game.Runtime
         public event Action<int> WaveStarted;
         public event Action<int> AliveCountChanged;
         public event Action<float> IntermissionStarted;
+        public event Action<EnemyHealth, int> EnemyKilled; // ennemi + argent gagné (méta/XP)
+        public event Action<int> WaveCleared;              // n° de vague nettoyée (XP_WAVE)
+
+        public int BestComboThisRun { get; private set; }
 
         public void Begin()
         {
@@ -46,6 +51,7 @@ namespace Game.Runtime
                 SpawnWave(CurrentWave);
                 WaveStarted?.Invoke(CurrentWave);
                 while (alive.Count > 0) yield return null;
+                WaveCleared?.Invoke(CurrentWave);
             }
         }
 
@@ -83,10 +89,16 @@ namespace Game.Runtime
             alive.Remove(enemy);
             if (enemy != null) corpses.Add(enemy.gameObject);
             int mult = Combo.RegisterKill(Time.time);
-            int vipMult = enemy != null && enemy.IsVip ? SpecialRules.VipMoneyMult : 1;
+            if (Combo.Count > BestComboThisRun) BestComboThisRun = Combo.Count;
+            bool vip = enemy != null && enemy.IsVip;
             var eco = context.database.economyConfig;
-            if (eco != null) Money += eco.perKillMoney * mult * vipMult; // web: MONEY_PER_KILL × combo × VIP
-            if (vipMult > 1) CalloutEvents.Raise("VIP ÉLIMINÉ!");        // web #140
+            var difficulty = GameContext.ResolveDifficulty(context.database);
+            int gained = eco != null
+                ? EconomyRules.MoneyForKill(eco.perKillMoney, mult, difficulty.moneyMult, vip, SpecialRules.VipMoneyMult)
+                : 0; // web: MONEY_PER_KILL × combo × difficulté × VIP
+            Money += gained;
+            if (vip) CalloutEvents.Raise("VIP ÉLIMINÉ!"); // web #140
+            EnemyKilled?.Invoke(enemy, gained);
             AliveCountChanged?.Invoke(alive.Count);
         }
 

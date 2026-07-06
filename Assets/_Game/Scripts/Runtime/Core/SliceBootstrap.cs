@@ -49,6 +49,14 @@ namespace Game.Runtime
             var status = motor.gameObject.AddComponent<PlayerStatusEffects>();
             status.motor = motor;
 
+            // Progression persistante (save cod-save-v1, argent/XP/records)
+            var meta = gameObject.AddComponent<MetaProgress>();
+            meta.LoadOrCreate();
+            waveManager.EnemyKilled += (enemy, money) =>
+                meta.OnKill(enemy != null && enemy.LastHitHead, enemy != null && enemy.IsVip, money);
+            waveManager.WaveCleared += _ => meta.OnWaveCleared();
+            health.Died += () => meta.OnRunEnded(waveManager.CurrentWave, waveManager.Money, waveManager.BestComboThisRun);
+
             // Avatar 3ᵉ personne (modèle du perso + anims + arme en main)
             var avatar = motor.gameObject.AddComponent<PlayerAvatar>();
             avatar.Init(context.ResolveCharacterModel(character), db.animationLibrary, motor, weaponData);

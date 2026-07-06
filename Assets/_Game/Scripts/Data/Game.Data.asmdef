@@ -1,7 +1,9 @@
 {
     "name": "Game.Data",
     "rootNamespace": "Game.Data",
-    "references": [],
+    "references": [
+        "Newtonsoft.Json"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

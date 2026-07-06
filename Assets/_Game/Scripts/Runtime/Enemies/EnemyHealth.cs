@@ -25,6 +25,7 @@ namespace Game.Runtime
         public int MaxHealth { get; private set; }
         public bool IsDead => Health <= 0;
         public bool IsVip { get; private set; }
+        public bool LastHitHead { get; private set; } // parité web e.lastHitHead (XP/callouts)
         public EnemyData Data => data;
 
         /// Posé par EnemySpecials (shielder) : retourne true si le tir venant de
@@ -54,6 +55,7 @@ namespace Game.Runtime
             HitZone zone = HitZoneResolver.Resolve(yLocal, data.scale, zones);
             if (BlockCheck != null && BlockCheck(shooterPos))
                 return new HitResult { valid = true, zone = zone, blocked = true }; // web #119 : dégâts 0
+            LastHitHead = zone == HitZone.Head;
             Health -= HitZoneResolver.Damage(zone, zones, weaponDmgMult, data.armor, armorDamageMult);
             Damaged?.Invoke(this);
             bool killed = Health <= 0;
