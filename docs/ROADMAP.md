@@ -13,7 +13,7 @@
 1. Ouvrir Unity sur ce projet.
 2. Panneau **Project** → `Assets/_Game/Scenes/` → double-cliquer **Slice**.
 3. Appuyer sur **Play** (▶).
-4. Contrôles clavier : **ZQSD** bouger · **souris** viser (le tir est automatique quand le viseur est sur un ennemi) · **Shift** courir · **Espace** sauter · **Ctrl gauche** dash · **R** recharger.
+4. Contrôles clavier (alignés sur le jeu web) : **ZQSD** bouger · **souris** viser (le tir est automatique quand le viseur est sur un ennemi) · **Shift ou R** courir · **Espace** sauter · **C** dash · **F** recharger.
 5. Les vagues s'enchaînent toutes seules. Vague 1 = 3 tireurs, vague 2 = des rushers au corps-à-corps, vague 5 = le boss.
 
 Si la scène est cassée ou supprimée : menu **Tools → Game → Build Slice Scene** la regénère entièrement. Si les données JSON changent : menu **Tools → Game → Import Spec from JSON** regénère les fiches de données.
@@ -68,7 +68,10 @@ Geler le design du jeu web pour que Unity ait une référence stable : refactors
 *Ordre voulu : du plus léger au plus lourd. Le jeu web (`C:\wamp64\www\projet\games`) est la référence exacte du comportement attendu.*
 
 1. **Animations des ennemis** (les clips existent déjà dans les GLB, dossier `animation/` du web en renfort) : idle, marche/course, attaque, **mort** — branchées sur la FSM existante. ⚠️ Changement induit : aujourd'hui l'ennemi disparaît instantanément à 0 PV ; il faudra un état « mort » qui joue l'animation avant de retirer le corps (collider désactivé pendant l'anim).
-2. **Côté joueur, comme sur le web** : animation/séquence de mort, **arme visible en main** (vue FPS), feedback de tir (flash, tracers, recul visuel), animations de déplacement partout où c'est visible (le modèle complet du joueur resservira en multi et dans les menus).
+2. **Côté joueur, comme sur le web** : animation/séquence de mort, **arme visible en main**, feedback de tir (flash, tracers, recul visuel), animations de déplacement partout où c'est visible.
+   - **Vue commutable 1ʳᵉ/3ᵉ personne (touche V + réglage), comme le web** — le modèle du joueur devient visible et animé en 3ᵉ personne.
+   - **Visée manuelle comme le web** : Q = viser (réticule qui change, lunette sniper), E = tir manuel au clavier — en coexistence avec le tir auto mobile (voir section « Parité HUD & contrôles »).
+   - HUD de cette phase : hitmarker, kill feed, barres de vie au-dessus des ennemis, barre de boss, indicateurs directionnels de dégâts, effets écran (sang/soin).
 3. **Un modèle par type d'ennemi** au fur et à mesure : copier le GLB du web → le glisser dans la fiche `EnemyData` (ou via `Tools → Game → Assign Imported Art`).
 4. **Les maps, EN DERNIER (le plus lourd)** : **utopia puis urban — portal est ABANDONNÉE (décision actée 2026-07-07)**. Import direct depuis les `.blend` de Nathan (`Desktop\3D\map_utopia\map_utopia_export.blend`) en pleine qualité — PAS les GLB web (dégradés). Colliders posés dans l'éditeur, éclairage cuit (lightmaps + probes) + post-processing URP, LOD/occlusion culling, NavMesh bakée par map.
 
@@ -84,7 +87,9 @@ Geler le design du jeu web pour que Unity ait une référence stable : refactors
 - **Économie/boutique (logique)** : catalogues, coûts croissants, achats, upgrades — formules déjà importées.
 - **Progression** : XP, niveaux, rangs, succès, contrats quotidiens, stats lifetime, prestige.
 - **Gameplay annexe** : consommables/grenades, power-ups complets, mêlée joueur, chien de guerre, loadout, killstreaks.
-- **Audio** : la synthèse Web Audio du jeu web → AudioSources Unity.
+- **Audio** : la synthèse Web Audio du jeu web → AudioSources Unity (+ touche M mute).
+- **Ce que l'analyse du web a révélé en plus (2026-07-07, à ne pas oublier)** : ramassage d'armes sur les cadavres (G), modes de tir auto/burst/semi (T/P), bouclier (barre séparée de la vie), pause (Échap) + game over + réglages en jeu (sensibilité/volume/difficulté/hardcore/pluie/vue), modes **hardcore** et **entraînement**, adrénaline/surchauffe/longshot/précision (mécaniques annexes visibles au HUD), tourelle/claymore/frappe aérienne avec ciblage sur carte/caisse de ravitaillement (= le loadout), barre de vie du chien.
+- **HUD de cette phase** : chaque fonctionnalité arrive avec son élément de HUD identique au web (stocks consommables, jauges loadout, XP/niveau, argent, combo/killstreak, toasts succès/défis/level-up) — voir la checklist « Parité HUD & contrôles ».
 - Extraction JSON restante (même méthode que les 7 JSON existants) : succès, contrats, killstreaks, stats consommables, chien (pet.js), prestige.
 - ⚠️ Marquer ce qui est solo-only (slow-mo, invincibilité… toxiques en PvP) : tables `PvE` et `PvP` séparées.
 
@@ -124,6 +129,44 @@ La save passe côté serveur (sinon triche triviale). Options : Unity Cloud Save
 
 ---
 
+## 🎯 Parité HUD & contrôles (décision actée 2026-07-07 — s'applique aux phases 3 à 5)
+
+**Le HUD en jeu et les touches clavier doivent être EXACTEMENT comme le jeu web** (relevé fait dans `game.html` + `main.js` du web — c'est la checklist de parité, à re-vérifier contre le web au moment de chaque phase).
+
+### Touches clavier (identiques au web, pour tout tester en éditeur)
+
+| Touche | Action web |
+|---|---|
+| ZQSD/WASD + flèches | se déplacer |
+| Shift **ou R** | courir |
+| Espace | sauter |
+| **E** | tirer (manuel) |
+| **Q (A sur AZERTY)** | viser (réticule/lunette) |
+| F | recharger |
+| C | dash |
+| X | mêlée |
+| G | ramasser l'arme d'un cadavre |
+| B (maintien) | arc de grenade · N flashbang · H fumigène · J collante · K molotov · O EMP |
+| Z | trousse de soin |
+| T | mode auto/burst · P semi-auto |
+| Y / L / U / I / 4 | loadout : claymore / tourelle / frappe aérienne / caisse / chien |
+| 1 / 2 / 3 | danses |
+| **V** | **changer de vue 1ʳᵉ/3ᵉ personne** |
+| M | couper le son · Échap : pause / fermer les panneaux |
+
+⚠️ **Compatibilité avec le tir auto mobile (décision D1)** : le tir auto reste le mode mobile ; au clavier, E = tir manuel et Q = visée **comme le web**. Les deux coexistent (l'abstraction « déclencheur de tir » était prévue pour ça).
+
+### HUD en jeu (inventaire relevé du web — tout doit y être à terme)
+
+- **Vitals** : barre de vie, **bouclier** (barre séparée), stamina, barre d'XP + niveau.
+- **Tir** : munitions + barre de rechargement + flash « chargeur vide », **réticule, viseur quand on vise (sight) et lunette sniper (scope + overlay)**, hitmarker, indicateur de mode de tir (auto/burst/semi).
+- **Combat** : kill feed, annonces de kill (callout), combo, killstreak + bannière, **barres de vie au-dessus des ennemis**, barre de vie du **boss**, barre de vie du **chien**, indicateurs directionnels de dégâts (4 directions), effets écran (sang, flash de soin, flashbang, vignette).
+- **Vagues** : n° de vague + bannière + compte à rebours d'intermission, compteur d'ennemis restants, radar.
+- **Ressources** : argent, stocks des 6 consommables + medkit, 5 jauges de loadout, jauge de dash, power-ups actifs, invite « ramasser l'arme » (G).
+- **Toasts** : succès, défis/contrats, level-up. **Écrans** : pause (Échap : reprendre/recommencer), game over (score/record, rejouer/menu), réglages en jeu (sensibilité, volume, difficulté, hardcore, pluie, **vue**).
+
+*(Le HUD actuel de la slice — vie/stamina/munitions/vague/radar/mort — est la v0 de cette liste ; le reste arrive avec les fonctionnalités correspondantes, phases 3 et 4.)*
+
 ## ✋ TODO manuels ouverts (côté Nathan)
 
 1. **Tester la slice** (voir « Comment tester » ci-dessus) puis donner le feu vert pour merger `feat/vertical-slice-solo` dans `main`.
@@ -141,7 +184,7 @@ La save passe côté serveur (sinon triche triviale). Options : Unity Cloud Save
 
 ## ✅ Décisions actées (ne pas re-débattre)
 
-Unity 6 + C#, URP (pas Built-in/HDRP/Unreal) · Android + iOS · solo d'abord (v1 publiable), puis coop, puis PvP · Photon Fusion pressenti (phase 6) · tir automatique façon Guns of Boom (bouton manuel possible plus tard en option) · uGUI pour le HUD in-game, UI Toolkit pour les menus/accueil (phase 5) · **la page d'accueil web est reproduite à l'identique — boutons, fonctionnalités, comportement (phase 5)** · **maps : utopia + urban seulement, portal abandonnée** · dans la phase 3 : animations d'abord, maps en dernier · le code web = spec fonctionnelle, pas une base à traduire ligne à ligne.
+Unity 6 + C#, URP (pas Built-in/HDRP/Unreal) · Android + iOS · solo d'abord (v1 publiable), puis coop, puis PvP · Photon Fusion pressenti (phase 6) · tir automatique façon Guns of Boom (bouton manuel possible plus tard en option) · uGUI pour le HUD in-game, UI Toolkit pour les menus/accueil (phase 5) · **la page d'accueil web est reproduite à l'identique — boutons, fonctionnalités, comportement (phase 5)** · **le HUD en jeu et les touches clavier sont identiques au web** (section « Parité HUD & contrôles ») · **vue 1ʳᵉ/3ᵉ personne commutable (V) comme le web** · **maps : utopia + urban seulement, portal abandonnée** · dans la phase 3 : animations d'abord, maps en dernier · le code web = spec fonctionnelle, pas une base à traduire ligne à ligne.
 
 ## 🗄️ Historique des livraisons
 

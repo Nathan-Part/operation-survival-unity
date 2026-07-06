@@ -30,13 +30,16 @@ namespace Game.Runtime
             jump = map.AddAction("Jump", binding: "<Keyboard>/space");
             jump.AddBinding("<Gamepad>/buttonSouth");
 
-            dash = map.AddAction("Dash", binding: "<Keyboard>/leftCtrl");
+            // Touches identiques au jeu web (voir ROADMAP « Parité HUD & contrôles »)
+            dash = map.AddAction("Dash", binding: "<Keyboard>/c");
             dash.AddBinding("<Gamepad>/buttonEast");
 
-            reload = map.AddAction("Reload", binding: "<Keyboard>/r");
+            reload = map.AddAction("Reload", binding: "<Keyboard>/f");
             reload.AddBinding("<Gamepad>/buttonWest");
 
             sprint = map.AddAction("Sprint", binding: "<Keyboard>/leftShift");
+            sprint.AddBinding("<Keyboard>/rightShift");
+            sprint.AddBinding("<Keyboard>/r"); // le web accepte Shift OU R pour courir
         }
 
         void OnEnable() { map.Enable(); }
