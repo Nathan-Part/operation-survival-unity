@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d037f587e43380479326ac6ff7a126c, type: 3}
+  m_Name: cost_bone
+  m_EditorClassIdentifier: Game.Data::Game.Data.AccessoryData
+  id: cost:bone
+  displayName: Armure Ossuaire
+  accessoryType: 1
+  price: 1400
+  rarity: 3
+  desc: "Plaques d'os fossilis\xE9 serties sur l'acier. L'armure des seigneurs de
+    guerre."
+  bonuses:
+  - icon: trophy
+    name: Prestige
+    desc: Affiche ton statut sur le champ de bataille.
+  - icon: shield
+    name: Forteresse
+    desc: Un rempart que rien ne fait plier.
+  - icon: medal
+    name: "L\xE9gende"
+    desc: "Rien n'\xE9gale un roi sur le terrain."
+  image: {fileID: 0}
+  modelPrefab: {fileID: 0}

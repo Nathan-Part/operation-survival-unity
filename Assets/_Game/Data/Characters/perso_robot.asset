@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a4945c7edbd9a04a8d8ab3a0c01d9de, type: 3}
+  m_Name: perso_robot
+  m_EditorClassIdentifier: Game.Data::Game.Data.CharacterData
+  id: perso:robot
+  displayName: Cyborg
+  price: 3000
+  rarity: 2
+  desc: "Un \xEAtre augment\xE9, con\xE7u pour survivre dans toutes les conditions."
+  baseHealth: 175
+  baseRegen: 17
+  baseSpeed: 1.15
+  skills:
+  - icon: heart
+    name: "Syst\xE8me optimis\xE9"
+    desc: "R\xE9g\xE9n\xE9ration de sant\xE9 am\xE9lior\xE9e."
+  - icon: sprint
+    name: Surcharge
+    desc: Augmente temporairement la vitesse.
+  - icon: shield
+    name: "R\xE9sistance"
+    desc: "R\xE9duction des d\xE9g\xE2ts explosifs."
+  modelPrefab: {fileID: 0}
+  icon: {fileID: 0}

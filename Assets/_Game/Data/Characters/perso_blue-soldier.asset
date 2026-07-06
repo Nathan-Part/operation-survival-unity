@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a4945c7edbd9a04a8d8ab3a0c01d9de, type: 3}
+  m_Name: perso_blue-soldier
+  m_EditorClassIdentifier: Game.Data::Game.Data.CharacterData
+  id: perso:blue-soldier
+  displayName: Blue-Soldier
+  price: 0
+  rarity: 0
+  desc: "Soldat d'\xE9lite polyvalent. Fiable au feu comme \xE0 la man\u0153uvre."
+  baseHealth: 100
+  baseRegen: 10
+  baseSpeed: 1
+  skills:
+  - icon: target
+    name: "Tireur confirm\xE9"
+    desc: "Entra\xEEnement au tir sans faille."
+  - icon: shield
+    name: Discipline
+    desc: Garde son sang-froid sous le feu.
+  - icon: medal
+    name: Polyvalence
+    desc: "\xC0 l'aise dans toutes les situations."
+  modelPrefab: {fileID: 0}
+  icon: {fileID: 0}

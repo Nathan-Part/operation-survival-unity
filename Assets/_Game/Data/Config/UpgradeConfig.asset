@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17872c66b7ac28843bbfd09d2f0e82c8, type: 3}
+  m_Name: UpgradeConfig
+  m_EditorClassIdentifier: Game.Data::Game.Data.UpgradeConfig
+  weaponUpgrades:
+  - statKey: damage
+    displayName: "D\xE9g\xE2ts"
+    maxLevel: 5
+    baseCost: 300
+    effectDesc: "dmgMult \xD7 (1 + 0.15 \xD7 l)"
+  - statKey: fireRate
+    displayName: Cadence
+    maxLevel: 5
+    baseCost: 300
+    effectDesc: "cooldown \xD7 (1 \u2212 0.08 \xD7 l)"
+  - statKey: recoil
+    displayName: Recul
+    maxLevel: 5
+    baseCost: 200
+    effectDesc: "recoil \xD7 (1 \u2212 0.12 \xD7 l)"
+  - statKey: mag
+    displayName: Chargeur
+    maxLevel: 5
+    baseCost: 250
+    effectDesc: "mag = round(mag \xD7 (1 + 0.2 \xD7 l))"
+  playerUpgrades:
+  - statKey: health
+    displayName: Vie
+    maxLevel: 5
+    baseCost: 300
+    perLevel: 20
+  - statKey: regen
+    displayName: "R\xE9g\xE9n"
+    maxLevel: 5
+    baseCost: 250
+    perLevel: 3
+  - statKey: speed
+    displayName: Vitesse
+    maxLevel: 5
+    baseCost: 350
+    perLevel: 0.06

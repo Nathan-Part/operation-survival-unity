@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb0323ad623b90b48968600999db3b71, type: 3}
+  m_Name: EconomyConfig
+  m_EditorClassIdentifier: Game.Data::Game.Data.EconomyConfig
+  perKillMoney: 10
+  vipMoneyMult: 2
+  bossKillBonus: 300
+  maxLevel: 50
+  leaderboardMaxEntries: 5
+  difficulties:
+  - id: facile
+    displayName: Facile
+    enemyHpMult: 0.7
+    enemyDmgMult: 0.7
+    moneyMult: 1.2
+  - id: normal
+    displayName: Normal
+    enemyHpMult: 1
+    enemyDmgMult: 1
+    moneyMult: 1
+  - id: difficile
+    displayName: Difficile
+    enemyHpMult: 1.4
+    enemyDmgMult: 1.5
+    moneyMult: 0.9
+  rarities:
+  - rarity: 0
+    displayName: Commun
+    colorHex: '#9aa3b2'
+    tier: 0
+  - rarity: 1
+    displayName: Rare
+    colorHex: '#4f9dff'
+    tier: 1
+  - rarity: 2
+    displayName: "\xC9pique"
+    colorHex: '#b066ff'
+    tier: 2
+  - rarity: 3
+    displayName: "L\xE9gendaire"
+    colorHex: '#ffb02e'
+    tier: 3
+  loadoutThresholds:
+    mine: 600
+    dog: 900
+    carepackage: 1000
+    turret: 1200
+    airstrike: 1800
