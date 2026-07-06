@@ -24,6 +24,21 @@ Le plan de migration a 6 grandes phases (voir `docs/migration-unity.md`). On est
 
 Pour comprendre le contenu du jeu (les données) : `unity-spec/README.md` explique comment sont structurés les 7 fichiers JSON (`weapons.json`, `enemies.json`, `player.json`, `economy.json`, `items.json`, `powerups.json`, `waves.json`).
 
+## Tous les fichiers `.md` du projet, à quoi ils servent
+
+| Fichier | À quoi il sert |
+|---|---|
+| `CLAUDE.md` (ce fichier) | Point d'entrée : contexte général du projet, décisions actées, comment vérifier le code. |
+| `docs/ROADMAP.md` | Vue simplifiée, une ligne par étape, de tout le projet (7 grandes phases) + détail de la tâche en cours. À lire pour une vue d'ensemble rapide. |
+| `docs/migration-unity.md` | Le plan complet et détaillé des 6 phases de migration (web → Unity). Référence complète, plus détaillée que la roadmap. |
+| `unity-spec/README.md` | Explique la structure des 7 fichiers JSON de spec gameplay (armes, ennemis, persos, économie...). |
+| `unity-spec/NEXT-STEPS.md` | Suivi d'avancement global de la migration : où on en est et la prochaine action à faire. Le fichier à relire à chaque reprise. |
+| `docs/superpowers/specs/2026-07-06-spec-import-scriptableobjects-design.md` | La spec de design de la tâche en cours (pipeline d'import JSON → ScriptableObjects) : ce qu'on construit et pourquoi. |
+| `docs/superpowers/plans/2026-07-06-spec-import-scriptableobjects.md` | Le plan d'implémentation détaillé (10 tâches) de ce pipeline, écrit pour être exécuté en TDD étape par étape. |
+| `.superpowers/sdd/progress.md` | Journal d'avancement de la tâche en cours : quelles tâches du plan sont terminées (avec leur commit) et où reprendre. |
+| `.superpowers/sdd/task-N-brief.md` | Pour chaque tâche du plan : les instructions données à l'agent qui l'exécute (extrait du plan). |
+| `.superpowers/sdd/task-N-report.md` | Pour chaque tâche du plan : le rapport de ce qui a été fait une fois la tâche terminée. |
+
 ## Travail en cours : pipeline d'import JSON → ScriptableObjects
 
 - **Branche git :** `feat/spec-import-scriptableobjects`
