@@ -1,0 +1,40 @@
+{
+  "_doc": "Économie, progression, difficulté, rareté — source : constantes + formules XP/combo (main.js).",
+  "money": {
+    "perKill": 10,
+    "perWaveBonus": "round(25 × w × difficulté.money)",
+    "killFormula": "round(10 × comboMult × difficulté.money × vipMult)",
+    "vipMult": 2,
+    "bossKillBonus": 300
+  },
+  "combo": {
+    "_doc": "n = kills consécutifs sans interruption. Multiplicateur plafonné à ×5.",
+    "multiplier": "min(5, 1 + floor(n / 3))"
+  },
+  "xp": {
+    "_doc": "Niveau max 50.",
+    "xpForLevel": "100 × n × (n + 1) / 2  (XP cumulé pour atteindre le niveau n+1)",
+    "maxLevel": 50
+  },
+  "difficulties": {
+    "facile":    { "name": "Facile",    "enemyHp": 0.7, "enemyDmg": 0.7, "money": 1.2 },
+    "normal":    { "name": "Normal",    "enemyHp": 1.0, "enemyDmg": 1.0, "money": 1.0 },
+    "difficile": { "name": "Difficile", "enemyHp": 1.4, "enemyDmg": 1.5, "money": 0.9 }
+  },
+  "rarities": {
+    "_doc": "Paliers partagés par toutes les vitrines (armes, persos, accessoires, danses, boosts).",
+    "commun":     { "name": "Commun",     "color": "#9aa3b2", "tier": 0 },
+    "rare":       { "name": "Rare",       "color": "#4f9dff", "tier": 1 },
+    "epique":     { "name": "Épique",     "color": "#b066ff", "tier": 2 },
+    "legendaire": { "name": "Légendaire", "color": "#ffb02e", "tier": 3 }
+  },
+  "leaderboard": { "maxEntries": 5, "entry": ["score", "wave", "kills", "headshots", "accuracy", "date"] },
+  "loadout": {
+    "_doc": "Bonus de série (#156/#201) : points accumulés en jeu, déclenchement à la touche 4 (web). Max 5 bonus, seuils en points.",
+    "thresholds": { "mine": 600, "dog": 900, "carepackage": 1000, "turret": 1200, "airstrike": 1800 }
+  },
+  "unityNotes": {
+    "save": "Structure à reprendre de save.js (localStorage 'cod-save-v1') : money, ownedWeapons, weaponUpgrades, ownedCharacters, selectedCharacterId, ownedAccessories, equipped, ownedBoosts, equippedBoosts, ownedDances, selectedDances, consumables, playerUpgrades, xp, bestWave, bestScore, bestCombo, leaderboard, prestige, unlockedAchievements, settings, daily, lifetime.",
+    "pvp": "⚠️ En multi, TOUTE la progression (money, achats) doit être validée côté serveur."
+  }
+}

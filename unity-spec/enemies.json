@@ -1,0 +1,74 @@
+{
+  "_doc": "Types d'ennemis et constantes de combat — source : ENEMY_TYPES + constantes IA (main.js). Chaque type deviendra un ScriptableObject EnemyData. Le bloc `assets` (modèle 3D, anims) est remplissable au fur et à mesure.",
+  "baseStats": {
+    "_doc": "Valeurs de référence : les multiplicateurs des types s'appliquent dessus.",
+    "hp": 100,
+    "walkSpeed": 1.8,
+    "runSpeed": 4.0,
+    "radius": 0.45,
+    "turnSpeed": 8,
+    "shootRange": 9,
+    "fireCooldown": 1.3,
+    "accuracy": 0.55,
+    "damage": 10,
+    "burstGap": 0.12,
+    "detectRadius": 12,
+    "loseRadius": 18,
+    "loseTime": 3.0,
+    "meleeRange": 2.2,
+    "meleeDamage": 14,
+    "meleeCooldown": 0.9
+  },
+  "hitZones": {
+    "_doc": "Dégâts joueur→ennemi selon la hauteur d'impact (y relatif aux pieds, modèle 1.8 m). Dégât final = zone × dmgMult arme × modificateurs.",
+    "head":  { "aboveY": 1.5, "damage": 60 },
+    "torso": { "damage": 25 },
+    "legs":  { "belowY": 0.6, "damage": 15 }
+  },
+  "armor": {
+    "_doc": "torso = l'armure ne protège que le torse (headshot passe intégralement) ; full = tout le corps protégé (juggernaut).",
+    "values": ["torso", "full"]
+  },
+  "types": {
+    "shooter":    { "name": "Shooter",    "hpMult": 1.0, "speedMult": 1.0,  "scale": 1.0,  "melee": false, "damageMult": 1.0, "burst": 3, "weapon": "default", "radarColor": "#ffb84d", "glow": null,
+                    "behavior": "Tireur standard en rafales de 3.", "assets": { "model": null } },
+    "rusher":     { "name": "Rusher",     "hpMult": 0.6, "speedMult": 1.75, "scale": 0.9,  "melee": true,  "damageMult": 1.0, "burst": 1, "weapon": "smg", "radarColor": "#ff5b5b", "glow": "0x6b1414",
+                    "behavior": "Mêlée rapide, fonce sur le joueur.", "assets": { "model": null } },
+    "tank":       { "name": "Tank",       "hpMult": 2.6, "speedMult": 0.55, "scale": 1.34, "melee": false, "damageMult": 1.8, "burst": 2, "weapon": "sniper", "radarColor": "#c07bff", "glow": "0x3a1250", "armor": "torso",
+                    "behavior": "Lourd et lent, armure de torse.", "assets": { "model": null } },
+    "boss":       { "name": "Boss",       "hpMult": 8.0, "speedMult": 0.7,  "scale": 1.9,  "melee": false, "damageMult": 2.2, "burst": 3, "weapon": "sniper", "glow": "0xff5a1e", "armor": "torso",
+                    "behavior": "Toutes les 5 vagues, accompagné de 2 sbires. Bonus de 300 à la mort.", "assets": { "model": null } },
+    "bomber":     { "name": "Bomber",     "hpMult": 0.5, "speedMult": 1.9,  "scale": 0.95, "melee": true,  "damageMult": 1.0, "burst": 1, "weapon": "smg", "glow": "0xff1e1e",
+                    "behavior": "Kamikaze : explose au contact ou à la mort.", "assets": { "model": null } },
+    "berserker":  { "name": "Berserker",  "hpMult": 1.5, "speedMult": 1.8,  "scale": 1.05, "melee": true,  "damageMult": 2.0, "burst": 1, "glow": "0xcc4400",
+                    "behavior": "Rage : mêlée rapide très agressive.", "assets": { "model": null } },
+    "sniper":     { "name": "Sniper",     "hpMult": 0.8, "speedMult": 0.5,  "scale": 1.0,  "melee": false, "damageMult": 2.5, "burst": 1, "glow": "0xcc0033", "shootCd": 4.0, "shootRange": 28,
+                    "behavior": "Engage de très loin (28 m au lieu de 9), tir lent et puissant.", "assets": { "model": null } },
+    "shielder":   { "name": "Shielder",   "hpMult": 1.2, "speedMult": 0.7,  "scale": 1.0,  "melee": false, "damageMult": 1.0, "burst": 2, "glow": "0x00aacc",
+                    "behavior": "Bouclier frontal : bloque les tirs venant de face (selon son orientation réelle).", "assets": { "model": null } },
+    "medic":      { "name": "Medic",      "hpMult": 0.7, "speedMult": 0.8,  "scale": 0.95, "melee": false, "damageMult": 0.8, "burst": 1, "glow": "0x00cc55",
+                    "behavior": "Soigne les ennemis proches.", "assets": { "model": null } },
+    "stunner":    { "name": "Stunner",    "hpMult": 0.9, "speedMult": 1.1,  "scale": 1.0,  "melee": false, "damageMult": 0.7, "burst": 2, "glow": "0xffdd00",
+                    "behavior": "Éblouit/ralentit le joueur à l'impact.", "assets": { "model": null } },
+    "grenadier":  { "name": "Grenadier",  "hpMult": 1.2, "speedMult": 0.7,  "scale": 1.05, "melee": false, "damageMult": 0.8, "burst": 1, "glow": "0xaaff00",
+                    "behavior": "Lance des grenades en cloche (anti-spam à courte portée).", "assets": { "model": null } },
+    "juggernaut": { "name": "Juggernaut", "hpMult": 5.0, "speedMult": 0.45, "scale": 1.5,  "melee": true,  "damageMult": 2.2, "burst": 1, "glow": "0x888899", "armor": "full",
+                    "behavior": "Élite blindé intégral, vague 10+.", "assets": { "model": null } },
+    "toxic":      { "name": "Toxic",      "hpMult": 0.9, "speedMult": 0.9,  "scale": 1.0,  "melee": false, "damageMult": 0.9, "burst": 2, "glow": "0x33cc33",
+                    "behavior": "Laisse un nuage de poison à la mort.", "assets": { "model": null } },
+    "cryo":       { "name": "Cryo",       "hpMult": 0.9, "speedMult": 0.9,  "scale": 1.0,  "melee": false, "damageMult": 0.8, "burst": 2, "glow": "0x66ccff",
+                    "behavior": "Laisse une zone de gel à la mort.", "assets": { "model": null } },
+    "commander":  { "name": "Commander",  "hpMult": 1.3, "speedMult": 0.8,  "scale": 1.1,  "melee": false, "damageMult": 1.0, "burst": 2, "glow": "0xffaa00",
+                    "behavior": "Aura : buffe les dégâts des ennemis proches.", "assets": { "model": null } },
+    "ghost":      { "name": "Ghost",      "_doc": "Voir main.js pour stats exactes (#107)", "glow": "0x55ddff", "opacity": 0.5,
+                    "behavior": "Semi-transparent, difficile à voir.", "assets": { "model": null } }
+  },
+  "vip": {
+    "_doc": "Cible à haute valeur (#140) : un ennemi aléatoire marqué doré, récompense × 2.",
+    "moneyMult": 2, "minWave": 3, "excluded": ["boss"]
+  },
+  "specialConstants": {
+    "vipNote": "Le VIP n'apparaît jamais sur une vague de boss.",
+    "bossKillBonus": 300
+  }
+}
