@@ -1,0 +1,10 @@
+{
+    "name": "Game.Runtime.PlayTests",
+    "rootNamespace": "Game.Runtime.PlayTests",
+    "references": [
+        "Game.Runtime",
+        "Game.Data"
+    ],
+    "optionalUnityReferences": ["TestAssemblies"],
+    "defineConstraints": ["UNITY_INCLUDE_TESTS"]
+}
