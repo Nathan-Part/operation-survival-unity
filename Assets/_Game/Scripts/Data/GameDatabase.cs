@@ -22,5 +22,6 @@ namespace Game.Data
         public UpgradeConfig upgradeConfig;
         public PowerUpConfig powerUpConfig;
         public PlaceholderLibrary placeholders;
+        public AnimationLibrary animationLibrary;
     }
 }

@@ -19,6 +19,17 @@ namespace Game.Runtime.Editor
         };
 
         const string GenericEnemyPath = "Assets/_Game/Art/Enemies/enemie-generic.glb";
+        const string AnimationLibraryPath = "Assets/_Game/Data/Config/AnimationLibrary.asset";
+        const string DefaultWeaponModelPath = "Assets/_Game/Art/Weapons/ar-15.glb";
+
+        static readonly (string role, string path)[] AnimationClips =
+        {
+            ("idle", "Assets/_Game/Art/Animations/anim-idle.glb"),
+            ("walk", "Assets/_Game/Art/Animations/anim-walk.glb"),
+            ("run", "Assets/_Game/Art/Animations/anim-run.glb"),
+            ("attack", "Assets/_Game/Art/Animations/anim-attack.glb"),
+            ("dead", "Assets/_Game/Art/Animations/anim-dead.glb"),
+        };
 
         [MenuItem("Tools/Game/Assign Imported Art")]
         public static void Assign()
@@ -54,8 +65,50 @@ namespace Game.Runtime.Editor
                 }
             }
 
+            // 3. AnimationLibrary (créée si absente, clips assignés si champs vides)
+            var animLib = AssetDatabase.LoadAssetAtPath<AnimationLibrary>(AnimationLibraryPath);
+            if (animLib == null)
+            {
+                animLib = ScriptableObject.CreateInstance<AnimationLibrary>();
+                AssetDatabase.CreateAsset(animLib, AnimationLibraryPath);
+            }
+            int clips = 0;
+            foreach (var (role, path) in AnimationClips)
+            {
+                var clip = FirstClipAt(path);
+                if (clip == null) { Debug.LogWarning($"AssignImportedArt: clip manquant {path}"); continue; }
+                switch (role)
+                {
+                    case "idle": if (animLib.idle == null) { animLib.idle = clip; clips++; } break;
+                    case "walk": if (animLib.walk == null) { animLib.walk = clip; clips++; } break;
+                    case "run": if (animLib.run == null) { animLib.run = clip; clips++; } break;
+                    case "attack": if (animLib.attack == null) { animLib.attack = clip; clips++; } break;
+                    case "dead": if (animLib.dead == null) { animLib.dead = clip; clips++; } break;
+                }
+            }
+            if (clips > 0) EditorUtility.SetDirty(animLib);
+            if (db.animationLibrary == null) { db.animationLibrary = animLib; EditorUtility.SetDirty(db); }
+
+            // 4. Modèle de l'arme de départ (Viper-AR / AR-15)
+            var weaponModel = AssetDatabase.LoadAssetAtPath<GameObject>(DefaultWeaponModelPath);
+            if (weaponModel == null) Debug.LogWarning($"AssignImportedArt: GLB manquant {DefaultWeaponModelPath}");
+            else foreach (var weapon in db.weapons)
+            {
+                if (weapon == null || weapon.id != "default" || weapon.modelPrefab != null) continue;
+                weapon.modelPrefab = weaponModel;
+                EditorUtility.SetDirty(weapon);
+            }
+
             AssetDatabase.SaveAssets();
-            Debug.Log($"AssignImportedArt: OK - placeholders branches, {assigned} modele(s) de perso assigne(s).");
+            Debug.Log($"AssignImportedArt: OK - placeholders branches, {assigned} modele(s) de perso, {clips} clip(s) d'animation assigne(s).");
+        }
+
+        static AnimationClip FirstClipAt(string assetPath)
+        {
+            foreach (var asset in AssetDatabase.LoadAllAssetsAtPath(assetPath))
+                if (asset is AnimationClip clip)
+                    return clip;
+            return null;
         }
     }
 }

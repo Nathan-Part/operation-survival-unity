@@ -27,5 +27,5 @@ MonoBehaviour:
   recoil: 1
   range: 60
   pellets: 0
-  modelPrefab: {fileID: 0}
+  modelPrefab: {fileID: -8098169881513260187, guid: 3b9b4ffbd66567c4888a702198a99ae1, type: 3}
   icon: {fileID: 0}
