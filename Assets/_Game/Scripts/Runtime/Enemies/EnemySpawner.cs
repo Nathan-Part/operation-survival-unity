@@ -44,12 +44,20 @@ namespace Game.Runtime
             controller.Init(data, db.enemyCombatConfig, player, difficulty);
 
             var model = context.ResolveEnemyModel(data);
-            GameObject visual = model != null
-                ? Instantiate(model, root.transform)
-                : PrimitiveFactory.CreateCapsule("Placeholder", RadarColor(data));
-            visual.transform.SetParent(root.transform, false);
-            visual.transform.localPosition = new Vector3(0f, ReferenceHeight * data.scale * 0.5f, 0f);
-            visual.transform.localScale = Vector3.one * (0.9f * data.scale); // capsule Unity = 2 m -> 1.8 m
+            if (model != null)
+            {
+                var visual = Instantiate(model, root.transform);
+                visual.transform.localPosition = Vector3.zero; // pivot GLB aux pieds
+                visual.transform.localRotation = Quaternion.identity;
+                visual.transform.localScale = Vector3.one * data.scale;
+            }
+            else
+            {
+                var capsule2 = PrimitiveFactory.CreateCapsule("Placeholder", RadarColor(data));
+                capsule2.transform.SetParent(root.transform, false);
+                capsule2.transform.localPosition = new Vector3(0f, ReferenceHeight * data.scale * 0.5f, 0f); // capsule : pivot au centre
+                capsule2.transform.localScale = Vector3.one * (0.9f * data.scale); // capsule Unity = 2 m -> 1.8 m
+            }
 
             return health;
         }

@@ -30,5 +30,5 @@ MonoBehaviour:
   - icon: shield
     name: "R\xE9sistance"
     desc: "R\xE9duction des d\xE9g\xE2ts explosifs."
-  modelPrefab: {fileID: 0}
+  modelPrefab: {fileID: 8771091787928289351, guid: ad74a91a093a07e43988c6c4cc2596e6, type: 3}
   icon: {fileID: 0}
