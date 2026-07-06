@@ -1,0 +1,92 @@
+{
+  "_doc": "Accessoires, boosts, consommables, danses — source : HELMETS/COSTUMES/BOOSTS/CONSUMABLES/DANCES (main.js). Les accessoires n'ont PAS encore de modèle 3D d'accroche (build:null en web) — le champ assets.model est à remplir quand les modèles arriveront ; assets.image = visuel de carte boutique (PNG transparents déjà traités).",
+  "accessories": {
+    "helmets": [
+      { "id": "helm:none", "name": "Aucun", "price": 0, "rarity": "commun", "desc": "Visage à découvert. Rien à cacher, rien à craindre.", "bonuses": [],
+        "assets": { "image": null, "model": null } },
+      { "id": "helm:insect", "name": "Insectoïde", "price": 400, "rarity": "rare",
+        "desc": "Masque de chasse aux reflets chitineux. Pour ceux qui frappent avant qu'on les voie.",
+        "bonuses": [
+          { "icon": "eye", "name": "Vision de traque", "desc": "Repère ta cible dans le chaos." },
+          { "icon": "sprint", "name": "Instinct", "desc": "Réagis plus vite à la menace." },
+          { "icon": "target", "name": "Précision", "desc": "Chaque tir vise juste." }
+        ],
+        "assets": { "image": "artefact/accessory/mask/insect-viber/insect-viber.png", "model": null } },
+      { "id": "helm:skull-soldier", "name": "Crâne Soldat", "price": 800, "rarity": "epique",
+        "desc": "La mort en uniforme. Un masque taillé pour hanter le champ de bataille.",
+        "bonuses": [
+          { "icon": "shield", "name": "Intimidation", "desc": "Ta seule présence fait reculer l'ennemi." },
+          { "icon": "medal", "name": "Vétéran", "desc": "Le calme de ceux qui ont tout vu." },
+          { "icon": "flash", "name": "Frappe nette", "desc": "Aucune hésitation au moment d'agir." }
+        ],
+        "assets": { "image": "artefact/accessory/mask/skeleton-soldier/squelette-soldier.png", "model": null } },
+      { "id": "helm:skull-ram", "name": "Crâne Bélier", "price": 1500, "rarity": "legendaire",
+        "desc": "Cornes d'os et regard vide. Le symbole de ceux qui enfoncent les lignes.",
+        "bonuses": [
+          { "icon": "trophy", "name": "Domination", "desc": "Impose ton autorité dès ton apparition." },
+          { "icon": "sprint", "name": "Charge", "desc": "Rien ne t'arrête une fois lancé." },
+          { "icon": "heart", "name": "Terreur", "desc": "Une légende ne meurt jamais vraiment." }
+        ],
+        "assets": { "image": "artefact/accessory/mask/skeleton-ram/squelette-belier.png", "model": null } }
+    ],
+    "costumes": [
+      { "id": "cost:none", "name": "Aucun", "price": 0, "rarity": "commun", "desc": "Tenue standard. Sobre et fonctionnelle.", "bonuses": [],
+        "assets": { "image": null, "model": null } },
+      { "id": "cost:insect", "name": "Carapace Insecte", "price": 700, "rarity": "epique",
+        "desc": "Blindage biomimétique articulé. Léger, résistant, imprévisible.",
+        "bonuses": [
+          { "icon": "shield", "name": "Carapace", "desc": "Encaisse là où les autres tombent." },
+          { "icon": "sprint", "name": "Agilité", "desc": "Bouge comme si tu ne pesais rien." },
+          { "icon": "flash", "name": "Réflexes", "desc": "Esquive avant même de penser." }
+        ],
+        "assets": { "image": "artefact/accessory/suit/insect-viber/insect-viber.png", "model": null } },
+      { "id": "cost:bone", "name": "Armure Ossuaire", "price": 1400, "rarity": "legendaire",
+        "desc": "Plaques d'os fossilisé serties sur l'acier. L'armure des seigneurs de guerre.",
+        "bonuses": [
+          { "icon": "trophy", "name": "Prestige", "desc": "Affiche ton statut sur le champ de bataille." },
+          { "icon": "shield", "name": "Forteresse", "desc": "Un rempart que rien ne fait plier." },
+          { "icon": "medal", "name": "Légende", "desc": "Rien n'égale un roi sur le terrain." }
+        ],
+        "assets": { "image": "artefact/accessory/suit/skeleton-ram/skeleton-ram.png", "model": null } }
+    ],
+    "attachBones": {
+      "_doc": "Où accrocher les futurs modèles 3D sur le rig (offsets monde en mètres).",
+      "helmet":  { "bone": "Head",   "offset": { "x": 0, "y": 0.10, "z": 0.04 } },
+      "costume": { "bone": "Spine2", "offset": { "x": 0, "y": 0.10, "z": 0 } }
+    }
+  },
+  "boosts": {
+    "_doc": "Bonus passifs permanents, 1 par slot (vest/boots/medal). Désactivables 'pour la partie' (#53).",
+    "items": [
+      { "id": "boost:vest1",  "slot": "vest",  "name": "Gilet léger",   "stat": "health", "bonus": 25,   "price": 400,  "rarity": "rare" },
+      { "id": "boost:vest2",  "slot": "vest",  "name": "Gilet lourd",   "stat": "health", "bonus": 60,   "price": 1000, "rarity": "epique" },
+      { "id": "boost:boots1", "slot": "boots", "name": "Bottes",        "stat": "speed",  "bonus": 0.08, "price": 400,  "rarity": "rare" },
+      { "id": "boost:boots2", "slot": "boots", "name": "Bottes ailées", "stat": "speed",  "bonus": 0.18, "price": 1000, "rarity": "epique" },
+      { "id": "boost:medal1", "slot": "medal", "name": "Médaille",      "stat": "regen",  "bonus": 5,    "price": 400,  "rarity": "rare" },
+      { "id": "boost:medal2", "slot": "medal", "name": "Médaille d'or", "stat": "regen",  "bonus": 12,   "price": 1100, "rarity": "legendaire" }
+    ]
+  },
+  "consumables": {
+    "_doc": "Stock persistant acheté en boutique (plus de refill par vague, #155).",
+    "items": [
+      { "key": "frag",      "name": "Grenade frag",     "price": 50,  "assets": { "icon": "grenade" } },
+      { "key": "flashbang", "name": "Flashbang",         "price": 60,  "assets": { "icon": "flash" } },
+      { "key": "smoke",     "name": "Fumigène",          "price": 50,  "assets": { "icon": "smoke" } },
+      { "key": "sticky",    "name": "Grenade collante",  "price": 150, "assets": { "icon": "sticky" } },
+      { "key": "molotov",   "name": "Molotov",           "price": 120, "assets": { "icon": "molotov" } },
+      { "key": "emp",       "name": "EMP",               "price": 150, "assets": { "icon": "emp" } },
+      { "key": "medkit",    "name": "Trousse de soin",   "price": 80,  "assets": { "icon": "heart" } }
+    ]
+  },
+  "dances": {
+    "_doc": "Emotes one-shot (touches 1/2/3 en web, max 3 sélectionnées). clip = nom du clip d'animation.",
+    "items": [
+      { "id": "dance:all_night", "name": "All Night",    "clip": "All_Night_Dance",     "price": 0,    "rarity": "commun" },
+      { "id": "dance:boom",      "name": "Boom",         "clip": "Boom_Dance",          "price": 0,    "rarity": "commun" },
+      { "id": "dance:groove",    "name": "You Groove",   "clip": "You_Groove",          "price": 0,    "rarity": "rare" },
+      { "id": "dance:skill1",    "name": "Skill I",      "clip": "Skill_01",            "price": 500,  "rarity": "rare" },
+      { "id": "dance:skill3",    "name": "Skill III",    "clip": "Skill_03",            "price": 800,  "rarity": "epique" },
+      { "id": "dance:combo",     "name": "Triple Combo", "clip": "Triple_Combo_Attack", "price": 1200, "rarity": "legendaire" }
+    ]
+  }
+}

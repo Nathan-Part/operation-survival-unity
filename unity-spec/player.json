@@ -1,0 +1,63 @@
+{
+  "_doc": "Personnages jouables + mouvement + améliorations — source : CHARACTERS, PLAYER_UPGRADE_SPECS et constantes de mouvement (main.js). Chaque perso deviendra un ScriptableObject CharacterData. `assets.model` remplissable au fur et à mesure (GLB Meshy actuels = placeholders valables).",
+  "characters": [
+    { "id": "perso:blue-soldier", "name": "Blue-Soldier", "price": 0, "rarity": "commun",
+      "base": { "health": 100, "regen": 10, "speed": 1.00 },
+      "desc": "Soldat d'élite polyvalent. Fiable au feu comme à la manœuvre.",
+      "skills": [
+        { "icon": "target", "name": "Tireur confirmé", "desc": "Entraînement au tir sans faille." },
+        { "icon": "shield", "name": "Discipline", "desc": "Garde son sang-froid sous le feu." },
+        { "icon": "medal",  "name": "Polyvalence", "desc": "À l'aise dans toutes les situations." }
+      ],
+      "assets": { "model": "perso/ (GLB actuel)", "icon": null } },
+    { "id": "perso:guard", "name": "Sentinel", "price": 1500, "rarity": "rare",
+      "base": { "health": 135, "regen": 13, "speed": 1.00 },
+      "desc": "Garde lourd bardé de blindage. Une muraille qui avance.",
+      "skills": [
+        { "icon": "heart",  "name": "Constitution", "desc": "Réserve de vie supérieure à la moyenne." },
+        { "icon": "shield", "name": "Blindage", "desc": "Encaisse les coups qui achèvent les autres." },
+        { "icon": "medal",  "name": "Sentinelle", "desc": "Tient sa position coûte que coûte." }
+      ],
+      "assets": { "model": "perso/ (GLB actuel)", "icon": null } },
+    { "id": "perso:robot", "name": "Cyborg", "price": 3000, "rarity": "epique",
+      "base": { "health": 175, "regen": 17, "speed": 1.15 },
+      "desc": "Un être augmenté, conçu pour survivre dans toutes les conditions.",
+      "skills": [
+        { "icon": "heart",  "name": "Système optimisé", "desc": "Régénération de santé améliorée." },
+        { "icon": "sprint", "name": "Surcharge", "desc": "Augmente temporairement la vitesse." },
+        { "icon": "shield", "name": "Résistance", "desc": "Réduction des dégâts explosifs." }
+      ],
+      "assets": { "model": "perso/ (GLB actuel)", "icon": null } }
+  ],
+  "playerUpgrades": {
+    "_doc": "Améliorations permanentes du perso (boutique). cost(level) = baseCost × (level + 1). Stat finale : voir statFormulas.",
+    "health": { "name": "Vie",     "max": 5, "baseCost": 300, "perLevel": 20 },
+    "regen":  { "name": "Régén",   "max": 5, "baseCost": 250, "perLevel": 3 },
+    "speed":  { "name": "Vitesse", "max": 5, "baseCost": 350, "perLevel": 0.06 }
+  },
+  "statFormulas": {
+    "maxHealth": "base.health + 20 × niveauUpgradeVie + bonusBoosts.health",
+    "regenRate": "base.regen + 3 × niveauUpgradeRegen + bonusBoosts.regen",
+    "speedMult": "base.speed × (1 + 0.06 × niveauUpgradeVitesse + bonusBoosts.speed)"
+  },
+  "movement": {
+    "walkSpeed": 2.4,
+    "runSpeed": 5.4,
+    "jumpSpeed": 6,
+    "gravity": 18,
+    "turnLerp": 12,
+    "stepUpMax": 0.55,
+    "stepDownSnap": 0.5,
+    "dash": { "distance": 2.6, "speed": 16, "cooldown": 1.4 },
+    "stamina": { "max": 100, "drainPerSec": 25, "regenPerSec": 15, "minToRun": 20 },
+    "fallDamage": { "safeHeight": 3.0, "damagePerMeter": 5, "maxDamage": 40, "formula": "h <= 3 ? 0 : min(40, round((h − 3) × 5))" }
+  },
+  "secondWind": {
+    "_doc": "Dernier souffle (#137) : le 1er coup fatal de la partie laisse le joueur à 1 PV avec invincibilité.",
+    "invulnSeconds": 2, "usesPerRun": 1
+  },
+  "unityNotes": {
+    "movement": "walkSpeed/runSpeed/gravity se transposent sur un CharacterController ; stepUpMax → Step Offset, stepDownSnap → gestion de la descente (grounded check).",
+    "pvp": "⚠️ secondWind, régén auto et dash sont à rééquilibrer (ou désactiver) en PvP — prévoir un override PvP séparé."
+  }
+}

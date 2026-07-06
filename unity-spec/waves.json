@@ -1,0 +1,39 @@
+{
+  "_doc": "Système de vagues — source : enemiesForWave/enemyHpForWave/waveComposition (main.js). Les formules sont notées en pseudo-code ; w = numéro de vague (1-based), i = index de l'ennemi dans la vague.",
+  "constants": {
+    "maxEnemiesPerWave": 7,
+    "intermissionSeconds": 2.5,
+    "bossEvery": 5
+  },
+  "formulas": {
+    "isBossWave": "w % 5 == 0",
+    "enemiesForWave": "isBossWave(w) ? 3 : min(2 + w, 7)",
+    "enemyHpForWave": "round(100 × 1.18^(w−1) × difficulté.hp)",
+    "waveScoreMult": "1 + floor(w / 5) × 0.5",
+    "waveMoneyBonus": "round(25 × w × difficulté.money)"
+  },
+  "composition": {
+    "_doc": "Règles de composition d'une vague, évaluées dans CET ordre pour chaque slot i (premier match gagne). Le slot 0 est TOUJOURS forcé à shooter après coup. Vague de boss = [boss, shooter, shooter].",
+    "rules": [
+      { "if": "w>=10 && i%4==3", "spawn": "juggernaut" },
+      { "if": "w>=3  && i%4==3", "spawn": "tank" },
+      { "if": "w>=7  && i%6==5", "spawn": "cryo si w pair, sinon stunner" },
+      { "if": "w>=8  && i%7==6", "spawn": "grenadier si w pair, sinon sniper" },
+      { "if": "w>=5  && i%7==6", "spawn": "sniper" },
+      { "if": "w>=9  && i%5==4", "spawn": "commander si w pair, sinon berserker" },
+      { "if": "w>=6  && i%5==4", "spawn": "berserker" },
+      { "if": "w>=4 && w<6 && i%5==4", "spawn": "shielder" },
+      { "if": "w>=6  && i%3==2", "spawn": "toxic si w pair, sinon bomber" },
+      { "if": "w>=4  && i%3==2", "spawn": "bomber" },
+      { "if": "w>=6  && i%6==1", "spawn": "medic" },
+      { "if": "w>=2  && i%2==1", "spawn": "rusher" },
+      { "if": "défaut", "spawn": "shooter" }
+    ]
+  },
+  "unlockSummary": {
+    "_doc": "Lecture rapide : première vague d'apparition de chaque type.",
+    "shooter": 1, "rusher": 2, "tank": 3, "bomber": 4, "shielder": 4,
+    "sniper": 5, "boss": 5, "berserker": 6, "medic": 6, "toxic": 6,
+    "cryo": 7, "stunner": 7, "grenadier": 8, "commander": 9, "juggernaut": 10
+  }
+}
