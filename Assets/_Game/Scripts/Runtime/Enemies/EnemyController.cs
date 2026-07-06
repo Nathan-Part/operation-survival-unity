@@ -16,6 +16,8 @@ namespace Game.Runtime
         EnemyBaseStats stats;
         Transform player;
         PlayerHealth playerHealth;
+        PlayerStatusEffects playerStatus;
+        EnemyHealth health;
 
         float attackDamage;
         float attackCooldown;
@@ -35,6 +37,8 @@ namespace Game.Runtime
             stats = combat.baseStats;
             this.player = player;
             playerHealth = player != null ? player.GetComponentInParent<PlayerHealth>() : null;
+            playerStatus = player != null ? player.GetComponentInParent<PlayerStatusEffects>() : null;
+            health = GetComponent<EnemyHealth>();
             agent = GetComponent<NavMeshAgent>();
 
             attackRange = data.melee ? stats.meleeRange
@@ -102,7 +106,8 @@ namespace Game.Runtime
             {
                 if (attackTimer <= 0f)
                 {
-                    playerHealth.TakeDamage(attackDamage, transform.position);
+                    if (data.id == "bomber") { health?.Kill(); return; } // kamikaze : explose au contact (web #37)
+                    playerHealth.TakeDamage(attackDamage * EnemySpecials.CurrentCommanderMult, transform.position);
                     attackTimer = attackCooldown;
                 }
                 return;
@@ -114,7 +119,10 @@ namespace Game.Runtime
                 {
                     Fired?.Invoke();
                     if (UnityEngine.Random.value <= stats.accuracy)
-                        playerHealth.TakeDamage(attackDamage, transform.position); // position source : indicateur directionnel
+                    {
+                        playerHealth.TakeDamage(attackDamage * EnemySpecials.CurrentCommanderMult, transform.position); // aura commander (web #151)
+                        if (data.id == "stunner" && playerStatus != null) { playerStatus.ApplyStun(); CalloutEvents.Raise("STUNNÉ!"); } // web #121
+                    }
                     burstRemaining--;
                     burstTimer = stats.burstGap;
                 }

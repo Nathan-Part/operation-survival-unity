@@ -25,6 +25,9 @@ namespace Game.Runtime
 
         public bool IsRunning { get; private set; }
         public bool IsMoving => moveInput.sqrMagnitude > 0.01f;
+
+        /// Multiplicateur de vitesse externe (stun/gel — web #121/#146), posé par PlayerStatusEffects.
+        [NonSerialized] public float ExternalSpeedMult = 1f;
         public float StaminaCurrent => stamina != null ? stamina.Current : 0f;
         public float StaminaMax => config != null ? config.stamina.max : 0f;
 
@@ -60,7 +63,7 @@ namespace Game.Runtime
 
             bool moving = moveInput.sqrMagnitude > 0.01f;
             IsRunning = stamina.Tick(dt, wantsRun && moving);
-            float speed = (IsRunning ? config.runSpeed : config.walkSpeed) * speedMult;
+            float speed = (IsRunning ? config.runSpeed : config.walkSpeed) * speedMult * ExternalSpeedMult;
             Vector3 horizontal = transform.TransformDirection(new Vector3(moveInput.x, 0f, moveInput.y)) * speed;
             if (dash.IsActive(Time.time)) horizontal = dashDirection * dash.Speed;
 

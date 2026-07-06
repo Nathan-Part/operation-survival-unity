@@ -24,7 +24,17 @@ namespace Game.Runtime
             label.color = new Color(1f, 0.85f, 0.3f);
             label.gameObject.SetActive(false);
             weapon.HitConfirmed += OnHit;
+            CalloutEvents.Show += Show; // BLOQUÉ! / STUNNÉ! / FRENZY! / VIP ÉLIMINÉ!
         }
+
+        public void Show(string text)
+        {
+            label.text = text;
+            label.gameObject.SetActive(true);
+            hideAt = Time.unscaledTime + ShowSeconds;
+        }
+
+        void OnDestroy() => CalloutEvents.Show -= Show;
 
         void OnHit(HitZone zone, bool killed, EnemyHealth target)
         {
@@ -34,10 +44,7 @@ namespace Game.Runtime
             killTimes.RemoveAll(t => now - t > CalloutRule.MultikillWindow);
             bool boss = target != null && target.Data != null && target.Data.id == "boss";
             string text = CalloutRule.ForKill(boss, zone == HitZone.Head, killTimes.Count);
-            if (text == null) return;
-            label.text = text;
-            label.gameObject.SetActive(true);
-            hideAt = Time.unscaledTime + ShowSeconds;
+            if (text != null) Show(text);
         }
 
         void Update()

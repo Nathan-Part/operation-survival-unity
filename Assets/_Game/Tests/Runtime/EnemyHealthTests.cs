@@ -98,6 +98,39 @@ namespace Game.Runtime.Tests
         }
 
         [Test]
+        public void Kill_DirectDeathRaisesDiedOnce()
+        {
+            health.Init(shooter, 1, 1f, Zones());
+            int deaths = 0;
+            health.Died += _ => deaths++;
+            health.Kill();
+            health.Kill();
+            Assert.AreEqual(1, deaths);
+            Assert.IsTrue(health.IsDead);
+        }
+
+        [Test]
+        public void BlockCheck_BlocksDamageAndReportsBlocked()
+        {
+            health.Init(shooter, 1, 1f, Zones());
+            health.BlockCheck = _ => true;                     // shielder : tout vient de face
+            var hit = health.TakeHit(new Vector3(0f, 1f, 0f), 1f, new Vector3(0f, 0f, 5f));
+            Assert.IsTrue(hit.valid);
+            Assert.IsTrue(hit.blocked);
+            Assert.IsFalse(hit.killed);
+            Assert.AreEqual(100, health.Health);               // aucun dégât
+        }
+
+        [Test]
+        public void MarkVip_SetsFlag()
+        {
+            health.Init(shooter, 1, 1f, Zones());
+            Assert.IsFalse(health.IsVip);
+            health.MarkVip();
+            Assert.IsTrue(health.IsVip);
+        }
+
+        [Test]
         public void TakeHit_ReturnsZoneAndKilled()
         {
             health.Init(shooter, 1, 1f, Zones());

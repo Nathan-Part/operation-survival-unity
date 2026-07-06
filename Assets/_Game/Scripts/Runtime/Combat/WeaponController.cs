@@ -86,8 +86,9 @@ namespace Game.Runtime
                     var enemy = hit.collider.GetComponentInParent<EnemyHealth>();
                     if (enemy != null)
                     {
-                        var result = enemy.TakeHit(hit.point, Weapon.dmgMult);
-                        if (result.valid) HitConfirmed?.Invoke(result.zone, result.killed, enemy);
+                        var result = enemy.TakeHit(hit.point, Weapon.dmgMult, ray.origin);
+                        if (result.blocked) CalloutEvents.Raise("BLOQUÉ!"); // bouclier frontal (web #119)
+                        else if (result.valid) HitConfirmed?.Invoke(result.zone, result.killed, enemy);
                     }
                 }
                 else

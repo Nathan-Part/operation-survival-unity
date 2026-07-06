@@ -9,6 +9,8 @@ namespace Game.Runtime
         public GameContext context;
         public Transform player;
 
+        WaveManager wavesCache;
+
         const float ReferenceHeight = 1.8f; // modèle web de référence
 
         public EnemyHealth Spawn(EnemyData data, Vector3 position, int wave)
@@ -44,6 +46,10 @@ namespace Game.Runtime
             controller.Init(data, db.enemyCombatConfig, player, difficulty);
 
             health.Died += _ => controller.EnterDeath();
+
+            if (wavesCache == null) wavesCache = FindAnyObjectByType<WaveManager>();
+            var specials = root.AddComponent<EnemySpecials>();
+            specials.Init(data, health, wavesCache, player);
 
             var model = context.ResolveEnemyModel(data);
             if (model != null)

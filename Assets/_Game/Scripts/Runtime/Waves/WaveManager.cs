@@ -20,6 +20,7 @@ namespace Game.Runtime
         public int Money { get; private set; }
         public int AliveCount => alive.Count;
         public IReadOnlyList<EnemyHealth> Alive => alive;
+        public ComboModel Combo { get; } = new ComboModel(); // web #29 : multiplicateur d'argent (HUD combo)
 
         public event Action<int> WaveStarted;
         public event Action<int> AliveCountChanged;
@@ -72,6 +73,8 @@ namespace Game.Runtime
                 alive.Add(enemy);
                 enemy.Died += OnEnemyDied;
             }
+            if (SpecialRules.VipAllowedOnWave(wave) && alive.Count > 0) // cible VIP dorée (web #140)
+                alive[UnityEngine.Random.Range(0, alive.Count)].MarkVip();
             AliveCountChanged?.Invoke(alive.Count);
         }
 
@@ -79,9 +82,14 @@ namespace Game.Runtime
         {
             alive.Remove(enemy);
             if (enemy != null) corpses.Add(enemy.gameObject);
+            int mult = Combo.RegisterKill(Time.time);
+            int vipMult = enemy != null && enemy.IsVip ? SpecialRules.VipMoneyMult : 1;
             var eco = context.database.economyConfig;
-            if (eco != null) Money += eco.perKillMoney;
+            if (eco != null) Money += eco.perKillMoney * mult * vipMult; // web: MONEY_PER_KILL × combo × VIP
+            if (vipMult > 1) CalloutEvents.Raise("VIP ÉLIMINÉ!");        // web #140
             AliveCountChanged?.Invoke(alive.Count);
         }
+
+        void Update() => Combo.Tick(Time.time);
     }
 }

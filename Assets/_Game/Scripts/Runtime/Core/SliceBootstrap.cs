@@ -45,6 +45,10 @@ namespace Game.Runtime
             weapon.Init(weaponData);
             motor.FellFrom += health.ApplyFallDamage;
 
+            // Effets de statut (stun du stunner, gel des zones cryo)
+            var status = motor.gameObject.AddComponent<PlayerStatusEffects>();
+            status.motor = motor;
+
             // Avatar 3ᵉ personne (modèle du perso + anims + arme en main)
             var avatar = motor.gameObject.AddComponent<PlayerAvatar>();
             avatar.Init(context.ResolveCharacterModel(character), db.animationLibrary, motor, weaponData);

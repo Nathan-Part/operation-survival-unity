@@ -89,6 +89,7 @@ namespace Game.Runtime
             gameObject.AddComponent<HudBossBar>().Init(root, waves);
             gameObject.AddComponent<HudScreenEffects>().Init(root, health);
             gameObject.AddComponent<HudCallout>().Init(root, weapon);
+            gameObject.AddComponent<HudCombo>().Init(root, waves);
             if (camera != null)
             {
                 gameObject.AddComponent<HudEnemyBars>().Init(root, waves, camera);
