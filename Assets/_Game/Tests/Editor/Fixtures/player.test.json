@@ -1,0 +1,32 @@
+{
+  "characters": [
+    { "id": "perso:blue-soldier", "name": "Blue-Soldier", "price": 0, "rarity": "commun",
+      "base": { "health": 100, "regen": 10, "speed": 1.00 },
+      "desc": "Soldat d'élite polyvalent.",
+      "skills": [
+        { "icon": "target", "name": "Tireur confirmé", "desc": "Entraînement au tir sans faille." },
+        { "icon": "shield", "name": "Discipline", "desc": "Garde son sang-froid sous le feu." }
+      ],
+      "assets": { "model": "perso/ (GLB actuel)", "icon": null } },
+    { "id": "perso:robot", "name": "Cyborg", "price": 3000, "rarity": "epique",
+      "base": { "health": 175, "regen": 17, "speed": 1.15 },
+      "desc": "Un être augmenté.",
+      "skills": [
+        { "icon": "heart", "name": "Système optimisé", "desc": "Régénération de santé améliorée." }
+      ],
+      "assets": { "model": "perso/ (GLB actuel)", "icon": null } }
+  ],
+  "playerUpgrades": {
+    "health": { "name": "Vie", "max": 5, "baseCost": 300, "perLevel": 20 },
+    "regen":  { "name": "Régén", "max": 5, "baseCost": 250, "perLevel": 3 },
+    "speed":  { "name": "Vitesse", "max": 5, "baseCost": 350, "perLevel": 0.06 }
+  },
+  "movement": {
+    "walkSpeed": 2.4, "runSpeed": 5.4, "jumpSpeed": 6, "gravity": 18, "turnLerp": 12,
+    "stepUpMax": 0.55, "stepDownSnap": 0.5,
+    "dash": { "distance": 2.6, "speed": 16, "cooldown": 1.4 },
+    "stamina": { "max": 100, "drainPerSec": 25, "regenPerSec": 15, "minToRun": 20 },
+    "fallDamage": { "safeHeight": 3.0, "damagePerMeter": 5, "maxDamage": 40 }
+  },
+  "secondWind": { "invulnSeconds": 2, "usesPerRun": 1 }
+}
