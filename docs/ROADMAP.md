@@ -33,8 +33,8 @@ Rien n'est encore jouable ni visible à l'écran — c'est de la plomberie de do
 5. ✅ Import des **personnages** jouables (3 persos + réglages de déplacement) — **fait**
 6. ✅ Import de l'**économie** (prix, gains...) — **fait**
 7. ✅ Import des **objets** (accessoires, boosts, consommables, danses) — **fait**
-8. 🔄 Import des **power-ups** — **en cours**
-9. ⬜ Import des **vagues** (composition des vagues d'ennemis)
-10. ⬜ Assemblage final : une base de données globale + un bouton de menu Unity "Importer tout"
+8. ✅ Import des **power-ups** — **fait**
+9. ✅ Import des **vagues** (constantes de vagues) — **fait**
+10. 🔄 Assemblage final : base de données globale + menu Unity "Importer tout" — **en cours**
 
 Une fois ces 10 sous-tâches finies, cette tâche technique sera terminée — mais ce ne sera **toujours qu'un préalable** à l'étape 2 (le jeu jouable), pas la fin du projet.
