@@ -30,8 +30,8 @@ Rien n'est encore jouable ni visible à l'écran — c'est de la plomberie de do
 2. ✅ Formules de jeu (calcul des vagues, de l'argent, des upgrades, des stats) — **fait** (15 tests passent)
 3. ✅ Import des **armes** (WeaponData + toute la plomberie d'import partagée) — **fait**
 4. ✅ Import des **ennemis** (16 types + résolution des armes) — **fait**
-5. 🔄 Import des **personnages** jouables (3 persos + réglages de déplacement) — **en cours**
-6. ⬜ Import de l'**économie** (prix, gains...)
+5. ✅ Import des **personnages** jouables (3 persos + réglages de déplacement) — **fait**
+6. 🔄 Import de l'**économie** (prix, gains...) — **en cours**
 7. ⬜ Import des **objets** (accessoires, boosts, consommables, danses)
 8. ⬜ Import des **power-ups**
 9. ⬜ Import des **vagues** (composition des vagues d'ennemis)
