@@ -1,0 +1,23 @@
+{
+  "_doc": "Fixture — 3 types d'ennemis représentatifs de unity-spec/enemies.json.",
+  "baseStats": {
+    "hp": 100, "walkSpeed": 1.8, "runSpeed": 4.0, "radius": 0.45, "turnSpeed": 8,
+    "shootRange": 9, "fireCooldown": 1.3, "accuracy": 0.55, "damage": 10, "burstGap": 0.12,
+    "detectRadius": 12, "loseRadius": 18, "loseTime": 3.0, "meleeRange": 2.2, "meleeDamage": 14, "meleeCooldown": 0.9
+  },
+  "hitZones": {
+    "head":  { "aboveY": 1.5, "damage": 60 },
+    "torso": { "damage": 25 },
+    "legs":  { "belowY": 0.6, "damage": 15 }
+  },
+  "types": {
+    "shooter": { "name": "Shooter", "hpMult": 1.0, "speedMult": 1.0, "scale": 1.0, "melee": false, "damageMult": 1.0, "burst": 3, "weapon": "default", "radarColor": "#ffb84d", "glow": null,
+                 "behavior": "Tireur standard en rafales de 3.", "assets": { "model": null } },
+    "tank": { "name": "Tank", "hpMult": 2.6, "speedMult": 0.55, "scale": 1.34, "melee": false, "damageMult": 1.8, "burst": 2, "weapon": "sniper", "radarColor": "#c07bff", "glow": "0x3a1250", "armor": "torso",
+              "behavior": "Lourd et lent, armure de torse.", "assets": { "model": null } },
+    "ghost": { "name": "Ghost", "_doc": "Voir main.js pour stats exactes (#107)", "glow": "0x55ddff", "opacity": 0.5,
+               "behavior": "Semi-transparent, difficile à voir.", "assets": { "model": null } }
+  },
+  "vip": { "moneyMult": 2, "minWave": 3, "excluded": ["boss"] },
+  "specialConstants": { "bossKillBonus": 300 }
+}

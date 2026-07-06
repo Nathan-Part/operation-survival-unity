@@ -18,6 +18,10 @@
     { "id": "shotgun", "name": "Devastator 870", "category": "shotgun", "rarity": "epique", "price": 1100,
       "desc": "Pompe dévastatrice à courte portée.",
       "stats": { "mag": 6, "cooldown": 0.7, "reload": 2.0, "dmgMult": 0.55, "recoil": 2.6, "pellets": 8, "range": 14 },
+      "assets": { "model": null, "icon": null } },
+    { "id": "sniper", "name": "Eclipse SR", "category": "sniper", "rarity": "epique", "price": 1500,
+      "desc": "Fusil de précision.",
+      "stats": { "mag": 5, "cooldown": 0.85, "reload": 1.9, "dmgMult": 3.0, "recoil": 2.2, "range": 160 },
       "assets": { "model": null, "icon": null } }
   ]
 }
