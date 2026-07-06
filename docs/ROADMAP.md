@@ -18,23 +18,8 @@
 
 ## Où on en est précisément
 
-On est dans l'**étape 2** ci-dessus ("reconstruire une version solo jouable"), mais **avant même son premier point** : on prépare d'abord la donnée qui va nourrir tout le reste. C'est un prérequis technique invisible, décrit comme "étape 3" dans `unity-spec/NEXT-STEPS.md` :
+L'**étape 2** ci-dessus ("reconstruire une version solo jouable") est **livrée dans sa version minimale** (2026-07-06, branche `feat/vertical-slice-solo`) : **le jeu est maintenant visible et jouable** — on se déplace en vue FPS, on tue des vagues d'ennemis (tir automatique façon Guns of Boom), avec HUD et joysticks virtuels. Le préalable "import des données" (les 10 sous-tâches de l'ancienne tâche en cours) était déjà terminé et mergé dans `main`.
 
-**Tâche en cours : importer automatiquement les fichiers JSON du jeu web (armes, ennemis, persos, économie...) en fiches de données Unity ("ScriptableObjects").**
+Ce qui reste volontairement en dehors de cette première slice (fait plus tard) : comportements spéciaux des types d'ennemis (bomber qui explose, medic qui soigne…), power-ups en partie, combo, changement d'arme, audio, vrais modèles 3D (des capsules colorées servent de placeholders).
 
-Rien n'est encore jouable ni visible à l'écran — c'est de la plomberie de données. Le premier truc qu'on pourra voir/tester en jeu arrivera juste après, avec le contrôleur du joueur.
-
-### Détail de cette tâche en cours (10 sous-tâches, faites une par une)
-
-1. ✅ Squelette du projet (dossiers de code, catégories d'armes/raretés, système de "placeholder" pour les modèles 3D manquants) — **fait**
-2. ✅ Formules de jeu (calcul des vagues, de l'argent, des upgrades, des stats) — **fait** (15 tests passent)
-3. ✅ Import des **armes** (WeaponData + toute la plomberie d'import partagée) — **fait**
-4. ✅ Import des **ennemis** (16 types + résolution des armes) — **fait**
-5. ✅ Import des **personnages** jouables (3 persos + réglages de déplacement) — **fait**
-6. ✅ Import de l'**économie** (prix, gains...) — **fait**
-7. ✅ Import des **objets** (accessoires, boosts, consommables, danses) — **fait**
-8. ✅ Import des **power-ups** — **fait**
-9. ✅ Import des **vagues** (constantes de vagues) — **fait**
-10. ✅ Assemblage final : base de données globale + menu Unity "Importer tout" — **fait**
-
-Une fois ces 10 sous-tâches finies, cette tâche technique sera terminée — mais ce ne sera **toujours qu'un préalable** à l'étape 2 (le jeu jouable), pas la fin du projet.
+**Prochaine étape à décider : passer à l'étape 3 (vraies maps + visuel) ou compléter la slice d'abord.**

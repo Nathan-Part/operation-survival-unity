@@ -36,17 +36,15 @@ Pipeline d'import complet livré et mergé dans `main` (10 tâches TDD, 31/31 te
 
 Détail : plan `docs/superpowers/plans/2026-07-06-spec-import-scriptableobjects.md`, dette technique connue `docs/superpowers/tech-debt-import-pipeline.md`. **À faire avant de dépendre du runtime :** remplir `PlaceholderLibrary` (prefabs/sprites de secours) à la main dans l'Inspector.
 
-### 4. Phase 2 du plan : vertical slice solo — ⬅️ PROCHAINE ÉTAPE
+### 4. Phase 2 du plan : vertical slice solo — ✅ FAIT (2026-07-06, branche `feat/vertical-slice-solo`)
 
-Dans l'ordre (détail dans `docs/migration-unity.md`) :
+Slice jouable livrée : contrôleur joueur complet (marche/course/stamina/saut/gravité/dash/dégâts de chute/second wind depuis `MovementConfig`), **tir automatique** façon Guns of Boom (décision actée, spec `docs/superpowers/specs/2026-07-06-vertical-slice-solo-design.md`), zones de dégâts par hauteur d'impact, ennemi générique data-driven ranged/mêlée (NavMesh + FSM), vagues avec la composition exacte de `waves.json`, HUD uGUI (vie, stamina, munitions, vague, radar, écran de mort) et joysticks virtuels. Scène : menu **`Tools/Game/Build Slice Scene`** → `Assets/_Game/Scenes/Slice.unity`. 83 tests EditMode + 2 smoke PlayMode verts.
 
-1. Contrôleur joueur (`CharacterController`) : vitesses/saut/gravité/dash/stamina depuis `player.json` → section `movement`.
-2. Input tactile (Input System, joysticks virtuels). Décision design ouverte : tir auto à la Guns of Boom vs bouton de tir — demander à Nathan.
-3. Tir raycast + zones de dégâts (`enemies.json` → `hitZones`).
-4. Un ennemi (shooter) avec NavMesh + FSM, puis les vagues (`waves.json`).
-5. HUD minimal.
+Différé (assumé, voir spec §6) : comportements spéciaux des types (bomber/medic/shielder…, ils utilisent leur archétype de base), VIP, power-ups, combo/killstreaks, changement d'arme, audio. 4 valeurs absentes des JSON implémentées avec défaut `// TODO(spec-web)` : mult. d'armure, délai de régén, réserve de munitions, portée radar — **à vérifier côté web puis reporter dans les JSON**.
 
-Assets provisoires : les GLB de `perso/` (persos Meshy) et `artefact/` du dépôt web sont importables tels quels comme placeholders.
+### 5. Prochaine étape — à décider avec Nathan
+
+Options : Phase 3 (maps Blender + vrai visuel) ou compléter la slice (comportements spéciaux des ennemis, extraction des valeurs manquantes). Assets provisoires : les GLB de `perso/` et `artefact/` du dépôt web restent importables comme placeholders (le runtime affiche des capsules en attendant).
 
 ## Règles à respecter
 
