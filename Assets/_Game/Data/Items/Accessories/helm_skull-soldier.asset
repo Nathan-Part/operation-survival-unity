@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d037f587e43380479326ac6ff7a126c, type: 3}
+  m_Name: helm_skull-soldier
+  m_EditorClassIdentifier: Game.Data::Game.Data.AccessoryData
+  id: helm:skull-soldier
+  displayName: "Cr\xE2ne Soldat"
+  accessoryType: 0
+  price: 800
+  rarity: 2
+  desc: "La mort en uniforme. Un masque taill\xE9 pour hanter le champ de bataille."
+  bonuses:
+  - icon: shield
+    name: Intimidation
+    desc: "Ta seule pr\xE9sence fait reculer l'ennemi."
+  - icon: medal
+    name: "V\xE9t\xE9ran"
+    desc: Le calme de ceux qui ont tout vu.
+  - icon: flash
+    name: Frappe nette
+    desc: "Aucune h\xE9sitation au moment d'agir."
+  image: {fileID: 0}
+  modelPrefab: {fileID: 0}

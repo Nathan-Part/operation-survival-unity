@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b2c241b90d74a64ca049969e467232b, type: 3}
+  m_Name: cyclone
+  m_EditorClassIdentifier: Game.Data::Game.Data.WeaponData
+  id: cyclone
+  displayName: Cyclone MK3
+  category: 0
+  rarity: 2
+  price: 2000
+  desc: "Fusil d'assaut d'\xE9lite. Cadence folle et d\xE9g\xE2ts qui ne pardonnent
+    pas."
+  semiAuto: 0
+  melee: 0
+  mag: 30
+  cooldown: 0.08
+  reload: 1
+  dmgMult: 1.4
+  recoil: 0.75
+  range: 70
+  pellets: 0
+  modelPrefab: {fileID: 0}
+  icon: {fileID: 0}

@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d037f587e43380479326ac6ff7a126c, type: 3}
+  m_Name: helm_skull-ram
+  m_EditorClassIdentifier: Game.Data::Game.Data.AccessoryData
+  id: helm:skull-ram
+  displayName: "Cr\xE2ne B\xE9lier"
+  accessoryType: 0
+  price: 1500
+  rarity: 3
+  desc: Cornes d'os et regard vide. Le symbole de ceux qui enfoncent les lignes.
+  bonuses:
+  - icon: trophy
+    name: Domination
+    desc: "Impose ton autorit\xE9 d\xE8s ton apparition."
+  - icon: sprint
+    name: Charge
+    desc: "Rien ne t'arr\xEAte une fois lanc\xE9."
+  - icon: heart
+    name: Terreur
+    desc: "Une l\xE9gende ne meurt jamais vraiment."
+  image: {fileID: 0}
+  modelPrefab: {fileID: 0}

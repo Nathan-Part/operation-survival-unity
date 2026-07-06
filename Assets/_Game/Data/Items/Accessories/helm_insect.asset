@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d037f587e43380479326ac6ff7a126c, type: 3}
+  m_Name: helm_insect
+  m_EditorClassIdentifier: Game.Data::Game.Data.AccessoryData
+  id: helm:insect
+  displayName: "Insecto\xEFde"
+  accessoryType: 0
+  price: 400
+  rarity: 1
+  desc: Masque de chasse aux reflets chitineux. Pour ceux qui frappent avant qu'on
+    les voie.
+  bonuses:
+  - icon: eye
+    name: Vision de traque
+    desc: "Rep\xE8re ta cible dans le chaos."
+  - icon: sprint
+    name: Instinct
+    desc: "R\xE9agis plus vite \xE0 la menace."
+  - icon: target
+    name: "Pr\xE9cision"
+    desc: Chaque tir vise juste.
+  image: {fileID: 0}
+  modelPrefab: {fileID: 0}

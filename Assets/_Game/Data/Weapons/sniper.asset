@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b2c241b90d74a64ca049969e467232b, type: 3}
+  m_Name: sniper
+  m_EditorClassIdentifier: Game.Data::Game.Data.WeaponData
+  id: sniper
+  displayName: Eclipse SR
+  category: 2
+  rarity: 2
+  price: 1500
+  desc: "Fusil de pr\xE9cision. Un tir, une cible neutralis\xE9e \xE0 distance."
+  semiAuto: 0
+  melee: 0
+  mag: 5
+  cooldown: 0.85
+  reload: 1.9
+  dmgMult: 3
+  recoil: 2.2
+  range: 160
+  pellets: 0
+  modelPrefab: {fileID: 0}
+  icon: {fileID: 0}

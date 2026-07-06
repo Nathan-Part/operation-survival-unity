@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c34e72e03266eea42be5f67903bb1f32, type: 3}
+  m_Name: berserker
+  m_EditorClassIdentifier: Game.Data::Game.Data.EnemyData
+  id: berserker
+  displayName: Berserker
+  hpMult: 1.5
+  speedMult: 1.8
+  scale: 1.05
+  melee: 1
+  damageMult: 2
+  burst: 1
+  weapon: {fileID: 0}
+  radarColor: 
+  glow: 0xcc4400
+  armor: 0
+  opacity: 1
+  hasShootOverride: 0
+  shootCdOverride: 0
+  shootRangeOverride: 0
+  behavior: "Rage : m\xEAl\xE9e rapide tr\xE8s agressive."
+  modelPrefab: {fileID: 0}

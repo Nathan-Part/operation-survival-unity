@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b2c241b90d74a64ca049969e467232b, type: 3}
+  m_Name: shotgun
+  m_EditorClassIdentifier: Game.Data::Game.Data.WeaponData
+  id: shotgun
+  displayName: Devastator 870
+  category: 3
+  rarity: 2
+  price: 1100
+  desc: "Pompe d\xE9vastatrice \xE0 courte port\xE9e. Efface tout ce qui approche."
+  semiAuto: 0
+  melee: 0
+  mag: 6
+  cooldown: 0.7
+  reload: 2
+  dmgMult: 0.55
+  recoil: 2.6
+  range: 14
+  pellets: 8
+  modelPrefab: {fileID: 0}
+  icon: {fileID: 0}
