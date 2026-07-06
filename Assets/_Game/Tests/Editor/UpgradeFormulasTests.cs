@@ -32,5 +32,12 @@ namespace Game.Data.Tests
             Assert.AreEqual(12, UpgradeFormulas.WeaponMag(12, 0));
             Assert.AreEqual(14, UpgradeFormulas.WeaponMag(12, 1));
         }
+
+        [Test]
+        public void WeaponRecoil_ReducesTwelvePercentPerLevel()
+        {
+            Assert.AreEqual(1.0f, UpgradeFormulas.WeaponRecoil(1.0f, 0), 0.0001f);
+            Assert.AreEqual(0.4f, UpgradeFormulas.WeaponRecoil(1.0f, 5), 0.0001f);
+        }
     }
 }
