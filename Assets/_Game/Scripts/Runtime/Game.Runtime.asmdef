@@ -1,0 +1,11 @@
+{
+    "name": "Game.Runtime",
+    "rootNamespace": "Game.Runtime",
+    "references": [
+        "Game.Data",
+        "Unity.InputSystem",
+        "Unity.AI.Navigation"
+    ],
+    "autoReferenced": true,
+    "noEngineReferences": false
+}
