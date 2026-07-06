@@ -32,8 +32,8 @@ Rien n'est encore jouable ni visible à l'écran — c'est de la plomberie de do
 4. ✅ Import des **ennemis** (16 types + résolution des armes) — **fait**
 5. ✅ Import des **personnages** jouables (3 persos + réglages de déplacement) — **fait**
 6. ✅ Import de l'**économie** (prix, gains...) — **fait**
-7. 🔄 Import des **objets** (accessoires, boosts, consommables, danses) — **en cours**
-8. ⬜ Import des **power-ups**
+7. ✅ Import des **objets** (accessoires, boosts, consommables, danses) — **fait**
+8. 🔄 Import des **power-ups** — **en cours**
 9. ⬜ Import des **vagues** (composition des vagues d'ennemis)
 10. ⬜ Assemblage final : une base de données globale + un bouton de menu Unity "Importer tout"
 
