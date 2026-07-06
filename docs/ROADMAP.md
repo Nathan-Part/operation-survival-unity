@@ -13,7 +13,7 @@
 1. Ouvrir Unity sur ce projet.
 2. Panneau **Project** → `Assets/_Game/Scenes/` → double-cliquer **Slice**.
 3. Appuyer sur **Play** (▶).
-4. Contrôles clavier (alignés sur le jeu web) : **ZQSD** bouger · **souris** viser (le tir est automatique quand le viseur est sur un ennemi) · **Shift ou R** courir · **Espace** sauter · **C** dash · **F** recharger.
+4. Contrôles clavier (alignés sur le jeu web) : **ZQSD** bouger · **souris** viser (le tir est automatique quand le viseur est sur un ennemi) · **E ou clic gauche** tir manuel · **Q ou clic droit** viser (sight ; lunette plein écran au sniper) · **V** vue 1ʳᵉ/3ᵉ personne · **Shift ou R** courir · **Espace** sauter · **C** dash · **F** recharger.
 5. Les vagues s'enchaînent toutes seules. Vague 1 = 3 tireurs, vague 2 = des rushers au corps-à-corps, vague 5 = le boss.
 
 Si la scène est cassée ou supprimée : menu **Tools → Game → Build Slice Scene** la regénère entièrement. Si les données JSON changent : menu **Tools → Game → Import Spec from JSON** regénère les fiches de données.
@@ -25,8 +25,9 @@ Sur mobile/tactile (Device Simulator ou build Android) : joystick virtuel à gau
 ## 📍 Où on en est (résumé)
 
 - ✅ Phase 1 faite (projet Unity créé, données importées).
-- ✅ Phase 2 faite dans sa version minimale : **le jeu est jouable** (branche `feat/vertical-slice-solo`, **pas encore mergée dans `main`** — en attente du test de Nathan). Les GLB de persos + ennemi générique sont déjà branchés.
-- ⬅️ **Prochaine action : Nathan teste la slice et on merge. Ensuite : Phase 3, en commençant par les animations** (brainstorm + spec + plan dédiés en début de phase, comme d'habitude).
+- ✅ Phase 2 faite dans sa version minimale et **mergée dans `main`** : le jeu est jouable.
+- ✅ **Phase 3, chantiers 1 et 2 FAITS (2026-07-07, branche `feat/phase3-anims-player-hud`, en attente du test visuel de Nathan)** : ennemis animés (idle/course/attaque/**mort** avec cadavre conservé jusqu'à la vague suivante), vue 1ʳᵉ/3ᵉ personne (V), visée Q (sight + lunette sniper), tir manuel E, arme en main (1ʳᵉ ET 3ᵉ personne + ennemis), muzzle flash/tracers/recul/kick caméra, mort du joueur animée, HUD de combat parité web (hitmarker, kill feed, barres de vie ennemis, barre boss, indicateurs directionnels, blood screen/heal flash, callouts, sight/scope). 129 tests EditMode + 4 PlayMode verts. Spec/plan : `docs/superpowers/{specs,plans}/2026-07-07-*`.
+- ⬅️ **Prochaine action : chantier 3 de la Phase 3** (un modèle par type d'ennemi — copier les GLB `perso/enemie-*` du web et les brancher sur les fiches EnemyData), puis chantier 4 (maps utopia/urban). En parallèle : Nathan vérifie visuellement les chantiers 1–2 (liste des vérifs manuelles ci-dessous).
 
 ---
 
@@ -67,11 +68,11 @@ Geler le design du jeu web pour que Unity ait une référence stable : refactors
 
 *Ordre voulu : du plus léger au plus lourd. Le jeu web (`C:\wamp64\www\projet\games`) est la référence exacte du comportement attendu.*
 
-1. **Animations des ennemis** (les clips existent déjà dans les GLB, dossier `animation/` du web en renfort) : idle, marche/course, attaque, **mort** — branchées sur la FSM existante. ⚠️ Changement induit : aujourd'hui l'ennemi disparaît instantanément à 0 PV ; il faudra un état « mort » qui joue l'animation avant de retirer le corps (collider désactivé pendant l'anim).
-2. **Côté joueur, comme sur le web** : animation/séquence de mort, **arme visible en main**, feedback de tir (flash, tracers, recul visuel), animations de déplacement partout où c'est visible.
-   - **Vue commutable 1ʳᵉ/3ᵉ personne (touche V + réglage), comme le web** — le modèle du joueur devient visible et animé en 3ᵉ personne.
-   - **Visée manuelle comme le web** : Q = viser (réticule qui change, lunette sniper), E = tir manuel au clavier — en coexistence avec le tir auto mobile (voir section « Parité HUD & contrôles »).
-   - HUD de cette phase : hitmarker, kill feed, barres de vie au-dessus des ennemis, barre de boss, indicateurs directionnels de dégâts, effets écran (sang/soin).
+1. ✅ **Animations des ennemis** (FAIT 2026-07-07) : clips Meshy copiés du web (`Assets/_Game/Art/Animations/`, rigs 100 % compatibles — spike validé), lecteur Playables (`AnimationDriver` + `CrossfadeModel`), FSM étendue d'un état **Dead** (anim de mort 0.18 s, collider off, pose figée, cadavre purgé à la vague suivante), `AnimationLibrary` remplie par Assign Imported Art.
+2. ✅ **Côté joueur, comme sur le web** (FAIT 2026-07-07) : mort animée en 3ᵉ personne + écran différé, arme en main (avatar + ennemis tireurs), viewmodel 1ʳᵉ personne avec recul, muzzle flash, tracers, kick caméra, locomotion animée de l'avatar.
+   - ✅ **Vue commutable 1ʳᵉ/3ᵉ personne (touche V)** — avatar visible et animé en 3ᵉ (le réglage persistant arrivera avec l'écran réglages, phase 4).
+   - ✅ **Visée manuelle** : Q = viser (sight + lunette sniper plein écran + FOV 55→42→20), E = tir manuel — coexiste avec le tir auto mobile.
+   - ✅ HUD de cette phase : hitmarker (variante headshot), kill feed, barres de vie au-dessus des ennemis, barre de boss, indicateurs directionnels de dégâts (4 secteurs), effets écran (sang/soin), callouts (HEADSHOT/DOUBLE/TRIPLE/MULTI KILL/BOSS DOWN).
 3. **Un modèle par type d'ennemi** au fur et à mesure : copier le GLB du web → le glisser dans la fiche `EnemyData` (ou via `Tools → Game → Assign Imported Art`).
 4. **Les maps, EN DERNIER (le plus lourd)** : **utopia puis urban — portal est ABANDONNÉE (décision actée 2026-07-07)**. Import direct depuis les `.blend` de Nathan (`Desktop\3D\map_utopia\map_utopia_export.blend`) en pleine qualité — PAS les GLB web (dégradés). Colliders posés dans l'éditeur, éclairage cuit (lightmaps + probes) + post-processing URP, LOD/occlusion culling, NavMesh bakée par map.
 
@@ -169,7 +170,15 @@ La save passe côté serveur (sinon triche triviale). Options : Unity Cloud Save
 
 ## ✋ TODO manuels ouverts (côté Nathan)
 
-1. **Tester la slice** (voir « Comment tester » ci-dessus) puis donner le feu vert pour merger `feat/vertical-slice-solo` dans `main`.
+0. **Vérifier visuellement la Phase 3 chantiers 1–2** (branche `feat/phase3-anims-player-hud`, scène Slice, Play) :
+   - Les ennemis **marchent/courent** vers toi, jouent une **anim d'attaque**, et à leur mort jouent l'**anim de mort** puis restent au sol (cadavre non ciblable, purgé à la vague suivante).
+   - **V** bascule 1ʳᵉ/3ᵉ personne : en 3ᵉ on voit le soldat bleu animé avec l'**AR-15 en main** ; en 1ʳᵉ l'arme est visible en bas à droite.
+   - **Q** (ou clic droit) : le réticule devient un viseur, le FOV zoome ; **E** (ou clic gauche) tire même sans ennemi sous le viseur.
+   - À chaque tir : **flash de bouche + tracer + recul** de l'arme + petit kick caméra. Les ennemis tireurs ont aussi leur flash.
+   - HUD : **hitmarker** en touchant (rouge si tête), **kill feed** en haut à droite, **barres de vie** au-dessus des ennemis (< 20 m), **barre de boss** à la vague 5, **indicateurs rouges directionnels** quand on te tire dessus, **voile de sang** sur gros dégâts, **callouts** (HEADSHOT, DOUBLE KILL…).
+   - Mort du joueur : bascule 3ᵉ personne + anim de mort, puis écran « Vous êtes mort » ~1,6 s après.
+   - Pour tester la **lunette sniper** : dans `SliceBootstrap.cs`, remplacer temporairement l'id d'arme `"default"` par `"sniper"` (ligne du `w.id == "default"`), Play, puis Q maintenu.
+1. ~~Tester la slice puis merger `feat/vertical-slice-solo`~~ ✅ mergée dans `main`.
 2. **Vérifier 4 valeurs dans le `main.js` du web** (absentes des JSON, implémentées avec des défauts marqués `// TODO(spec-web)` dans le code) : multiplicateur de réduction d'armure (défaut 0.5), délai de régénération de vie après dégâts (défaut 3 s), réserve de munitions (défaut : infinie), portée du radar (défaut 20 m). Puis les reporter dans les JSON.
 3. **Remplir le `PlaceholderLibrary`** (clic droit dans `Assets/_Game/Data/` → Create → Game → Config → Placeholder Library, puis glisser des prefabs/sprites dans l'Inspector). Non bloquant : le code génère des capsules colorées en secours.
 
@@ -191,6 +200,7 @@ Unity 6 + C#, URP (pas Built-in/HDRP/Unreal) · Android + iOS · solo d'abord (v
 | Date | Quoi | Où |
 |---|---|---|
 | 2026-07-06 | Pipeline d'import JSON → ScriptableObjects (91 assets, 31 tests) | mergé dans `main` |
-| 2026-07-06 | Vertical slice solo jouable (83 + 2 tests) | branche `feat/vertical-slice-solo` |
+| 2026-07-06 | Vertical slice solo jouable (83 + 2 tests) | mergé dans `main` |
+| 2026-07-07 | Phase 3 chantiers 1–2 : animations ennemis + mort, vues V, visée Q/tir E, arme en main, feedback tir, HUD combat parité web (129 + 4 tests) | branche `feat/phase3-anims-player-hud` |
 
 Détails d'archive : specs dans `docs/superpowers/specs/`, plans dans `docs/superpowers/plans/`, journal de l'import dans `.superpowers/sdd/progress.md`, dette technique de l'import dans `docs/superpowers/tech-debt-import-pipeline.md`.
