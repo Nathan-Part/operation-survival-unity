@@ -26,7 +26,8 @@ namespace Game.Runtime
 
         static Font UiFont => Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
 
-        public void Init(PlayerHealth health, WeaponController weapon, WaveManager waves, PlayerMotor motor, Transform playerBody)
+        public void Init(PlayerHealth health, WeaponController weapon, WaveManager waves, PlayerMotor motor, Transform playerBody,
+            Camera camera = null, PlayerViewController viewController = null)
         {
             this.health = health;
             this.weapon = weapon;
@@ -74,6 +75,7 @@ namespace Game.Runtime
             var crosshair = MakeImage(root, new Color(1f, 1f, 1f, 0.8f));
             crosshair.rectTransform.anchorMin = crosshair.rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
             crosshair.rectTransform.sizeDelta = new Vector2(6f, 6f);
+            crosshair.gameObject.name = "Crosshair";
 
             // Radar (haut droite)
             var radarGo = new GameObject("Radar");
@@ -81,11 +83,26 @@ namespace Game.Runtime
             var radar = radarGo.AddComponent<HudRadar>();
             radar.Init(waves, playerBody);
 
-            // Écran de mort
+            // HUD de combat phase 3 (parité web) — chaque composant s'abonne à ses événements
+            gameObject.AddComponent<HudHitmarker>().Init(root, weapon);
+            gameObject.AddComponent<HudKillFeed>().Init(root, weapon);
+            gameObject.AddComponent<HudBossBar>().Init(root, waves);
+            gameObject.AddComponent<HudScreenEffects>().Init(root, health);
+            gameObject.AddComponent<HudCallout>().Init(root, weapon);
+            if (camera != null)
+            {
+                gameObject.AddComponent<HudEnemyBars>().Init(root, waves, camera);
+                gameObject.AddComponent<HudDamageIndicators>().Init(root, health, playerBody, camera);
+            }
+            if (viewController != null)
+                gameObject.AddComponent<HudReticle>().Init(root, viewController, crosshair.gameObject);
+
+            // Écran de mort (affiché par PlayerViewController après l'anim de mort ;
+            // repli direct sur Died si le view controller n'existe pas)
             deathPanel = BuildDeathPanel(root);
+            if (viewController == null) this.health.Died += ShowDeathScreen;
 
             this.health.HealthChanged += OnHealthChanged;
-            this.health.Died += ShowDeathScreen;
             this.weapon.AmmoChanged += OnAmmoChanged;
             this.weapon.ReloadingChanged += OnReloadingChanged;
             this.waves.WaveStarted += w => { lastWave = w; RefreshWaveText(); };
