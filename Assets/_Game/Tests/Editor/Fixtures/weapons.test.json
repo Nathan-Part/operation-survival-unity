@@ -1,5 +1,5 @@
 {
-  "_doc": "Fixture — 3 armes, un sous-ensemble représentatif de unity-spec/weapons.json.",
+  "_doc": "Fixture — 4 armes (default, jackal, shotgun, sniper), sous-ensemble représentatif de unity-spec/weapons.json.",
   "upgrades": {
     "damage":   { "name": "Dégâts",   "max": 5, "baseCost": 300, "effect": "dmgMult × (1 + 0.15 × l)" },
     "fireRate": { "name": "Cadence",  "max": 5, "baseCost": 300, "effect": "cooldown × (1 − 0.08 × l)" },

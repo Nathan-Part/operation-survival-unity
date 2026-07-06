@@ -53,7 +53,7 @@ Dans `Assets/_Game/Data/Config/` :
 
 ### Formules en C# (à la main, pas importées)
 
-`Assets/_Game/Scripts/Data/Rules/` : `WaveRules` (composition de vague, `enemiesForWave`, `enemyHpForWave`, `waveScoreMult`, `waveMoneyBonus`), `EconomyRules` (combo, XP, argent par kill), `UpgradeFormulas` (coût par niveau, effet cumulé), `StatFormulas` (stats finales personnage). Chacune est testée en EditMode contre des valeurs calculées à la main depuis les JSON (ex. `WaveRules.EnemyHpForWave(5, Difficulty.Normal) == 193`).
+`Assets/_Game/Scripts/Data/Rules/` : `WaveRules` (composition de vague, `enemiesForWave`, `enemyHpForWave`, `waveScoreMult`, `waveMoneyBonus`), `EconomyRules` (combo, XP, argent par kill), `UpgradeFormulas` (coût par niveau, effet cumulé), `StatFormulas` (stats finales personnage). Chacune est testée en EditMode contre des valeurs calculées à la main depuis les JSON (ex. `WaveRules.EnemyHpForWave(5, Difficulty.Normal) == 194`, soit `round(100 × 1.18^4)`).
 
 ## Résolution des placeholders (runtime)
 
