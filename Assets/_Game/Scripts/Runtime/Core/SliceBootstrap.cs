@@ -93,7 +93,7 @@ namespace Game.Runtime
 
             var hudGo = new GameObject("HUD");
             var hud = hudGo.AddComponent<HudController>();
-            hud.Init(health, weapon, waveManager, motor, motor.transform, weapon.aimCamera, view);
+            hud.Init(health, weapon, waveManager, motor, motor.transform, weapon.aimCamera, view, meta);
             view.hud = hud;
 
             if (save.settings.defaultView == "third") view.SetMode(ViewMode.Third); // réglage « vue » du web
