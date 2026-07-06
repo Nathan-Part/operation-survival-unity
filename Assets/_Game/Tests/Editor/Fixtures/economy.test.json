@@ -1,0 +1,17 @@
+{
+  "money": { "perKill": 10, "vipMult": 2, "bossKillBonus": 300 },
+  "xp": { "maxLevel": 50 },
+  "difficulties": {
+    "facile":    { "name": "Facile",    "enemyHp": 0.7, "enemyDmg": 0.7, "money": 1.2 },
+    "normal":    { "name": "Normal",    "enemyHp": 1.0, "enemyDmg": 1.0, "money": 1.0 },
+    "difficile": { "name": "Difficile", "enemyHp": 1.4, "enemyDmg": 1.5, "money": 0.9 }
+  },
+  "rarities": {
+    "commun":     { "name": "Commun",     "color": "#9aa3b2", "tier": 0 },
+    "rare":       { "name": "Rare",       "color": "#4f9dff", "tier": 1 },
+    "epique":     { "name": "Épique",     "color": "#b066ff", "tier": 2 },
+    "legendaire": { "name": "Légendaire", "color": "#ffb02e", "tier": 3 }
+  },
+  "leaderboard": { "maxEntries": 5 },
+  "loadout": { "thresholds": { "mine": 600, "dog": 900, "carepackage": 1000, "turret": 1200, "airstrike": 1800 } }
+}
