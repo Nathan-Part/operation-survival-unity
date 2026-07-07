@@ -30,7 +30,10 @@ Sur mobile/tactile (Device Simulator ou build Android) : joystick virtuel à gau
 - ✅ **Reste de la Phase 2 FAIT (2026-07-07)** : comportements spéciaux des 10 types, VIP doré, combo (détail dans la Phase 3 ci-dessous). 140 tests EditMode + 5 PlayMode verts.
 - ✅ **Chantier 4, première passe FAITE (2026-07-07)** : scène **Utopia** jouable (GLB pleine qualité depuis le .blend, colliders, NavMesh, smoke test vert). Reste : lightmaps/post-pro/LOD + dette perf des colliders. **Urban bloquée** (pas de .blend).
 - ⚠️ **Chantier 3 bloqué** : les dossiers `perso/enemie-*` du web sont **vides** (modèles à produire, Phase 0).
-- ⬅️ **Prochaine action : Nathan vérifie visuellement tout ça à son réveil (liste ci-dessous), pendant ce temps on attaque la Phase 4 (systèmes méta : sauvegarde, économie/boutique, progression…)** — brainstorm + spec + plan dédiés, comme d'habitude.
+- ✅ **Phase 4 lot 1 FAIT (2026-07-07)** : sauvegarde `cod-save-v1`, XP/niveaux, boutique (logique), save→gameplay, HUD argent/XP.
+- 🧠 **Réflexion Phase 5 FAITE en autonomie (2026-07-07, sans code, sur demande de Nathan)** : inventaire de parité de l'accueil web écran par écran + 15 décisions (D1-D15) + 5 points à valider par Nathan. Spec `docs/superpowers/specs/2026-07-07-phase5-home-ui-design.md`, plan `docs/superpowers/plans/2026-07-07-phase5-home-ui.md` (16 tâches, branche prévue `feat/phase5-home-ui`). **Pas encore exécutée** — attend le feu vert de Nathan sur la spec.
+- 🐛 **Bugs trouvés par Nathan en playtest (2026-07-07)** : voir section dédiée ci-dessous. **À corriger dès la prochaine session.**
+- ⬅️ **Prochaine session, dans l'ordre** : (1) finir ce qui reste de la Phase 4 (lot 2+ : consommables/grenades, loadout, audio, extraction JSON succès/contrats/chien/prestige...), (2) corriger les bugs listés ci-dessous. La Phase 5 (exécution du plan UI) attend le feu vert de Nathan sur sa spec.
 
 ---
 
@@ -106,8 +109,8 @@ Geler le design du jeu web pour que Unity ait une référence stable : refactors
 
 **Décision actée (2026-07-07, très important pour Nathan) : la page d'accueil du jeu web est reproduite À L'IDENTIQUE — mêmes boutons, mêmes fonctionnalités, même comportement, tout pareil.** La référence : l'accueil du jeu web (`C:\wamp64\www\projet\games`, HTML/CSS dans `styles/` et `src/`).
 
-- Étape 1 du brainstorm de cette phase : **inventaire exhaustif écran par écran, bouton par bouton** de l'accueil web (jouer, boutique, persos, armes, loadout, réglages, stats, succès, contrats, danses… tout), pour en faire la checklist de parité.
-- Refaire en **UI Toolkit**, branché sur les systèmes de la Phase 4.
+- ✅ **Réflexion faite en autonomie (2026-07-07, sans code)** : inventaire exhaustif écran par écran, bouton par bouton de l'accueil web (jouer, boutique, persos, armes, loadout, réglages, stats, danses…) → checklist de parité. Spec `docs/superpowers/specs/2026-07-07-phase5-home-ui-design.md` (15 décisions D1-D15 + 5 points ouverts pour Nathan), plan `docs/superpowers/plans/2026-07-07-phase5-home-ui.md` (16 tâches, branche prévue `feat/phase5-home-ui`). Découverte clé : l'accueil web vit dans `game.html` (pas d'`index.html` séparé), en lobby + panneaux overlays ; pas d'écran dédié succès/contrats/prestige (juste des compteurs "Intel") ; pas de musique de menu.
+- **Refaire en UI Toolkit**, branché sur les systèmes de la Phase 4. **Exécution du plan en attente du feu vert de Nathan sur la spec.**
 - Vérification de parité **bouton par bouton** contre le web avant de clore la phase.
 
 **Jalon :** un joueur du jeu web retrouve exactement son accueil sur mobile → **c'est la v1 publiable**.
@@ -135,6 +138,22 @@ La save passe côté serveur (sinon triche triviale). Options : Unity Cloud Save
 **Ordre global : le solo complet (phases 2–5) sort AVANT le réseau (phase 6).**
 
 ---
+
+## 🐛 Bugs trouvés par Nathan en playtest (2026-07-07) — à corriger en priorité
+
+*Relevés sur la scène Utopia (branche `feat/phase3-anims-player-hud`) après le travail de la nuit. Captures d'écran fournies par Nathan (non jointes ici) : (1) arme mal positionnée dans le dos du perso en 3ᵉ personne, (2) un carré de décor complètement déchiqueté près d'un bâtiment.*
+
+1. **Arme mal positionnée sur l'avatar en 3ᵉ personne** — le fusil flotte dans le dos/près de la tête au lieu d'être tenu en main. Suspect : `PlayerAvatar.AttachWeapon()` / `PlayerAvatar.FindHandBone()` (`Assets/_Game/Scripts/Runtime/Player/PlayerAvatar.cs`) — soit le bone `RightHand` du rig `blue-soldier` n'est pas trouvé et le fallback regex attrape un mauvais bone, soit l'offset local `(0, 0.02, 0.08)` / rotation `(90°,0,0)` ne convient pas à ce rig précis. À vérifier : dumper la hiérarchie d'os de `blue-soldier.glb` via `execute_code` (comme le spike du chantier 1) et confirmer quel bone est réellement récupéré.
+
+2. **Marcher fait courir et vide la barre de stamina** — en avançant simplement (sans appuyer sur Shift/R), le perso court et consomme sa stamina. Cause confirmée : `PlayerInputBridge.Update()` (`Assets/_Game/Scripts/Runtime/Player/PlayerInputBridge.cs`) — `bool wantsRun = sprint.IsPressed() || m.sqrMagnitude >= 0.81f;` (décision D11, pensée pour un stick de manette/joystick tactile à fond). Au clavier, le vecteur de déplacement WASD est quasiment toujours à magnitude ~1 dès qu'on appuie une touche → la condition `>= 0.81` est **quasiment toujours vraie**, donc on court en permanence sans le vouloir. **Fix : cette règle "stick à fond = courir" ne doit s'appliquer qu'à l'input manette/joystick tactile, pas au clavier** (détecter la source de l'input, ou ne l'appliquer que quand `move` vient de `<Gamepad>/leftStick`/joystick tactile).
+
+3. **L'animation de course ne semble pas être la bonne** (à confirmer par Nathan, doute exprimé) — probablement lié au bug n°2 : comme le perso court en permanence, seule l'anim "Run" est visible et Nathan n'est pas sûr qu'elle corresponde à celle attendue. **À revérifier une fois le bug n°2 corrigé** (une fois que marcher redevient possible, comparer visuellement idle/walk/run). Si le souci persiste, vérifier le clip assigné dans `AnimationLibrary.asset` (rôle `run`) et le mapping dans `PlayerAvatar.Update()`.
+
+4. **Impossible de monter dans les bâtiments (bloqué par une "vitre" invisible dans les escaliers) + on traverse parfois les vraies vitres** — collision cassée sur la map Utopia. Cause probable : `UtopiaSceneBuilder.Build()` (`Assets/_Game/Scripts/Editor/Scene/UtopiaSceneBuilder.cs`) pose un `MeshCollider` **non convexe** sur chaque mesh individuel de la map (39 043 colliders — dette déjà notée). Les géométries fines/complexes des vitres et des marches d'escalier ne collisionnent pas de façon fiable avec le `CharacterController` (colliders non-convexes = comportement physique instable, `stepOffset` inefficace sur une géométrie d'escalier en un seul mesh compliqué). **C'est probablement la même cause racine que la dette de perf déjà notée** (39k MeshColliders) — la corriger réglera sans doute les deux à la fois : soit des colliders convexes/primitifs sur les éléments clés (escaliers, vitres), soit un mesh de collision simplifié dédié à faire dans Blender (géométrie basse-poly invisible, juste pour la physique). **Cette correction doit sans doute être traitée avant la Phase 4 lot 2**, vu qu'elle casse la jouabilité de la map.
+
+5. **Les ennemis spawnent sur le toit et ne bougent pas, donc impossible de les tuer** — probablement une conséquence directe du bug n°4 (NavMesh) : `UtopiaSceneBuilder` bake la NavMesh avec `collectObjects = CollectObjects.All`, ce qui inclut les toits (marchables) dans la NavMesh. Si les escaliers ne connectent pas correctement le toit au sol (à cause des colliders cassés du bug n°4), la NavMesh du toit devient une **île isolée** : les ennemis y sont bien posés mais ne peuvent littéralement pas trouver de chemin vers le joueur au sol. Le calcul des points de spawn (`NavMesh.SamplePosition` dans un rayon de 30 m autour d'une sonde à 5 m au-dessus du joueur) peut aussi accrocher un toit proche par erreur. **Fix attendu : une fois le bug n°4 réglé (escaliers navigables), rebaker la NavMesh et vérifier qu'il n'y a plus d'îles déconnectées** (Window → AI → Navigation → onglet Areas/visualisation, ou vérifier via `NavMesh.CalculatePath` que le sol et les toits sont reliés). Si des îles persistent, envisager d'exclure les toits de la zone marchable ou de sonder les spawns par un raycast vertical depuis le sol plutôt que par un échantillonnage NavMesh à large rayon.
+
+6. **Éléments de décor complètement déformés** (capture 2 : une grande forme verte déchiquetée, non-manifold, qui transperce le sol/les massifs près d'un bâtiment) — suspect côté **export Blender → GLB**, pas côté Unity. Le script d'export (`bpy.ops.export_scene.gltf(..., export_apply=True)`) applique les modifiers classiques, mais **les systèmes de particules (herbe/végétation) et les geometry nodes ne s'exportent pas fiablement en glTF** sans être d'abord convertis en géométrie réelle ("Convert to Mesh" / réalisation des instances) dans Blender. Ce type de forme fragmentée/spiky est une signature typique d'un scatter de particules ou d'un modifier non résolu à l'export. **Fix côté Blender (Nathan)** : identifier l'objet/collection concerné dans `map_utopia_export.blend`, convertir les particules/geometry nodes en mesh réel avant de relancer l'export, puis regénérer `utopia.glb` et la scène (`Tools → Game → Build Utopia Scene`).
 
 ## 🎯 Parité HUD & contrôles (décision actée 2026-07-07 — s'applique aux phases 3 à 5)
 
@@ -213,5 +232,7 @@ Unity 6 + C#, URP (pas Built-in/HDRP/Unreal) · Android + iOS · solo d'abord (v
 | 2026-07-07 | Reste Phase 2 : comportements spéciaux des 10 types, VIP doré, combo + HUD | même branche |
 | 2026-07-07 | Map utopia jouable (GLB pleine qualité du .blend, colliders, NavMesh, smoke test) | même branche |
 | 2026-07-07 | Phase 4 lot 1 : save `cod-save-v1` + XP/niveaux + boutique (logique) + save→gameplay + HUD argent/XP (150 + 5 tests) | même branche |
+| 2026-07-07 | Réflexion Phase 5 (spec + plan, sans code) : inventaire de parité accueil web, 16 tâches prêtes | même branche |
+| 2026-07-07 | Playtest Nathan sur Utopia : 6 bugs relevés (arme mal placée, marche/course, anim course, collisions escaliers/vitres, ennemis bloqués sur toit, décor déformé) — voir section « Bugs » | à corriger |
 
 Détails d'archive : specs dans `docs/superpowers/specs/`, plans dans `docs/superpowers/plans/`, journal de l'import dans `.superpowers/sdd/progress.md`, dette technique de l'import dans `docs/superpowers/tech-debt-import-pipeline.md`.
