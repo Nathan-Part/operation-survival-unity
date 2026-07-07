@@ -37,6 +37,7 @@ namespace Game.Runtime
                 held = Instantiate(data.modelPrefab, transform);
                 held.transform.localPosition = Vector3.zero;
                 held.transform.localRotation = Quaternion.identity;
+                held.transform.localScale = Vector3.Scale(held.transform.localScale, Vector3.one * data.modelScale);
                 foreach (var r in held.GetComponentsInChildren<Renderer>())
                     r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 
