@@ -60,6 +60,12 @@ namespace Game.Data.Editor.Import.JsonModels
         [JsonProperty("key")] public string Key;
         [JsonProperty("name")] public string Name;
         [JsonProperty("price")] public int Price;
+        [JsonProperty("damage")] public float Damage;
+        [JsonProperty("radius")] public float Radius;
+        [JsonProperty("fuseSeconds")] public float FuseSeconds;
+        [JsonProperty("effectSeconds")] public float EffectSeconds;
+        [JsonProperty("throwSpeed")] public float ThrowSpeed;
+        [JsonProperty("maxStock")] public int MaxStock;
         [JsonProperty("assets")] public ConsumableAssetsJson Assets;
     }
 

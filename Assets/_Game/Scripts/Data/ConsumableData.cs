@@ -10,6 +10,13 @@ namespace Game.Data
         public int price;
         public string iconName;
 
+        public float damage;
+        public float radius;
+        public float fuseSeconds;
+        public float effectSeconds;
+        public float throwSpeed;
+        public int maxStock;
+
         public Sprite icon;
     }
 }

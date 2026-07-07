@@ -93,6 +93,12 @@ namespace Game.Data.Editor.Import
             Set(ref consumable.key, entry.Key, ref changed);
             Set(ref consumable.displayName, entry.Name, ref changed);
             Set(ref consumable.price, entry.Price, ref changed);
+            Set(ref consumable.damage, entry.Damage, ref changed);
+            Set(ref consumable.radius, entry.Radius, ref changed);
+            Set(ref consumable.fuseSeconds, entry.FuseSeconds, ref changed);
+            Set(ref consumable.effectSeconds, entry.EffectSeconds, ref changed);
+            Set(ref consumable.throwSpeed, entry.ThrowSpeed, ref changed);
+            Set(ref consumable.maxStock, entry.MaxStock, ref changed);
             Set(ref consumable.iconName, entry.Assets.Icon, ref changed);
 
             Report(report, consumable.key, wasCreated, changed);
