@@ -60,7 +60,9 @@ namespace Game.Runtime
         {
             if (motor == null) return;
             Vector2 m = move.ReadValue<Vector2>();
-            bool wantsRun = sprint.IsPressed() || m.sqrMagnitude >= 0.81f; // stick à fond = courir (D11)
+            // La source active du move : clavier → jamais de course auto ; stick/manette → règle D11.
+            bool fromStick = move.activeControl != null && !(move.activeControl.device is Keyboard);
+            bool wantsRun = RunDecision.WantsRun(sprint.IsPressed(), m.sqrMagnitude, fromStick);
             motor.SetMoveInput(m, wantsRun);
             if (look != null) look.AddLook(lookAction.ReadValue<Vector2>());
             if (jump.WasPressedThisFrame()) motor.RequestJump();
