@@ -67,12 +67,15 @@ namespace Game.Runtime.Editor
             foreach (var offset in offsets)
             {
                 var probe = playerPos + offset + Vector3.up * 5f;
-                if (NavMesh.SamplePosition(probe, out NavMeshHit hit, 30f, NavMesh.AllAreas))
-                    spawns.Add(hit.position);
+                if (!NavMesh.SamplePosition(probe, out NavMeshHit hit, 30f, NavMesh.AllAreas)) continue;
+                var path = new NavMeshPath();
+                if (NavMesh.CalculatePath(hit.position, playerPos, NavMesh.AllAreas, path)
+                    && path.status == NavMeshPathStatus.PathComplete)
+                    spawns.Add(hit.position); // rejette les îlots (toits déconnectés — bug n°5)
             }
             if (spawns.Count == 0)
             {
-                Debug.LogWarning("UtopiaSceneBuilder: aucun point de spawn sur la NavMesh — spawns greybox autour du joueur.");
+                Debug.LogWarning("UtopiaSceneBuilder: aucun spawn joignable — repli greybox autour du joueur.");
                 foreach (var offset in offsets) spawns.Add(playerPos + offset);
             }
 

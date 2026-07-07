@@ -25,6 +25,8 @@ namespace Game.Runtime.Editor
             cc.height = 1.8f;
             cc.center = new Vector3(0f, 0.9f, 0f);
             cc.radius = 0.35f;
+            cc.stepOffset = 0.4f; // franchir des marches jusqu'à 40 cm (escaliers utopia)
+            cc.slopeLimit = 55f;  // pentes/rampes raides
 
             var pivot = new GameObject("CameraPivot");
             pivot.transform.SetParent(player.transform, false);

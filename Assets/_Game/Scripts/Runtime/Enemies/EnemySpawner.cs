@@ -21,6 +21,17 @@ namespace Game.Runtime
                 return null;
             }
 
+            if (player != null)
+            {
+                var reachPath = new NavMeshPath();
+                if (!NavMesh.CalculatePath(navHit.position, player.position, NavMesh.AllAreas, reachPath)
+                    || reachPath.status != NavMeshPathStatus.PathComplete)
+                {
+                    Debug.LogWarning($"EnemySpawner: '{data.id}' injoignable depuis {navHit.position} — spawn ignoré.");
+                    return null;
+                }
+            }
+
             var db = context.database;
             var stats = db.enemyCombatConfig.baseStats;
             var difficulty = GameContext.ResolveDifficulty(db);
