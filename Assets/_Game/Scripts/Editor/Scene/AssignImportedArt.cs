@@ -21,6 +21,11 @@ namespace Game.Runtime.Editor
         const string GenericEnemyPath = "Assets/_Game/Art/Enemies/enemie-generic.glb";
         const string AnimationLibraryPath = "Assets/_Game/Data/Config/AnimationLibrary.asset";
         const string DefaultWeaponModelPath = "Assets/_Game/Art/Weapons/ar-15.glb";
+        // ar-15.glb mesuré ~2,00 m de long tel qu'exporté (mesh brut, aucune correction d'échelle
+        // dans le GLB) — un AR-15 réel fait ~0,85-1,00 m : défaut d'export Blender (même famille de
+        // problème que d'autres GLB du projet). Corrigé ici en attendant un ré-export à la bonne
+        // échelle depuis Blender.
+        const float DefaultWeaponModelScale = 0.45f;
 
         static readonly (string role, string path)[] AnimationClips =
         {
@@ -94,9 +99,10 @@ namespace Game.Runtime.Editor
             if (weaponModel == null) Debug.LogWarning($"AssignImportedArt: GLB manquant {DefaultWeaponModelPath}");
             else foreach (var weapon in db.weapons)
             {
-                if (weapon == null || weapon.id != "default" || weapon.modelPrefab != null) continue;
-                weapon.modelPrefab = weaponModel;
-                EditorUtility.SetDirty(weapon);
+                if (weapon == null || weapon.id != "default") continue;
+                if (weapon.modelPrefab == null) { weapon.modelPrefab = weaponModel; EditorUtility.SetDirty(weapon); }
+                // Correctif d'échelle connu pour ce GLB précis ; ne touche pas si Nathan a déjà réglé la valeur à la main.
+                if (Mathf.Approximately(weapon.modelScale, 1f)) { weapon.modelScale = DefaultWeaponModelScale; EditorUtility.SetDirty(weapon); }
             }
 
             AssetDatabase.SaveAssets();

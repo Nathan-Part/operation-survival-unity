@@ -17,7 +17,7 @@ namespace Game.Runtime
         const float LocoFade = 0.2f;  // web: crossfade loco
         const float DeathFade = 0.18f;
 
-        public void Init(GameObject modelPrefab, AnimationLibrary library, PlayerMotor motor, GameObject weaponModel)
+        public void Init(GameObject modelPrefab, AnimationLibrary library, PlayerMotor motor, GameObject weaponModel, float weaponModelScale = 1f)
         {
             this.motor = motor;
             if (modelPrefab == null) return;
@@ -34,7 +34,7 @@ namespace Game.Runtime
                 driver.Bind(animator, library);
             }
 
-            AttachWeapon(weaponModel);
+            AttachWeapon(weaponModel, weaponModelScale);
         }
 
         // Grip main droite. Offsets exprimés dans l'espace du bone, robustes à l'échelle du rig
@@ -42,18 +42,25 @@ namespace Game.Runtime
         static readonly Vector3 GripLocalPos = new Vector3(0.02f, 0.03f, 0.06f); // TODO(Nathan): affiner à l'œil
         static readonly Vector3 GripLocalEuler = new Vector3(0f, 90f, 0f);       // TODO(Nathan): affiner à l'œil
 
-        void AttachWeapon(GameObject weaponModel)
+        void AttachWeapon(GameObject weaponModel, float weaponModelScale)
         {
             if (visual == null || weaponModel == null) return; // placeholder déjà résolu en amont : on ne skippe plus sur modelPrefab null
             var hand = FindHandBone(visual.transform);
             if (hand == null) { Debug.LogWarning("PlayerAvatar: bone main droite introuvable — arme non attachée."); return; }
             var held = Instantiate(weaponModel, hand);
+            var templateScale = held.transform.localScale; // échelle propre du prefab d'arme (généralement 1, mais à préserver si non)
             held.transform.localPosition = GripLocalPos;
             held.transform.localRotation = Quaternion.Euler(GripLocalEuler);
-            // Compense l'échelle monde du bone pour garder la taille du template d'arme.
+            // Neutralise l'échelle monde du bone : le rig du perso porte souvent une correction
+            // d'échelle intentionnelle sur son Armature (ex. blue-soldier.glb -> RightHand.lossyScale
+            // = 0.01, nécessaire pour que LE PERSO rende à la bonne taille), qui n'a rien à voir avec
+            // l'arme et ne doit pas s'appliquer à elle (sinon l'arme hérite d'une échelle x100 et
+            // devient géante). weaponModelScale corrige en plus un éventuel défaut d'export du
+            // modèle d'arme lui-même (voir WeaponData.modelScale).
             var s = hand.lossyScale;
-            held.transform.localScale = new Vector3(
+            var handCompensation = new Vector3(
                 s.x > 1e-4f ? 1f / s.x : 1f, s.y > 1e-4f ? 1f / s.y : 1f, s.z > 1e-4f ? 1f / s.z : 1f);
+            held.transform.localScale = Vector3.Scale(templateScale, handCompensation) * weaponModelScale;
         }
 
         public static Transform FindHandBone(Transform root)

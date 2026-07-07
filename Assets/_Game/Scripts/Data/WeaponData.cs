@@ -24,6 +24,12 @@ namespace Game.Data
         public GameObject modelPrefab;
         public Sprite icon;
 
+        // Correctif d'échelle du modèle 3D (art, pas d'équilibrage — jamais dans le JSON de spec).
+        // Certains GLB Blender sortent mal dimensionnés (ex. ar-15.glb mesuré ~2 m de long au lieu
+        // de ~0,9 m) ; ce facteur multiplicatif permet de corriger sans toucher au mesh. 1 = taille
+        // native du prefab (par défaut, tant qu'aucun défaut n'est constaté).
+        public float modelScale = 1f;
+
         public GameObject ResolveModel(PlaceholderLibrary placeholders) =>
             modelPrefab != null ? modelPrefab : placeholders.GetWeaponPlaceholder(category);
 

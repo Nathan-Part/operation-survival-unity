@@ -67,7 +67,7 @@ namespace Game.Runtime
             // Avatar 3ᵉ personne (modèle du perso + anims + arme en main)
             var avatar = motor.gameObject.AddComponent<PlayerAvatar>();
             avatar.Init(context.ResolveCharacterModel(character), db.animationLibrary, motor,
-                weaponData.ResolveModel(db.placeholders));
+                weaponData.ResolveModel(db.placeholders), weaponData.modelScale);
 
             // Feedback de tir : tracers partagés + viewmodel 1ʳᵉ personne
             var tracers = new GameObject("Tracers").AddComponent<TracerPool>();
