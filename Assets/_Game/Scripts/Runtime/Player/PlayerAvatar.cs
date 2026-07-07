@@ -17,7 +17,7 @@ namespace Game.Runtime
         const float LocoFade = 0.2f;  // web: crossfade loco
         const float DeathFade = 0.18f;
 
-        public void Init(GameObject modelPrefab, AnimationLibrary library, PlayerMotor motor, WeaponData weapon)
+        public void Init(GameObject modelPrefab, AnimationLibrary library, PlayerMotor motor, GameObject weaponModel)
         {
             this.motor = motor;
             if (modelPrefab == null) return;
@@ -34,20 +34,26 @@ namespace Game.Runtime
                 driver.Bind(animator, library);
             }
 
-            AttachWeapon(weapon);
+            AttachWeapon(weaponModel);
         }
 
-        /// Arme dans la main droite (web: RightHand, pos (0,0.02,0.08), rot (90°,0,0)).
-        void AttachWeapon(WeaponData weapon)
+        // Grip main droite. Offsets exprimés dans l'espace du bone, robustes à l'échelle du rig
+        // (le GLB peut être importé à une échelle ≠ 1). web: attachWeaponToHand.
+        static readonly Vector3 GripLocalPos = new Vector3(0.02f, 0.03f, 0.06f); // TODO(Nathan): affiner à l'œil
+        static readonly Vector3 GripLocalEuler = new Vector3(0f, 90f, 0f);       // TODO(Nathan): affiner à l'œil
+
+        void AttachWeapon(GameObject weaponModel)
         {
-            if (visual == null || weapon == null || weapon.modelPrefab == null) return;
+            if (visual == null || weaponModel == null) return; // placeholder déjà résolu en amont : on ne skippe plus sur modelPrefab null
             var hand = FindHandBone(visual.transform);
-            if (hand == null) return;
-            var held = Instantiate(weapon.modelPrefab, hand);
-            held.transform.localPosition = new Vector3(0f, 0.02f, 0.08f);
-            held.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
-            float ws = hand.lossyScale.x;
-            if (ws > 0.0001f) held.transform.localScale = Vector3.one / ws; // garde la taille monde du template
+            if (hand == null) { Debug.LogWarning("PlayerAvatar: bone main droite introuvable — arme non attachée."); return; }
+            var held = Instantiate(weaponModel, hand);
+            held.transform.localPosition = GripLocalPos;
+            held.transform.localRotation = Quaternion.Euler(GripLocalEuler);
+            // Compense l'échelle monde du bone pour garder la taille du template d'arme.
+            var s = hand.lossyScale;
+            held.transform.localScale = new Vector3(
+                s.x > 1e-4f ? 1f / s.x : 1f, s.y > 1e-4f ? 1f / s.y : 1f, s.z > 1e-4f ? 1f / s.z : 1f);
         }
 
         public static Transform FindHandBone(Transform root)
@@ -55,8 +61,10 @@ namespace Game.Runtime
             Transform fallback = null;
             foreach (var t in root.GetComponentsInChildren<Transform>())
             {
-                if (t.name == "RightHand") return t;
-                if (fallback == null && System.Text.RegularExpressions.Regex.IsMatch(t.name, "righthand|hand_r|rhand", System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+                // Noms exacts prioritaires (Mixamo/GLB), puis repli regex.
+                if (t.name == "mixamorig:RightHand" || t.name == "RightHand" || t.name == "Hand_R") return t;
+                if (fallback == null && System.Text.RegularExpressions.Regex.IsMatch(
+                        t.name, "right.?hand|hand.?r|rhand", System.Text.RegularExpressions.RegexOptions.IgnoreCase))
                     fallback = t;
             }
             return fallback;
