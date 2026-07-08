@@ -47,10 +47,17 @@ namespace Game.Runtime
                 return;
             }
 
+            // Difficulté + hardcore + entraînement (Lot 7, T24) — réglages persistants + one-shot posé par l'accueil.
+            context.SelectedDifficultyId = save.settings.difficulty;   // facile/normal/difficile
+            bool hardcore = save.settings.hardcore;
+            bool training = LaunchParams.Training; LaunchParams.Reset();
+
             int UpgLevel(string key) => save.playerUpgrades.TryGetValue(key, out int lvl) ? lvl : 0;
             motor.Init(db.movementConfig, StatFormulas.SpeedMult(character.baseSpeed, UpgLevel("speed"), 0f));
             health.Init(character, db.movementConfig, UpgLevel("health"), UpgLevel("regen"));
             health.shield = new ShieldModel();
+            health.hardcore = hardcore; // web: aucune régén PV/bouclier en hardcore
+            if (hardcore) health.DisableSecondWind(); // web: pas de dernier souffle en hardcore
             weapon.Init(weaponData, ShopRules.WeaponUpgradeLevel(save, weaponData.id));
             weapon.health = health;
             weapon.motor = motor;
@@ -100,6 +107,7 @@ namespace Game.Runtime
             // Lancer/usage de consommables (frag/collante/molotov/emp/flashbang/fumigène/medkit)
             var thrower = motor.gameObject.AddComponent<ConsumableThrower>();
             thrower.Init(db, meta, weapon.aimCamera, waveManager, health);
+            thrower.Hardcore = hardcore; // web: medkit désactivé en hardcore
             if (view.inputBridge != null) view.inputBridge.thrower = thrower;
 
             // Mêlée (web #45, X) : coup de crosse à courte portée.
@@ -158,7 +166,9 @@ namespace Game.Runtime
 
             TouchControlsRoot.CreateIfNeeded(look);
 
-            waveManager.Begin();
+            // Entraînement (Lot 7, T24) : pas de vagues, munitions infinies ; sinon lancement normal des vagues.
+            if (training) { weapon.infiniteAmmo = true; CalloutEvents.Raise("🎯 ENTRAÎNEMENT"); }
+            else waveManager.Begin();
         }
 
         /// Projette un point devant le joueur sur le sol (raycast vers le bas) pour poser un gadget (T13) ;

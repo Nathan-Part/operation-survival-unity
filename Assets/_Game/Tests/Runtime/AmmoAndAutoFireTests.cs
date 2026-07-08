@@ -21,6 +21,21 @@ namespace Game.Runtime.Tests
         }
 
         [Test]
+        public void Ammo_Refill_ResetsMagAndCancelsReload()
+        {
+            var a = new AmmoModel(3, 5f);
+            a.TryConsume();
+            a.TryConsume();
+            a.StartReload();
+            Assert.IsTrue(a.IsReloading);
+
+            a.Refill();                          // entraînement (T24) : jamais à sec
+
+            Assert.IsFalse(a.IsReloading);
+            Assert.AreEqual(3, a.InMag);
+        }
+
+        [Test]
         public void Ammo_ReloadIgnoredWhenFullOrAlreadyReloading()
         {
             var a = new AmmoModel(3, 1f);

@@ -43,5 +43,12 @@ namespace Game.Runtime
                 InMag = MagSize;
             }
         }
+
+        /// Munitions infinies (entraînement, T24) : remet le chargeur au max, annule un rechargement en cours.
+        public void Refill()
+        {
+            IsReloading = false;
+            InMag = MagSize;
+        }
     }
 }

@@ -72,5 +72,17 @@ namespace Game.Runtime.Tests
             health.ApplyFallDamage(2f);              // sous safeHeight : rien
             Assert.AreEqual(75f, health.Health);
         }
+
+        [Test]
+        public void DisableSecondWind_HardcoreDiesOnFatalBlow()
+        {
+            health.DisableSecondWind();              // web: pas de dernier souffle en hardcore (T24)
+            bool died = false;
+            health.Died += () => died = true;
+
+            health.TakeDamage(150f);                  // coup fatal : plus de second wind, mort directe
+            Assert.AreEqual(0f, health.Health);
+            Assert.IsTrue(died);
+        }
     }
 }

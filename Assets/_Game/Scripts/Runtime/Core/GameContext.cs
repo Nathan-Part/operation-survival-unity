@@ -7,6 +7,9 @@ namespace Game.Runtime
     {
         public GameDatabase database;
 
+        /// Difficulté choisie côté save (facile/normal/difficile) — posée par SliceBootstrap (T24).
+        public string SelectedDifficultyId = "normal";
+
         public static GameContext Instance { get; private set; }
 
         void Awake()
@@ -25,14 +28,16 @@ namespace Game.Runtime
             if (Instance == this) Instance = null;
         }
 
-        public DifficultySettings Difficulty => ResolveDifficulty(database);
+        public DifficultySettings Difficulty => ResolveDifficulty(database, SelectedDifficultyId);
 
-        public static DifficultySettings ResolveDifficulty(GameDatabase db)
+        public static DifficultySettings ResolveDifficulty(GameDatabase db) => ResolveDifficulty(db, "normal");
+
+        public static DifficultySettings ResolveDifficulty(GameDatabase db, string id)
         {
             var list = db != null && db.economyConfig != null ? db.economyConfig.difficulties : null;
             if (list != null)
                 foreach (var d in list)
-                    if (d != null && d.id == "normal")
+                    if (d != null && d.id == id)
                         return d;
             return new DifficultySettings
             {

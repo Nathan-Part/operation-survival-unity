@@ -41,6 +41,9 @@ namespace Game.Runtime
             HealthChanged?.Invoke(Health, MaxHealth);
         }
 
+        /// Hardcore (Lot 7, T24) : pas de dernier souffle — appelé après Init une fois le mode connu.
+        public void DisableSecondWind() => secondWindRemaining = 0;
+
         public void TakeDamage(float amount, Vector3 sourceWorldPos)
         {
             float before = Health;

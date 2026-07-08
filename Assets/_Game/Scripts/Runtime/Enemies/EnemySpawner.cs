@@ -34,7 +34,7 @@ namespace Game.Runtime
 
             var db = context.database;
             var stats = db.enemyCombatConfig.baseStats;
-            var difficulty = GameContext.ResolveDifficulty(db);
+            var difficulty = context.Difficulty;
 
             var root = new GameObject($"Enemy_{data.id}");
             root.transform.position = navHit.position;

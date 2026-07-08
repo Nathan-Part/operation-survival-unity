@@ -22,6 +22,9 @@ namespace Game.Runtime
         public PlayerMotor motor;
         public bool isLmg;
 
+        /// Entraînement (Lot 7, T24) : jamais de chargeur vide — rechargé après chaque coup, désactive le reload.
+        public bool infiniteAmmo;
+
         /// Power-ups (web #34+, Lot 5) : dmgx2 (DamageMult) et rapid (CooldownMult), branché par SliceBootstrap.
         public PowerUpRuntime powerups;
         readonly OverheatModel overheat = new OverheatModel();
@@ -221,6 +224,7 @@ namespace Game.Runtime
             }
 
             if (isLmg) overheat.OnShot(Time.time);
+            if (infiniteAmmo) ammo.Refill(); // entraînement (T24) : jamais à sec, jamais de rechargement
 
             Fired?.Invoke();
             AmmoChanged?.Invoke(ammo.InMag, ammo.MagSize);

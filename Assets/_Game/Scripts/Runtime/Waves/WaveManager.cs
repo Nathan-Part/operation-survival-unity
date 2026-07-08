@@ -97,7 +97,7 @@ namespace Game.Runtime
             if (Combo.Count > BestComboThisRun) BestComboThisRun = Combo.Count;
             bool vip = enemy != null && enemy.IsVip;
             var eco = context.database.economyConfig;
-            var difficulty = GameContext.ResolveDifficulty(context.database);
+            var difficulty = context.Difficulty;
             int gained = eco != null
                 ? EconomyRules.MoneyForKill(eco.perKillMoney, mult, difficulty.moneyMult, vip, SpecialRules.VipMoneyMult)
                 : 0; // web: MONEY_PER_KILL × combo × difficulté × VIP
