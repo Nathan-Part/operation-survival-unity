@@ -19,6 +19,7 @@ namespace Game.Runtime.Editor
         const string UxmlPath = "Assets/_Game/UI/Home/Home.uxml";
         const string SettingsPanelUxmlPath = "Assets/_Game/UI/Home/SettingsPanel.uxml";
         const string MapPanelUxmlPath = "Assets/_Game/UI/Home/MapPanel.uxml";
+        const string LoadoutPanelUxmlPath = "Assets/_Game/UI/Home/LoadoutPanel.uxml";
 
         [MenuItem("Tools/Game/Build Home Scene")]
         public static void Build()
@@ -82,13 +83,21 @@ namespace Game.Runtime.Editor
             if (mapPanelAsset == null)
                 Debug.LogError($"HomeSceneBuilder: MapPanel.uxml introuvable a {MapPanelUxmlPath}");
 
+            // LoadoutPanelController partage aussi le GameObject UIDocument : clone LoadoutPanel.uxml
+            // dans le conteneur vide #loadout-panel au Play Mode (Task 10) — même raison que MapPanelController.
+            var loadoutPanel = uiGo.AddComponent<LoadoutPanelController>();
+            var loadoutPanelAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(LoadoutPanelUxmlPath);
+            if (loadoutPanelAsset == null)
+                Debug.LogError($"HomeSceneBuilder: LoadoutPanel.uxml introuvable a {LoadoutPanelUxmlPath}");
+
             var controller = uiGo.AddComponent<HomeController>();
             // Init() ne fait qu'assigner les références sérialisées (voir commentaire sur la
             // méthode) : le câblage réel (rendu du lobby, perso 3D affiché) se fait au Play Mode
             // via HomeController.Start(), jamais ici (pas de GameObject runtime à sérialiser dans la scène).
-            controller.Init(context.database, meta, stage, launcher, settingsPanel, mapPanel);
+            controller.Init(context.database, meta, stage, launcher, settingsPanel, mapPanel, loadoutPanel);
             settingsPanel.Init(meta, controller, settingsPanelAsset);
             mapPanel.Init(meta, controller, mapPanelAsset);
+            loadoutPanel.Init(context.database, meta, controller, loadoutPanelAsset);
 
             System.IO.Directory.CreateDirectory("Assets/_Game/Scenes");
             EditorSceneManager.SaveScene(scene, ScenePath);

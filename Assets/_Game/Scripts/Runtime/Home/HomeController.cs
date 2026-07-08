@@ -27,6 +27,7 @@ namespace Game.Runtime
         [SerializeField] GameLauncher launcher;
         [SerializeField] SettingsPanelController settingsPanel;
         [SerializeField] MapPanelController mapPanel;
+        [SerializeField] LoadoutPanelController loadoutPanel;
 
         bool wired;
 
@@ -54,7 +55,7 @@ namespace Game.Runtime
         /// Play Mode. Si WireUi() créait des GameObjects (perso 3D) dès cet appel, ils seraient
         /// sérialisés tels quels dans la scène puis dupliqués par le vrai câblage runtime (Start())
         /// au Play Mode suivant — d'où la séparation stricte affectation (Init) / câblage (Start).
-        public void Init(GameDatabase database, MetaProgress metaProgress, LobbyCharacterStage characterStage, GameLauncher gameLauncher, SettingsPanelController settingsPanelController, MapPanelController mapPanelController)
+        public void Init(GameDatabase database, MetaProgress metaProgress, LobbyCharacterStage characterStage, GameLauncher gameLauncher, SettingsPanelController settingsPanelController, MapPanelController mapPanelController, LoadoutPanelController loadoutPanelController)
         {
             db = database;
             meta = metaProgress;
@@ -62,6 +63,7 @@ namespace Game.Runtime
             launcher = gameLauncher;
             settingsPanel = settingsPanelController;
             mapPanel = mapPanelController;
+            loadoutPanel = loadoutPanelController;
         }
 
         void Start()
@@ -120,7 +122,7 @@ namespace Game.Runtime
             settingsButton.clicked += () => { settingsPanel?.Render(meta.Data); OpenPanel("settings"); }; // web: openSettings() rend puis ouvre
             howtoButton.clicked += () => OpenPanel("howto");
             tileShop.clicked += () => OpenPanel("shop");
-            tileLoadout.clicked += () => OpenPanel("loadout");
+            tileLoadout.clicked += () => { loadoutPanel?.Render(meta.Data); OpenPanel("loadout"); }; // web: parité openSettings — rend puis ouvre
             tileMap.clicked += () => { mapPanel?.Render(meta.Data); OpenPanel("map"); }; // web: parité openSettings — rend puis ouvre
             tileTraining.clicked += () => launcher?.Deploy(meta, training: true);
             deployButton.clicked += TryDeploy;

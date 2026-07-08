@@ -1,0 +1,41 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="loadout-card" class="tac-card loadout-card">
+        <ui:Label text="// Chargement de combat" class="eyebrow" />
+        <ui:Label text="Série de points" class="panel-title" />
+        <ui:Label text="Choisis 3 bonus. Chaque kill donne 100 points à chacun, en parallèle. Une fois le palier atteint, la touche indiquée le déclenche." class="panel-intro" />
+
+        <ui:VisualElement name="loadout-grid" class="loadout-grid">
+            <ui:VisualElement name="loadout-item-turret" class="loadout-item">
+                <ui:Label text="Tourelle" class="loadout-name" />
+                <ui:Label name="loadout-sub-turret" text="Palier : — pts" class="loadout-sub" />
+                <ui:Button name="loadout-toggle-turret" text="Choisir — touche L" class="loadout-toggle" />
+            </ui:VisualElement>
+
+            <ui:VisualElement name="loadout-item-mine" class="loadout-item">
+                <ui:Label text="Claymore" class="loadout-name" />
+                <ui:Label name="loadout-sub-mine" text="Palier : — pts" class="loadout-sub" />
+                <ui:Button name="loadout-toggle-mine" text="Choisir — touche Y" class="loadout-toggle" />
+            </ui:VisualElement>
+
+            <ui:VisualElement name="loadout-item-airstrike" class="loadout-item">
+                <ui:Label text="Frappe aérienne" class="loadout-name" />
+                <ui:Label name="loadout-sub-airstrike" text="Palier : — pts" class="loadout-sub" />
+                <ui:Button name="loadout-toggle-airstrike" text="Choisir — touche U" class="loadout-toggle" />
+            </ui:VisualElement>
+
+            <ui:VisualElement name="loadout-item-carepackage" class="loadout-item">
+                <ui:Label text="Caisse" class="loadout-name" />
+                <ui:Label name="loadout-sub-carepackage" text="Palier : — pts" class="loadout-sub" />
+                <ui:Button name="loadout-toggle-carepackage" text="Choisir — touche I" class="loadout-toggle" />
+            </ui:VisualElement>
+
+            <ui:VisualElement name="loadout-item-dog" class="loadout-item">
+                <ui:Label text="Chien de guerre" class="loadout-name" />
+                <ui:Label name="loadout-sub-dog" text="Palier : — pts" class="loadout-sub" />
+                <ui:Button name="loadout-toggle-dog" text="Choisir — touche 4" class="loadout-toggle" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <ui:Button name="loadout-back" text="◀ Retour" class="panel-back" />
+    </ui:VisualElement>
+</ui:UXML>
