@@ -16,6 +16,12 @@ namespace Game.Runtime
         [NonSerialized] public bool FireHeld;
         [NonSerialized] public bool AimHeld;
 
+        /// Branchés par SliceBootstrap : adrénaline (PV du joueur), précision (immobile), surchauffe LMG.
+        public PlayerHealth health;
+        public PlayerMotor motor;
+        public bool isLmg;
+        readonly OverheatModel overheat = new OverheatModel();
+
         AmmoModel ammo;
         float cooldownRemaining;
         bool wasReloading;
@@ -32,6 +38,7 @@ namespace Game.Runtime
         public event Action Fired;                                       // chaque coup parti : recul, muzzle flash, kick caméra
         public event Action<HitZone, bool, EnemyHealth> HitConfirmed;    // zone, killed, cible : hitmarker/kill feed/callouts
         public event Action<Vector3> TracerRequested;                    // point d'impact ou fin de portée (l'origine vient du viewmodel)
+        public event Action<int, int> LongShot;                          // argent, xp — tir confirmé à ≥ 30 m (web #)
 
         public void Init(WeaponData weapon, int upgradeLevel = 0)
         {
@@ -62,6 +69,8 @@ namespace Game.Runtime
             }
             cooldownRemaining -= dt;
 
+            if (isLmg) overheat.Tick(Time.time);
+
             Ray center = aimCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
             bool onTarget = false;
             float distance = 0f;
@@ -73,7 +82,7 @@ namespace Game.Runtime
 
             bool ammoReady = !ammo.IsReloading && ammo.InMag > 0;
             bool auto = AutoFireDecider.ShouldFire(onTarget, distance, Weapon.range, cooldownRemaining, ammoReady);
-            if (AutoFireDecider.ShouldFireWithManual(auto, FireHeld, cooldownRemaining, ammoReady))
+            if (AutoFireDecider.ShouldFireWithManual(auto, FireHeld, cooldownRemaining, ammoReady) && (!isLmg || overheat.CanFire))
                 Fire();
 
             if (ammo.InMag == 0 && !ammo.IsReloading)
@@ -84,6 +93,12 @@ namespace Game.Runtime
         {
             if (!ammo.TryConsume()) return;
             cooldownRemaining = EffectiveCooldown;
+
+            bool precision = AimHeld && (motor == null || !motor.IsMoving);
+            bool adrenaline = health != null && CombatModifiers.IsAdrenaline(health.Health, health.MaxHealth);
+            float dmgMult = EffectiveDmgMult * CombatModifiers.DamageMult(adrenaline, precision);
+            bool longShotAwarded = false;
+
             int pellets = Mathf.Max(1, Weapon.pellets);
             for (int i = 0; i < pellets; i++)
             {
@@ -95,9 +110,17 @@ namespace Game.Runtime
                     var enemy = hit.collider.GetComponentInParent<EnemyHealth>();
                     if (enemy != null)
                     {
-                        var result = enemy.TakeHit(hit.point, EffectiveDmgMult, ray.origin);
+                        var result = enemy.TakeHit(hit.point, dmgMult, ray.origin);
                         if (result.blocked) CalloutEvents.Raise("BLOQUÉ!"); // bouclier frontal (web #119)
-                        else if (result.valid) HitConfirmed?.Invoke(result.zone, result.killed, enemy);
+                        else if (result.valid)
+                        {
+                            HitConfirmed?.Invoke(result.zone, result.killed, enemy);
+                            if (!longShotAwarded && CombatModifiers.IsLongShot(hit.distance))
+                            {
+                                longShotAwarded = true;
+                                LongShot?.Invoke(CombatModifiers.LongShotMoney, CombatModifiers.LongShotXp);
+                            }
+                        }
                     }
                 }
                 else
@@ -105,6 +128,9 @@ namespace Game.Runtime
                     TracerRequested?.Invoke(ray.origin + ray.direction * Weapon.range);
                 }
             }
+
+            if (isLmg) overheat.OnShot(Time.time);
+
             Fired?.Invoke();
             AmmoChanged?.Invoke(ammo.InMag, ammo.MagSize);
         }

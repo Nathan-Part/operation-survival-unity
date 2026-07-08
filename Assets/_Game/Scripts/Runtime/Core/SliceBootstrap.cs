@@ -52,6 +52,10 @@ namespace Game.Runtime
             health.Init(character, db.movementConfig, UpgLevel("health"), UpgLevel("regen"));
             health.shield = new ShieldModel();
             weapon.Init(weaponData, ShopRules.WeaponUpgradeLevel(save, weaponData.id));
+            weapon.health = health;
+            weapon.motor = motor;
+            weapon.isLmg = weaponData.id == "lmg";
+            weapon.LongShot += (money, xp) => { waveManager.AddBonusMoney(money); meta.Data.xp += xp; };
             motor.FellFrom += health.ApplyFallDamage;
             if (look != null) look.sensitivity = 0.12f * save.settings.sensitivity; // réglage web × base slice
 
