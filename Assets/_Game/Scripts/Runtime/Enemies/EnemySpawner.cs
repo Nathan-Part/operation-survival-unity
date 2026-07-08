@@ -55,6 +55,7 @@ namespace Game.Runtime
 
             var controller = root.AddComponent<EnemyController>();
             controller.Init(data, db.enemyCombatConfig, player, difficulty);
+            controller.Fired += () => AudioKit.Instance?.Play("enemyShot"); // T26 : parité web, son de tir ennemi
 
             health.Died += _ => controller.EnterDeath();
 

@@ -70,6 +70,16 @@ namespace Game.Runtime
             var status = motor.gameObject.AddComponent<PlayerStatusEffects>();
             status.motor = motor;
 
+            // Audio synthétisé (parité web audio.js, T26) : 8 sons construits une fois, câblés sur les events de gameplay.
+            var audio = motor.gameObject.AddComponent<AudioKit>();
+            audio.SetVolume(save.settings.volume);
+            weapon.Fired += () => audio.Play("shot");
+            weapon.HitConfirmed += (_, __, ___) => audio.Play("hit");
+            weapon.ReloadingChanged += r => { if (r) audio.Play("reload"); };
+            health.DamagedFrom += (_, __) => audio.Play("playerHit");
+            health.Died += () => audio.Play("gameover");
+            waveManager.EnemyKilled += (_, __) => audio.Play("enemyDie");
+
             // Progression persistante : argent/XP/records alimentés par les vagues
             waveManager.EnemyKilled += (enemy, money) =>
                 meta.OnKill(enemy != null && enemy.LastHitHead, enemy != null && enemy.IsVip, money);
@@ -101,7 +111,11 @@ namespace Game.Runtime
             view.health = health;
             view.motor = motor;
             view.inputBridge = motor.GetComponent<PlayerInputBridge>();
-            if (view.inputBridge != null) view.inputBridge.viewController = view;
+            if (view.inputBridge != null)
+            {
+                view.inputBridge.viewController = view;
+                view.inputBridge.audioKit = audio; // M (mute) — remplace le mécanisme provisoire du T25
+            }
             if (viewmodel != null) viewmodel.BindView(view);
 
             // Lancer/usage de consommables (frag/collante/molotov/emp/flashbang/fumigène/medkit)

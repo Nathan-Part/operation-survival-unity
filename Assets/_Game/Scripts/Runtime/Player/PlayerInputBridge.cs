@@ -16,6 +16,7 @@ namespace Game.Runtime
         public PlayerMelee melee;
         public WeaponPickup pickup;
         public HudPauseMenu pauseMenu;
+        public AudioKit audioKit;
 
         InputActionMap map;
         InputAction move, lookAction, jump, dash, reload, sprint, aim, fire, toggleView, fragKey, stickyKey;
@@ -103,7 +104,7 @@ namespace Game.Runtime
             // Échap/M avant le early-return : ces touches doivent marcher même sans moteur assigné (tests, écran de mort…)
             // et même à Time.timeScale=0 (l'Input System lit en temps non-scalé, cf. commentaire à la déclaration des actions).
             if (pauseKey.WasPressedThisFrame() && pauseMenu != null) pauseMenu.Toggle();
-            if (muteKey.WasPressedThisFrame()) ToggleMute();
+            if (muteKey.WasPressedThisFrame() && audioKit != null) audioKit.ToggleMute();
 
             if (motor == null) return;
             Vector2 m = move.ReadValue<Vector2>();
@@ -137,7 +138,11 @@ namespace Game.Runtime
                 if (empKey.WasPressedThisFrame()) thrower.Throw("emp");
                 if (medkitKey.WasPressedThisFrame()) thrower.UseMedkit();
             }
-            if (melee != null && meleeKey.WasPressedThisFrame()) melee.Strike();
+            if (melee != null && meleeKey.WasPressedThisFrame())
+            {
+                melee.Strike();
+                if (audioKit != null) audioKit.Play("melee");
+            }
             if (pickup != null && pickupKey.WasPressedThisFrame()) pickup.TryPickup();
             if (loadout != null)
             {
@@ -147,13 +152,6 @@ namespace Game.Runtime
                 if (carePackageKey.WasPressedThisFrame()) loadout.TryTrigger("carepackage");
                 if (dogKey.WasPressedThisFrame()) loadout.TryTrigger("dog");
             }
-        }
-
-        /// Mute global provisoire (T25) : bascule le volume de l'AudioListener.
-        /// Sera remplacé par AudioKit.ToggleMute() au T26 (vrai mixer/sons).
-        static void ToggleMute()
-        {
-            AudioListener.volume = AudioListener.volume > 0f ? 0f : 1f;
         }
     }
 }
