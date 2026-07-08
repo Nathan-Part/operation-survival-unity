@@ -104,6 +104,33 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9a1ed657c9e0de04f84f64bddf6e7db7, type: 2}
   - {fileID: 11400000, guid: 7f744e7ce370751469748bc246146175, type: 2}
   - {fileID: 11400000, guid: 7d7a629d886bd9b45ad3756ec0681f79, type: 2}
+  achievements:
+  - {fileID: 11400000, guid: 64092d76e37b5384bad5b6053c5cea72, type: 2}
+  - {fileID: 11400000, guid: 7c841f24f148d2a45b2c17e223f2713d, type: 2}
+  - {fileID: 11400000, guid: ca32ae76b8c88e14e89324328389786d, type: 2}
+  - {fileID: 11400000, guid: a201485435025a144ad871f22507f3e0, type: 2}
+  - {fileID: 11400000, guid: a5445885a962aa447a3da00563494668, type: 2}
+  - {fileID: 11400000, guid: 2a1d80c4db12fe3488c28f984949c0f0, type: 2}
+  - {fileID: 11400000, guid: 0b0eabcb9e9d0e74c871645d90d16a7a, type: 2}
+  - {fileID: 11400000, guid: fa3582b7a60194e48876ddf5baf68369, type: 2}
+  - {fileID: 11400000, guid: 4678fea524f9aeb4b8ef9d28caa9036e, type: 2}
+  - {fileID: 11400000, guid: b7141e65365857d498807c7e0d9e529b, type: 2}
+  - {fileID: 11400000, guid: 5bb6f31c8be88ab4693fe029ad543abf, type: 2}
+  - {fileID: 11400000, guid: 4941cd84807805a42bc925e6c446c40a, type: 2}
+  - {fileID: 11400000, guid: 78b2db773f67a1f4dbb2a3cb9d630741, type: 2}
+  - {fileID: 11400000, guid: 3041a9c16b1b8cc4ea3893bfe62fdb36, type: 2}
+  - {fileID: 11400000, guid: 4f791e20c12823248a9d8e843a0ccb34, type: 2}
+  - {fileID: 11400000, guid: e6d71abeb7c670e4eaf3c87538153777, type: 2}
+  - {fileID: 11400000, guid: 4380ed4fa02061842994af2069bc2b9e, type: 2}
+  - {fileID: 11400000, guid: 29fb5b6f95c04cc4b870fd6f10d53518, type: 2}
+  - {fileID: 11400000, guid: 103dd3bd18c18364c976bfa26801b3c7, type: 2}
+  - {fileID: 11400000, guid: 320923a90d4e6eb478c8e541631a135e, type: 2}
+  - {fileID: 11400000, guid: db05fdc5e7e813e408369f6d07e863fa, type: 2}
+  - {fileID: 11400000, guid: 14fd13529717bb046b43d471b8a84aca, type: 2}
+  - {fileID: 11400000, guid: 59573baa7abe6f1409dac64e6b3d6f11, type: 2}
+  - {fileID: 11400000, guid: 13727c635e9c25641bbddad2c3b2935c, type: 2}
+  - {fileID: 11400000, guid: 53d623a5487a36048bda1c5055a7ef6f, type: 2}
+  - {fileID: 11400000, guid: 8596abac1f3227b4da996c698552fca7, type: 2}
   movementConfig: {fileID: 11400000, guid: 42a4b5949855ffc4ba24b092032c78fc, type: 2}
   enemyCombatConfig: {fileID: 11400000, guid: c5a2af1ffff257d44883ee6e8786c504, type: 2}
   waveConfig: {fileID: 11400000, guid: 0d2a2489e1d80514b8729f7dacfa02aa, type: 2}

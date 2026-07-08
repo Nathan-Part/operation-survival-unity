@@ -1,0 +1,31 @@
+{
+  "_doc": "26 succès extraits de main.js:1658-1723. desc = descriptions françaises reconstituées (pas encore recroisées mot-à-mot avec le web — à valider par Nathan). conditionType+target pilotent AchievementRules.IsUnlocked côté Unity (pas de logique en dur par succès).",
+  "achievements": [
+    { "id": "firstblood", "name": "Premier sang", "desc": "Éliminez votre premier ennemi.", "conditionType": "run_kills", "target": 1 },
+    { "id": "headhunter", "name": "Chasseur de têtes", "desc": "Réalisez 5 tirs à la tête dans une même partie.", "conditionType": "run_headshots", "target": 5 },
+    { "id": "survivor5", "name": "Survivant", "desc": "Atteignez la vague 5.", "conditionType": "wave", "target": 5 },
+    { "id": "combomaster", "name": "Combo Master", "desc": "Atteignez un combo de 5 éliminations d'affilée.", "conditionType": "combo", "target": 5 },
+    { "id": "wave10", "name": "Vétéran", "desc": "Atteignez la vague 10.", "conditionType": "wave", "target": 10 },
+    { "id": "richesse", "name": "Fortune de guerre", "desc": "Accumulez 5000 pièces.", "conditionType": "money", "target": 5000 },
+    { "id": "legende", "name": "Légende", "desc": "Atteignez le niveau 50.", "conditionType": "level", "target": 50 },
+    { "id": "collectionneur", "name": "Collectionneur", "desc": "Possédez 10 armes différentes.", "conditionType": "owned_weapons", "target": 10 },
+    { "id": "perfectionniste", "name": "Perfectionniste", "desc": "Terminez 5 vagues sans perdre un point de vie.", "conditionType": "lifetime_perfect_waves", "target": 5 },
+    { "id": "millionnaire", "name": "Millionnaire", "desc": "Accumulez 10000 pièces.", "conditionType": "money", "target": 10000 },
+    { "id": "increvable", "name": "Increvable", "desc": "Atteignez la vague 20.", "conditionType": "wave", "target": 20 },
+    { "id": "bourreau", "name": "Bourreau", "desc": "Éliminez 500 ennemis au total.", "conditionType": "lifetime_kills", "target": 500 },
+    { "id": "sniper_elite", "name": "Sniper d'élite", "desc": "Réalisez 100 tirs à la tête au total.", "conditionType": "lifetime_headshots", "target": 100 },
+    { "id": "marathonien", "name": "Marathonien", "desc": "Parcourez 10000 mètres au total.", "conditionType": "lifetime_distance", "target": 10000 },
+    { "id": "speedrunner", "name": "Speedrunner", "desc": "Terminez 3 vagues en un temps record dans une même partie.", "conditionType": "run_speed_clears", "target": 3 },
+    { "id": "intouchable", "name": "Intouchable", "desc": "Enchaînez 10 vagues parfaites sans perdre un point de vie.", "conditionType": "perfect_wave_streak", "target": 10 },
+    { "id": "sans_faille", "name": "Sans faille", "desc": "Terminez 5 vagues sans recharger votre arme.", "conditionType": "no_reload_clears", "target": 5 },
+    { "id": "ombre", "name": "Ombre", "desc": "Éliminez 5 ennemis sans être repéré.", "conditionType": "stealth_kills", "target": 5 },
+    { "id": "cible_mouvante", "name": "Cible mouvante", "desc": "Parcourez 50 mètres en restant constamment en mouvement dans une même partie.", "conditionType": "run_distance", "target": 50 },
+    { "id": "intraitable", "name": "Intraitable", "desc": "Renversez 3 situations désespérées dans une même partie.", "conditionType": "clutches", "target": 3 },
+    { "id": "ingenieur", "name": "Ingénieur", "desc": "Provoquez 10 explosions en chaîne de barils dans une même partie.", "conditionType": "barrel_chains", "target": 10 },
+    { "id": "miracule", "name": "Miraculé", "desc": "Survivez alors que votre vie était presque à zéro.", "conditionType": "flag_miracle", "target": 1 },
+    { "id": "contractant", "name": "Contractant", "desc": "Terminez 3 contrats quotidiens.", "conditionType": "contracts_done", "target": 3 },
+    { "id": "legendaire_arme", "name": "Arme légendaire", "desc": "Obtenez une arme de rareté légendaire.", "conditionType": "flag_legendary_weapon", "target": 1 },
+    { "id": "silencieux", "name": "Silencieux", "desc": "Terminez une vague entière sans être détecté.", "conditionType": "flag_silent_clear", "target": 1 },
+    { "id": "stylise", "name": "Stylisé", "desc": "Équipez un cosmétique de rareté légendaire.", "conditionType": "flag_legendary_cosmetics", "target": 1 }
+  ]
+}

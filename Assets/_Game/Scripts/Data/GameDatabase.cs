@@ -14,6 +14,7 @@ namespace Game.Data
         public BoostData[] boosts = Array.Empty<BoostData>();
         public ConsumableData[] consumables = Array.Empty<ConsumableData>();
         public DanceData[] dances = Array.Empty<DanceData>();
+        public AchievementData[] achievements = Array.Empty<AchievementData>();
 
         public MovementConfig movementConfig;
         public EnemyCombatConfig enemyCombatConfig;
