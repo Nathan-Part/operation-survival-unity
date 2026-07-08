@@ -1,0 +1,76 @@
+/* Variables de thème + classes partagées par tout l'accueil (premier UI Toolkit du projet).
+   Couleurs actées phase 5 : violet #7c4dff, or #ffd15c ; raretés = EconomyConfig.rarities. */
+
+:root {
+    --color-purple: #7c4dff;
+    --color-purple-dark: #5b32c2;
+    --color-blue: #4f9dff;
+    --color-gold: #ffd15c;
+    --color-bg-card: rgba(18, 20, 32, 0.82);
+    --color-border: rgba(255, 255, 255, 0.1);
+    --color-text: #eef1f8;
+    --color-text-dim: #9aa3b2;
+    --rarity-common: #9aa3b2;
+    --rarity-rare: #4f9dff;
+    --rarity-epic: #b066ff;
+    --rarity-legendary: #ffb02e;
+}
+
+.hidden {
+    display: none;
+}
+
+.tac-card {
+    background-color: var(--color-bg-card);
+    border-width: 1px;
+    border-color: var(--color-border);
+    border-radius: 10px;
+    padding: 14px;
+}
+
+.chip {
+    flex-direction: row;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.07);
+    border-radius: 999px;
+    padding: 4px 12px;
+    margin-left: 6px;
+    color: var(--color-text);
+    font-size: 12px;
+}
+
+.eyebrow {
+    color: var(--color-text-dim);
+    font-size: 11px;
+    -unity-font-style: bold;
+    letter-spacing: 1px;
+}
+
+.gold-text {
+    color: var(--color-gold);
+}
+
+.rarity-common {
+    color: var(--rarity-common);
+}
+
+.rarity-rare {
+    color: var(--rarity-rare);
+}
+
+.rarity-epic {
+    color: var(--rarity-epic);
+}
+
+.rarity-legendary {
+    color: var(--rarity-legendary);
+}
+
+/* Polices Barlow (Task 1) — repli police par défaut si les TTF sont absents (pas de plantage USS). */
+Label, Button {
+    -unity-font-definition: url("/Assets/_Game/Art/UI/Fonts/Barlow-Regular.ttf");
+}
+
+.title-word, .deploy-title, .tile-title {
+    -unity-font-definition: url("/Assets/_Game/Art/UI/Fonts/BarlowCondensed-Bold.ttf");
+}

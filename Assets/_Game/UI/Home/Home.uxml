@@ -1,0 +1,144 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="HomeTheme.uss" />
+    <Style src="Home.uss" />
+    <ui:VisualElement name="home-root" class="home-root" picking-mode="Ignore">
+        <ui:VisualElement name="lobby" class="lobby">
+            <ui:VisualElement name="hub-top" class="hub-top">
+                <ui:VisualElement name="hub-operator" class="hub-col tac-card">
+                    <ui:Label text="Opérateur" class="eyebrow" />
+                    <ui:Label name="rank-label" text="Rang 1" class="rank-label" />
+                    <ui:VisualElement name="rank-bar" class="rank-bar">
+                        <ui:VisualElement name="rank-bar-fill" class="rank-bar-fill" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+
+                <ui:VisualElement name="hub-warzone" class="hub-col hub-center">
+                    <ui:Label text="// Zone de guerre" class="eyebrow" />
+                    <ui:VisualElement class="title-row">
+                        <ui:Label text="Opération" class="title-word" />
+                        <ui:Label text="Survie" class="title-word title-gradient" />
+                    </ui:VisualElement>
+                    <ui:Label text="Survivez aux vagues infinies" class="subtitle" />
+                </ui:VisualElement>
+
+                <ui:VisualElement name="hub-status" class="hub-col hub-status">
+                    <ui:VisualElement class="chip-row">
+                        <ui:VisualElement class="chip">
+                            <ui:Label text="🪙" />
+                            <ui:Label name="credits-chip" text="0" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="chip">
+                            <ui:Label name="wave-chip" text="Vague 0" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="chip">
+                            <ui:Label name="combo-chip" text="Meilleur combo x1" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="button-row">
+                        <ui:Button name="settings-button" text="⚙ Réglages" class="icon-button" />
+                        <ui:Button name="howto-button" text="? Comment jouer" class="icon-button" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <ui:VisualElement name="hub-main" class="hub-main">
+                <ui:VisualElement name="hub-main-left" class="hub-main-col">
+                    <ui:VisualElement name="intel-card" class="tac-card">
+                        <ui:Label text="// Intel" class="eyebrow" />
+                        <ui:VisualElement class="intel-row">
+                            <ui:Label text="Record vague" class="intel-key" />
+                            <ui:Label name="intel-best-wave" text="0" class="intel-value" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="intel-row">
+                            <ui:Label text="Meilleur combo" class="intel-key" />
+                            <ui:Label name="intel-best-combo" text="0" class="intel-value" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="intel-row">
+                            <ui:Label text="Meilleur score" class="intel-key" />
+                            <ui:Label name="intel-best-score" text="0" class="intel-value" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="intel-row">
+                            <ui:Label text="Prestige" class="intel-key" />
+                            <ui:Label name="intel-prestige" text="—" class="intel-value" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="intel-row">
+                            <ui:Label text="Succès" class="intel-key" />
+                            <ui:Label name="intel-achievements" text="0/0" class="intel-value" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="intel-row">
+                            <ui:Label text="Crédits" class="intel-key" />
+                            <ui:Label name="intel-credits" text="0" class="intel-value gold-text" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+
+                    <ui:VisualElement name="equipment-card" class="tac-card">
+                        <ui:Label text="// Équipement" class="eyebrow" />
+                        <ui:VisualElement class="intel-row">
+                            <ui:Label text="Arme" class="intel-key" />
+                            <ui:Label name="equip-weapon" text="—" class="intel-value" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="intel-row">
+                            <ui:Label text="Masque" class="intel-key" />
+                            <ui:Label name="equip-helmet" text="—" class="intel-value" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="intel-row">
+                            <ui:Label text="Costume" class="intel-key" />
+                            <ui:Label name="equip-costume" text="—" class="intel-value" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+
+                <ui:VisualElement name="hub-main-center" class="hub-main-col hub-deploy-col">
+                    <ui:Button name="deploy-button" class="deploy-button">
+                        <ui:Label text="// Mode survie" class="eyebrow" />
+                        <ui:Label text="Déployer" class="deploy-title" />
+                        <ui:Label text="Survie — vagues infinies" class="subtitle" />
+                    </ui:Button>
+
+                    <ui:VisualElement name="char-selector" class="char-selector">
+                        <ui:Button name="char-prev" text="‹" class="char-arrow" />
+                        <ui:Label name="char-name" text="—" class="char-name" />
+                        <ui:Button name="char-next" text="›" class="char-arrow" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="char-dots" class="char-dots" />
+                </ui:VisualElement>
+
+                <ui:VisualElement name="hub-main-right" class="hub-main-col">
+                    <ui:VisualElement name="objectif-card" class="tac-card">
+                        <ui:Label text="// Objectif" class="eyebrow" />
+                        <ui:VisualElement name="objectif-thumb" class="objectif-thumb" />
+                        <ui:Label text="Survivez le plus longtemps possible. Affrontez des vagues d'ennemis toujours plus redoutables." class="objectif-text" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <ui:VisualElement name="hub-deploy" class="hub-deploy">
+                <ui:Button name="tile-shop" class="hub-tile">
+                    <ui:Label text="Armurerie" class="tile-title" />
+                    <ui:Label text="Équipez vos armes" class="tile-subtitle" />
+                </ui:Button>
+                <ui:Button name="tile-loadout" class="hub-tile">
+                    <ui:Label text="Série de points" class="tile-title" />
+                    <ui:Label text="Choisissez vos bonus" class="tile-subtitle" />
+                </ui:Button>
+                <ui:Button name="tile-training" class="hub-tile">
+                    <ui:Label text="Entraînement" class="tile-title" />
+                    <ui:Label text="Munitions illimitées" class="tile-subtitle" />
+                </ui:Button>
+                <ui:Button name="tile-map" class="hub-tile">
+                    <ui:Label text="Map" class="tile-title" />
+                    <ui:Label text="Choisissez le terrain" class="tile-subtitle" />
+                </ui:Button>
+                <ui:VisualElement name="tile-indicator" class="hub-tile hub-indicator" picking-mode="Ignore">
+                    <ui:Label text="Difficulté Croissante" class="tile-title" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <ui:VisualElement name="shop-panel" class="panel hidden" />
+        <ui:VisualElement name="loadout-panel" class="panel hidden" />
+        <ui:VisualElement name="map-panel" class="panel hidden" />
+        <ui:VisualElement name="settings-panel" class="panel hidden" />
+        <ui:VisualElement name="howto-panel" class="panel hidden" />
+    </ui:VisualElement>
+</ui:UXML>

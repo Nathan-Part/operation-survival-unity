@@ -1,0 +1,258 @@
+/* Layout du lobby (approximation USS du CSS web — clip-path "tactique" non reproduit, spec §4.6). */
+
+.home-root {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.lobby {
+    flex-grow: 1;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 28px 36px;
+}
+
+.hub-top {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.hub-col {
+    width: 30%;
+}
+
+.hub-center {
+    width: 38%;
+    align-items: center;
+}
+
+.hub-status {
+    align-items: flex-end;
+}
+
+.rank-label {
+    color: var(--color-text);
+    font-size: 18px;
+    -unity-font-style: bold;
+    margin-top: 4px;
+}
+
+.rank-bar {
+    height: 6px;
+    background-color: rgba(255, 255, 255, 0.12);
+    border-radius: 3px;
+    margin-top: 6px;
+    overflow: hidden;
+}
+
+.rank-bar-fill {
+    height: 100%;
+    width: 0%;
+    background-color: var(--color-purple);
+}
+
+.title-row {
+    flex-direction: row;
+    justify-content: center;
+}
+
+.title-word {
+    font-size: 34px;
+    -unity-font-style: bold;
+    color: var(--color-text);
+    margin-right: 8px;
+}
+
+.title-gradient {
+    color: var(--color-purple);
+}
+
+.subtitle {
+    color: var(--color-text-dim);
+    font-size: 13px;
+    margin-top: 4px;
+    -unity-text-align: middle-center;
+}
+
+.chip-row {
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.button-row {
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.icon-button {
+    margin-left: 8px;
+    background-color: rgba(255, 255, 255, 0.08);
+    border-width: 1px;
+    border-color: var(--color-border);
+    border-radius: 8px;
+    color: var(--color-text);
+    padding: 6px 12px;
+}
+
+.hub-main {
+    flex-grow: 1;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.hub-main-col {
+    flex-direction: column;
+    margin-left: 18px;
+    margin-right: 18px;
+}
+
+.hub-main-col > .tac-card {
+    margin-bottom: 14px;
+    width: 260px;
+}
+
+.intel-row {
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 4px;
+}
+
+.intel-key {
+    color: var(--color-text-dim);
+    font-size: 12px;
+}
+
+.intel-value {
+    color: var(--color-text);
+    font-size: 12px;
+    -unity-font-style: bold;
+}
+
+.hub-deploy-col {
+    align-items: center;
+}
+
+.deploy-button {
+    width: 260px;
+    height: 140px;
+    background-color: var(--color-purple);
+    border-radius: 14px;
+    border-width: 0;
+    justify-content: center;
+    align-items: center;
+}
+
+.deploy-title {
+    font-size: 30px;
+    -unity-font-style: bold;
+    color: white;
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+.char-selector {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 16px;
+}
+
+.char-arrow {
+    width: 32px;
+    height: 32px;
+    border-radius: 16px;
+    background-color: rgba(255, 255, 255, 0.08);
+    color: var(--color-text);
+}
+
+.char-name {
+    color: var(--color-text);
+    font-size: 16px;
+    -unity-font-style: bold;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.char-dots {
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.25);
+    margin-left: 3px;
+    margin-right: 3px;
+}
+
+.dot-active {
+    background-color: var(--color-purple);
+}
+
+.objectif-thumb {
+    height: 90px;
+    background-image: url("/Assets/_Game/Art/UI/objectif.jpg");
+    -unity-background-scale-mode: scale-and-crop;
+    border-radius: 8px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
+.objectif-text {
+    color: var(--color-text-dim);
+    font-size: 11px;
+    white-space: normal;
+}
+
+.hub-deploy {
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.hub-tile {
+    flex-grow: 1;
+    margin-left: 6px;
+    margin-right: 6px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    border-width: 1px;
+    border-color: var(--color-border);
+    padding: 10px;
+    align-items: center;
+}
+
+.tile-title {
+    color: var(--color-text);
+    font-size: 14px;
+    -unity-font-style: bold;
+}
+
+.tile-subtitle {
+    color: var(--color-text-dim);
+    font-size: 10px;
+    margin-top: 2px;
+}
+
+.hub-indicator {
+    opacity: 0.6;
+}
+
+.panel {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(6, 7, 12, 0.85);
+}
