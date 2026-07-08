@@ -117,6 +117,8 @@ namespace Game.Runtime
                 { "dog", db.economyConfig.loadoutThresholds.dog },
             };
             loadout.Init(save.selectedLoadout, loadoutThresholds, waveManager);
+            loadout.SetTrigger("mine", () => ProximityMine.Place(GroundInFront(motor, 1.5f), waveManager));
+            loadout.SetTrigger("turret", () => Turret.Deploy(GroundInFront(motor, 1.5f), waveManager));
             if (view.inputBridge != null) view.inputBridge.loadout = loadout;
 
             var hudGo = new GameObject("HUD");
@@ -129,6 +131,15 @@ namespace Game.Runtime
             TouchControlsRoot.CreateIfNeeded(look);
 
             waveManager.Begin();
+        }
+
+        /// Projette un point devant le joueur sur le sol (raycast vers le bas) pour poser un gadget (T13) ;
+        /// repli sur la position du joueur si le raycast ne touche rien.
+        static Vector3 GroundInFront(PlayerMotor m, float dist)
+        {
+            Vector3 origin = m.transform.position + m.transform.forward * dist + Vector3.up * 2f;
+            if (Physics.Raycast(origin, Vector3.down, out var hit, 10f)) return hit.point;
+            return m.transform.position;
         }
     }
 }
