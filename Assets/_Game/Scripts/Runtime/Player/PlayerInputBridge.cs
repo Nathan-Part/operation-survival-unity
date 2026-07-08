@@ -12,10 +12,12 @@ namespace Game.Runtime
         public WeaponController weapon;
         public PlayerViewController viewController;
         public ConsumableThrower thrower;
+        public LoadoutController loadout;
 
         InputActionMap map;
         InputAction move, lookAction, jump, dash, reload, sprint, aim, fire, toggleView, fragKey, stickyKey;
         InputAction flashKey, smokeKey, molotovKey, empKey, medkitKey;
+        InputAction mineKey, turretKey, airstrikeKey, carePackageKey, dogKey;
 
         void Awake()
         {
@@ -64,6 +66,13 @@ namespace Game.Runtime
 
             // Medkit (web: Z) : consommable instantané, pas un lancer.
             medkitKey = map.AddAction("Medkit", binding: "<Keyboard>/z");
+
+            // Série de points loadout (web #156, Y/L/U/I/4 = mine/turret/airstrike/carepackage/dog)
+            mineKey = map.AddAction("Mine", binding: "<Keyboard>/y");
+            turretKey = map.AddAction("Turret", binding: "<Keyboard>/l");
+            airstrikeKey = map.AddAction("Airstrike", binding: "<Keyboard>/u");
+            carePackageKey = map.AddAction("CarePackage", binding: "<Keyboard>/i");
+            dogKey = map.AddAction("Dog", binding: "<Keyboard>/digit4");
         }
 
         void OnEnable() { map.Enable(); }
@@ -100,6 +109,14 @@ namespace Game.Runtime
                 if (molotovKey.WasPressedThisFrame()) thrower.Throw("molotov");
                 if (empKey.WasPressedThisFrame()) thrower.Throw("emp");
                 if (medkitKey.WasPressedThisFrame()) thrower.UseMedkit();
+            }
+            if (loadout != null)
+            {
+                if (mineKey.WasPressedThisFrame()) loadout.TryTrigger("mine");
+                if (turretKey.WasPressedThisFrame()) loadout.TryTrigger("turret");
+                if (airstrikeKey.WasPressedThisFrame()) loadout.TryTrigger("airstrike");
+                if (carePackageKey.WasPressedThisFrame()) loadout.TryTrigger("carepackage");
+                if (dogKey.WasPressedThisFrame()) loadout.TryTrigger("dog");
             }
         }
     }

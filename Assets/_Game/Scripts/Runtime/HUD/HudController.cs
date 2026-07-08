@@ -30,7 +30,7 @@ namespace Game.Runtime
 
         public void Init(PlayerHealth health, WeaponController weapon, WaveManager waves, PlayerMotor motor, Transform playerBody,
             Camera camera = null, PlayerViewController viewController = null, MetaProgress meta = null, ConsumableThrower thrower = null,
-            KillstreakController killstreak = null)
+            KillstreakController killstreak = null, LoadoutController loadout = null)
         {
             this.health = health;
             this.weapon = weapon;
@@ -107,6 +107,7 @@ namespace Game.Runtime
             gameObject.AddComponent<HudCombo>().Init(root, waves);
             if (meta != null) gameObject.AddComponent<HudMeta>().Init(root, meta);
             if (meta != null) gameObject.AddComponent<HudConsumables>().Init(root, meta, thrower);
+            if (loadout != null && loadout.Model != null) gameObject.AddComponent<HudLoadout>().Init(root, loadout);
             if (camera != null)
             {
                 gameObject.AddComponent<HudEnemyBars>().Init(root, waves, camera);

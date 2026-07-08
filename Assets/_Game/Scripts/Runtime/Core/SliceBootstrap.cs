@@ -106,9 +106,22 @@ namespace Game.Runtime
             var killstreak = motor.gameObject.AddComponent<KillstreakController>();
             killstreak.Init(waveManager, weapon, health);
 
+            // Série de points loadout (web #156) : mine/turret/airstrike/carepackage/dog, seuils EconomyConfig
+            var loadout = motor.gameObject.AddComponent<LoadoutController>();
+            var loadoutThresholds = new System.Collections.Generic.Dictionary<string, int>
+            {
+                { "turret", db.economyConfig.loadoutThresholds.turret },
+                { "mine", db.economyConfig.loadoutThresholds.mine },
+                { "airstrike", db.economyConfig.loadoutThresholds.airstrike },
+                { "carepackage", db.economyConfig.loadoutThresholds.carepackage },
+                { "dog", db.economyConfig.loadoutThresholds.dog },
+            };
+            loadout.Init(save.selectedLoadout, loadoutThresholds, waveManager);
+            if (view.inputBridge != null) view.inputBridge.loadout = loadout;
+
             var hudGo = new GameObject("HUD");
             var hud = hudGo.AddComponent<HudController>();
-            hud.Init(health, weapon, waveManager, motor, motor.transform, weapon.aimCamera, view, meta, thrower, killstreak);
+            hud.Init(health, weapon, waveManager, motor, motor.transform, weapon.aimCamera, view, meta, thrower, killstreak, loadout);
             view.hud = hud;
 
             if (save.settings.defaultView == "third") view.SetMode(ViewMode.Third); // réglage « vue » du web
