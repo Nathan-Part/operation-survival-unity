@@ -103,6 +103,15 @@ namespace Game.Runtime
                 : 0; // web: MONEY_PER_KILL × combo × difficulté × VIP
             Money += Mathf.RoundToInt(gained * bonusMoneyMult); // web #58 : killstreak ×2
             if (vip) CalloutEvents.Raise("VIP ÉLIMINÉ!"); // web #140
+
+            // Power-ups (web #34+, Lot 5) : orbe lâché avec 12% de chance, tiré au hasard parmi les 24 fiches.
+            var powerUps = context.database.powerUps;
+            if (enemy != null && powerUps.Length > 0 && UnityEngine.Random.value < PowerUpRuntime.DropChance)
+            {
+                var chosen = powerUps[UnityEngine.Random.Range(0, powerUps.Length)];
+                if (chosen != null) PowerUpPickup.Spawn(enemy.transform.position, chosen);
+            }
+
             EnemyKilled?.Invoke(enemy, gained); // montant de base (hors bonus killstreak) pour l'XP/méta
             AliveCountChanged?.Invoke(alive.Count);
         }

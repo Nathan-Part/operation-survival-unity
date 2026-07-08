@@ -112,9 +112,17 @@ namespace Game.Runtime
             pickup.Init(motor.transform, weapon, db);
             if (view.inputBridge != null) view.inputBridge.pickup = pickup;
 
+            // Power-ups (web #34+, Lot 5) : cadre + drops (12%) + effets prioritaires, composant unique sur le joueur.
+            var powerups = motor.gameObject.AddComponent<PowerUpRuntime>();
+            powerups.health = health;
+            powerups.waves = waveManager;
+            weapon.powerups = powerups;
+            motor.powerups = powerups;
+
             // Killstreaks (web #58) : rechargement instantané / bouclier / argent ×2
             var killstreak = motor.gameObject.AddComponent<KillstreakController>();
             killstreak.Init(waveManager, weapon, health);
+            killstreak.powerups = powerups; // compose avec kevlar sur PlayerHealth.incomingMult (pas d'écrasement)
 
             // Série de points loadout (web #156) : mine/turret/airstrike/carepackage/dog, seuils EconomyConfig
             var loadout = motor.gameObject.AddComponent<LoadoutController>();
@@ -139,7 +147,7 @@ namespace Game.Runtime
 
             var hudGo = new GameObject("HUD");
             var hud = hudGo.AddComponent<HudController>();
-            hud.Init(health, weapon, waveManager, motor, motor.transform, weapon.aimCamera, view, meta, thrower, killstreak, loadout);
+            hud.Init(health, weapon, waveManager, motor, motor.transform, weapon.aimCamera, view, meta, thrower, killstreak, loadout, powerups);
             view.hud = hud;
 
             if (save.settings.defaultView == "third") view.SetMode(ViewMode.Third); // réglage « vue » du web

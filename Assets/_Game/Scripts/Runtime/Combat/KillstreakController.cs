@@ -7,6 +7,11 @@ namespace Game.Runtime
     public class KillstreakController : MonoBehaviour
     {
         public WaveManager waves; public WeaponController weapon; public PlayerHealth health;
+
+        /// Power-ups (web #34+, Lot 5) : compose avec le bouclier de killstreak sur PlayerHealth.incomingMult
+        /// (les deux multiplicateurs se multiplient entre eux, aucun des deux systèmes n'écrase l'autre).
+        public PowerUpRuntime powerups;
+
         readonly KillstreakModel model = new KillstreakModel();
         float ksShieldUntil = float.NegativeInfinity, moneyMultUntil = float.NegativeInfinity;
 
@@ -29,7 +34,9 @@ namespace Game.Runtime
 
         void Update()
         {
-            health.incomingMult = Time.time < ksShieldUntil ? 0.5f : 1f;   // web: ksShieldActive ×0.5 (compose avec kevlar au Lot 5)
+            float ksMult = Time.time < ksShieldUntil ? 0.5f : 1f;               // web: ksShieldActive ×0.5
+            float powerUpMult = powerups != null ? powerups.IncomingMult : 1f;   // web: kevlar ×0.7
+            health.incomingMult = ksMult * powerUpMult;                         // composition, jamais un écrasement
             waves.bonusMoneyMult = Time.time < moneyMultUntil ? 2f : 1f;
         }
     }

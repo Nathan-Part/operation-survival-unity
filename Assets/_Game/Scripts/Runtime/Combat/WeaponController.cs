@@ -21,6 +21,9 @@ namespace Game.Runtime
         public PlayerHealth health;
         public PlayerMotor motor;
         public bool isLmg;
+
+        /// Power-ups (web #34+, Lot 5) : dmgx2 (DamageMult) et rapid (CooldownMult), branché par SliceBootstrap.
+        public PowerUpRuntime powerups;
         readonly OverheatModel overheat = new OverheatModel();
 
         AmmoModel ammo;
@@ -180,11 +183,11 @@ namespace Game.Runtime
         void Fire()
         {
             if (!ammo.TryConsume()) return;
-            cooldownRemaining = EffectiveCooldown;
+            cooldownRemaining = EffectiveCooldown * (powerups != null ? powerups.CooldownMult : 1f); // web: rapid ×1.8 cadence
 
             bool precision = AimHeld && (motor == null || !motor.IsMoving);
             bool adrenaline = health != null && CombatModifiers.IsAdrenaline(health.Health, health.MaxHealth);
-            float dmgMult = EffectiveDmgMult * CombatModifiers.DamageMult(adrenaline, precision);
+            float dmgMult = EffectiveDmgMult * CombatModifiers.DamageMult(adrenaline, precision) * (powerups != null ? powerups.DamageMult : 1f); // web: dmgx2
             bool longShotAwarded = false;
 
             int pellets = Mathf.Max(1, Weapon.pellets);
