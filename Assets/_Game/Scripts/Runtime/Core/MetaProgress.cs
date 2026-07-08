@@ -48,7 +48,14 @@ namespace Game.Runtime
             if (wave > Data.bestWave) Data.bestWave = wave;
             if (score > Data.bestScore) Data.bestScore = score;
             if (bestComboThisRun > Data.bestCombo) Data.bestCombo = bestComboThisRun;
+            LeaderboardRules.Push(Data.leaderboard, score, wave, System.DateTime.Now.ToString("yyyy-MM-dd"));
             Persist();
+        }
+
+        public bool Prestige()
+        {
+            if (Data == null || !RankRules.CanPrestige(Level)) return false;
+            Data.prestige++; Data.xp = 0; Persist(); return true; // web: doPrestige (reset XP seul)
         }
 
         void Update() { if (Data != null) Data.lifetime.playtime += Time.unscaledDeltaTime; }
