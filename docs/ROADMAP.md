@@ -20,6 +20,8 @@ Si la scène est cassée ou supprimée : menu **Tools → Game → Build Slice S
 
 Sur mobile/tactile (Device Simulator ou build Android) : joystick virtuel à gauche, glisser à droite pour viser, boutons Saut/Dash/Recharge.
 
+**Depuis la Phase 5**, l'accueil réel est `Assets/_Game/Scenes/Home.unity` (première scène des Build Settings) : Play dessus pour tester le lobby → boutique → Déployer, qui enchaîne sur la map choisie (Utopia par défaut). `Tools → Game → Build Home Scene` la regénère entièrement. `Slice` reste l'outil de dev pour tester le gameplay brut sans passer par le menu.
+
 ---
 
 ## 📍 Où on en est (résumé)
@@ -39,9 +41,9 @@ Sur mobile/tactile (Device Simulator ou build Android) : joystick virtuel à gau
   - **Lot 6 — méta** : 26 succès pilotés par données, 8 contrats quotidiens (tirage déterministe + migration de save sûre), rangs/prestige/leaderboard, suivi de partie + toasts.
   - **Lot 7 — modes** : difficulté/hardcore/entraînement consommés au lancement, menu pause (Échap) + mute (M), audio synthétisé (8 sons, parité `audio.js`).
   - **Suivis ouverts non bloquants** (voir `.superpowers/sdd/progress.md` pour le détail) : slowmo (power-up) sans effet ennemi, plusieurs compteurs `RunStats` d'succès jamais alimentés (perfectWaveStreak lifetime, distance, etc.), tag `// SOLO-ONLY` pas appliqué partout, un commentaire de code obsolète sur `incomingMult` — rien de bloquant, à sweep avant la Phase 6.
-- 🧠 **Réflexion Phase 5 FAITE en autonomie (2026-07-07, sans code, sur demande de Nathan)** : inventaire de parité de l'accueil web écran par écran + 15 décisions (D1-D15) + 5 points à valider par Nathan. Spec `docs/superpowers/specs/2026-07-07-phase5-home-ui-design.md`, plan `docs/superpowers/plans/2026-07-07-phase5-home-ui.md` (16 tâches, branche prévue `feat/phase5-home-ui`). **Mise à jour en cours (2026-07-08)** pour les recoupements avec ce que la Phase 4 vient de livrer (succès déjà extraits, difficulté/hardcore/entraînement déjà consommés côté runtime, leaderboard déjà alimenté) avant exécution.
+- ✅✅✅ **PHASE 5 TERMINÉE À 100 % (2026-07-09, branche `feat/phase5-home-ui`)** — les 16 tâches du plan (accueil UI Toolkit, reproduction à l'identique du web), chacune implémentée puis relue par un agent indépendant (revue allégée pour les tâches 11/14/15 sur accord Nathan). **Task 16 (celle-ci) = passe de vérification complète dédiée** : suite entière relancée pour la première fois depuis le début de la branche (Tasks 13-15 avaient différé les `run_tests` par nouveau process) — **279/279 tests EditMode, 9 PlayMode (7 verts + 2 skips connus Utopia NavMesh-îlot, 0 échec)**, aucune régression sur les 16 tâches combinées. `HomeSmokeTests` ajouté (patron `SliceSmokeTests`). Cycle complet Home → Shop (5 onglets, achats/équipements réels testés) → Map/Réglages/Loadout/Comment-jouer → Deploy → Utopia → HUD → mort → Menu → Home vérifié via MCP en Play Mode. Passe de parité contre la spec §3 : catalogues boutique (armes/persos/accessoires/boosts/danses/consommables), textes des panneaux Map/Réglages/Loadout, gating Urban (`MapRules.IsAvailable`) tous confirmés exacts par inspection de code + `execute_code`. Détail complet dans `.superpowers/sdd/task-16-report.md`. TODO manuels restants (visuel, non bloquants) listés ci-dessous.
 - 🐛 **Bugs trouvés par Nathan en playtest (2026-07-07)** : voir section dédiée ci-dessous — 3 corrigés, 1 aggravé (map Blender), 1 encore ouvert (décor déformé, Blender).
-- ⬅️ **Prochaine session** : exécuter le plan Phase 5 (accueil UI Toolkit) à 100 %, une fois sa spec/plan mis à jour pour les recoupements Phase 4.
+- ⬅️ **Prochaine session** : vérification visuelle de l'accueil par Nathan (voir TODO manuels), puis merge de `feat/phase5-home-ui`, puis Phase 6 (multijoueur, Photon Fusion).
 
 ---
 
@@ -114,15 +116,16 @@ Geler le design du jeu web pour que Unity ait une référence stable : refactors
 
 **Jalon :** toute la logique du solo complet existe et est testée (même si l'interface finale n'est pas encore là).
 
-### Phase 5 — L'interface : reproduction EXACTE de la page d'accueil web ⭐ 🔜
+### Phase 5 — L'interface : reproduction EXACTE de la page d'accueil web ✅ FAIT (2026-07-09)
 
 **Décision actée (2026-07-07, très important pour Nathan) : la page d'accueil du jeu web est reproduite À L'IDENTIQUE — mêmes boutons, mêmes fonctionnalités, même comportement, tout pareil.** La référence : l'accueil du jeu web (`C:\wamp64\www\projet\games`, HTML/CSS dans `styles/` et `src/`).
 
-- ✅ **Réflexion faite en autonomie (2026-07-07, sans code)** : inventaire exhaustif écran par écran, bouton par bouton de l'accueil web (jouer, boutique, persos, armes, loadout, réglages, stats, danses…) → checklist de parité. Spec `docs/superpowers/specs/2026-07-07-phase5-home-ui-design.md` (15 décisions D1-D15 + 5 points ouverts pour Nathan), plan `docs/superpowers/plans/2026-07-07-phase5-home-ui.md` (16 tâches, branche prévue `feat/phase5-home-ui`). Découverte clé : l'accueil web vit dans `game.html` (pas d'`index.html` séparé), en lobby + panneaux overlays ; pas d'écran dédié succès/contrats/prestige (juste des compteurs "Intel") ; pas de musique de menu.
-- **Refaire en UI Toolkit**, branché sur les systèmes de la Phase 4. **Exécution du plan en attente du feu vert de Nathan sur la spec.**
-- Vérification de parité **bouton par bouton** contre le web avant de clore la phase.
+- ✅ **Réflexion faite en autonomie (2026-07-07, sans code)** : inventaire exhaustif écran par écran, bouton par bouton de l'accueil web (jouer, boutique, persos, armes, loadout, réglages, stats, danses…) → checklist de parité. Spec `docs/superpowers/specs/2026-07-07-phase5-home-ui-design.md` (15 décisions D1-D15 + 5 points ouverts pour Nathan), plan `docs/superpowers/plans/2026-07-07-phase5-home-ui.md` (16 tâches, branche `feat/phase5-home-ui`). Découverte clé : l'accueil web vit dans `game.html` (pas d'`index.html` séparé), en lobby + panneaux overlays ; pas d'écran dédié succès/contrats/prestige (juste des compteurs "Intel") ; pas de musique de menu.
+- ✅ **Les 16 tâches livrées (branche `feat/phase5-home-ui`)** : scène `Home.unity` (`HomeSceneBuilder`, premier UI Toolkit du projet) avec perso 3D animé sur fond `lobby-bg.jpg` (caméra fixe parité web) ; lobby complet (Opérateur/rang, Intel, Équipement, Déployer, sélecteur de perso, 4 tuiles + indicateur) ; boutique 5 onglets (Armes/Personnage/Accessoires/Boost/Consommables) avec achats/équipements réels sur `ShopRules` étendu ; panneaux Map (Utopia jouable + Urban grisée « Bientôt », gating dérivé de `MapRules.IsAvailable`), Réglages (6 contrôles persistés), Série de points/loadout (5 tuiles, max 3, touches L/Y/U/I/4), Comment jouer (7 onglets statiques copiés du web) ; `GameLauncher.Deploy` (persist → overlay anti-flash → charge la map résolue) ; bouton Menu sur l'écran de mort → retour Home. Polices Barlow/Barlow Condensed TTF importées et câblées dans les USS.
+- ✅ **Task 16 (vérification complète dédiée, 2026-07-09)** : `HomeSmokeTests` ajouté (patron `SliceSmokeTests`), suite complète relancée pour la première fois sur la branche entière — **279/279 EditMode, 9 PlayMode (7 verts + 2 skips connus, 0 échec)**, aucune régression. Cycle Home → Shop → Map/Réglages/Loadout/Comment-jouer → Deploy → Utopia → HUD → mort → Menu → Home vérifié de bout en bout via MCP. Parité vérifiable sans humain confirmée (catalogues boutique exacts, textes des panneaux, gating Urban). Détail : `.superpowers/sdd/task-16-report.md`.
+- 💤 **Reste (manuel, non bloquant)** : vérification visuelle de l'accueil par Nathan, clips de danse à importer du web (`PlayDance` no-op sans eux, ne plante pas), découpe « tactique » exacte des cartes si souhaitée — voir TODO manuels ci-dessous.
 
-**Jalon :** un joueur du jeu web retrouve exactement son accueil sur mobile → **c'est la v1 publiable**.
+**Jalon atteint :** un joueur du jeu web retrouve exactement son accueil sur mobile → **c'est la v1 publiable**, sous réserve de la vérification visuelle manuelle de Nathan.
 
 ### Phase 6 — Multijoueur 🔜
 
@@ -223,6 +226,9 @@ La save passe côté serveur (sinon triche triviale). Options : Unity Cloud Save
 5. **Ré-exporter `ar-15.glb` depuis Blender à la bonne échelle** — le mesh brut est ~2,1× trop grand ; un correctif cosmétique (`WeaponData.modelScale = 0.45`) compense en attendant, mais le vrai fix est un ré-export propre.
 6. **Copier le modèle du chien de guerre** (`pets/chien2/chien-rigged.glb` du web) et les icônes/modèles des consommables/power-ups — placeholders en attendant, rien ne plante.
 7. **Sweep mineur (non bloquant, avant la Phase 6)** : appliquer le tag `// SOLO-ONLY` partout où le plan Phase 4 le demandait (second souffle, bouclier killstreak, slowmo — actuellement seul `CombatModifiers.cs` l'a) ; corriger le commentaire obsolète sur `PlayerHealth.incomingMult` (mentionne la difficulté à tort, elle est appliquée côté ennemi).
+8. **Vérifier visuellement l'accueil (Phase 5, scène `Assets/_Game/Scenes/Home.unity`, Play)** : lobby (cartes Opérateur/Zone de guerre/Intel/Équipement/Objectif, sélecteur de perso 3D animé sur le fond `lobby-bg.jpg`), les 5 onglets de la boutique, les panneaux Map/Réglages/Loadout/Comment jouer, le cycle Déployer → Utopia → mort → Menu → retour Home. Tout ce qui est vérifiable en code (textes, prix, états de boutons) a déjà été confirmé (Task 16) ; reste le regard humain : mise en page, alignements, lisibilité, couleurs, sensation générale.
+9. **Importer les clips de danse depuis le web** (`pets`/`animation` du jeu web, danses du perso) : `DanceData.animationClip` n'a aucun clip assigné pour l'instant, donc `LobbyCharacterStage.PlayDance` ne fait rien du tout (no-op gracieux, aucun plantage) quand on clique ▶ dans l'onglet Accessoires → Danses. Une fois les clips copiés dans `Assets/_Game/Art/Animations/` et assignés aux `DanceData`, les danses joueront réellement.
+10. **Découpe « tactique » exacte des cartes (optionnel)** : les cartes du lobby/boutique (`tac-card` et dérivés) utilisent des coins droits/bordures simples en USS ; le web a des `clip-path` façon biseaux militaires. Approximation assumée (écart D6 de la spec Phase 5) — si Nathan veut la découpe exacte, ce sera un ajustement USS pur (pas de logique à toucher).
 
 ## 📜 Règles à respecter (toutes sessions)
 
@@ -250,5 +256,6 @@ Unity 6 + C#, URP (pas Built-in/HDRP/Unreal) · Android + iOS · solo d'abord (v
 | 2026-07-07 | Réflexion Phase 5 (spec + plan, sans code) : inventaire de parité accueil web, 16 tâches prêtes | même branche |
 | 2026-07-07 | Playtest Nathan sur Utopia : 6 bugs relevés (arme mal placée, marche/course, anim course, collisions escaliers/vitres, ennemis bloqués sur toit, décor déformé) — voir section « Bugs » | à corriger |
 | 2026-07-08 | **Phase 4 complète** (26 tâches, 7 lots) : consommables/grenades, bouclier, killstreaks, modificateurs de combat, loadout+gadgets+chien, modes de tir/mêlée/ramassage/power-ups, succès/contrats/rangs/prestige/leaderboard, difficulté/hardcore/entraînement, pause/mute, audio synthétisé — + 3 bugs playtest corrigés + 1 bug supplémentaire trouvé et corrigé en live (arme géante) + 1 correctif de la revue finale (155→220 tests EditMode) | branche `feat/phase4-systems`, mergée dans `feat/phase3-anims-player-hud` |
+| 2026-07-09 | **Phase 5 complète** (16 tâches) : accueil UI Toolkit reproduit à l'identique du web (lobby, boutique 5 onglets, Map/Réglages/Loadout/Comment-jouer, Deploy, retour Menu). Task 16 : passe de vérification dédiée (`HomeSmokeTests`, 279 EditMode + 9 PlayMode, cycle complet Home→Shop→Deploy→Utopia→mort→Home vérifié via MCP, parité écran par écran confirmée) | branche `feat/phase5-home-ui` |
 
 Détails d'archive : specs dans `docs/superpowers/specs/`, plans dans `docs/superpowers/plans/`, journal de l'import dans `.superpowers/sdd/progress.md`, dette technique de l'import dans `docs/superpowers/tech-debt-import-pipeline.md`.
