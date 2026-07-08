@@ -204,6 +204,24 @@ namespace Game.Runtime
             buttonLabel.rectTransform.anchorMax = Vector2.one;
             buttonLabel.rectTransform.sizeDelta = Vector2.zero;
 
+            var menuButtonGo = new GameObject("MenuButton");
+            menuButtonGo.transform.SetParent(rect, false);
+            var menuButtonImage = menuButtonGo.AddComponent<Image>();
+            menuButtonImage.color = new Color(0.25f, 0.25f, 0.3f, 0.95f);
+            var menuButtonRect = (RectTransform)menuButtonGo.transform;
+            menuButtonRect.anchorMin = menuButtonRect.anchorMax = new Vector2(0.5f, 0.3f);
+            menuButtonRect.sizeDelta = new Vector2(320f, 80f);
+            var menuButton = menuButtonGo.AddComponent<Button>();
+            menuButton.onClick.AddListener(() =>
+            {
+                Time.timeScale = 1f;
+                SceneManager.LoadScene("Home"); // scène d'accueil enregistrée en Phase 5 — référence en avance, non bloquante ici
+            });
+            var menuButtonLabel = MakeText(menuButtonRect, "Menu", 36, TextAnchor.MiddleCenter);
+            menuButtonLabel.rectTransform.anchorMin = Vector2.zero;
+            menuButtonLabel.rectTransform.anchorMax = Vector2.one;
+            menuButtonLabel.rectTransform.sizeDelta = Vector2.zero;
+
             panel.SetActive(false);
             return panel;
         }
