@@ -30,6 +30,12 @@ namespace Game.Runtime
 
         public EnemyState State => brain != null ? brain.State : EnemyState.Idle;
 
+        /// Posés à la mort (EnterDeath) pour le ramassage d'arme (G, web #tranche23) :
+        /// id de l'arme lâchée par ce cadavre et flag « déjà pillé » (WeaponPickup).
+        public string DropWeaponId { get; private set; }
+        public bool Looted { get; private set; }
+        public void MarkLooted() => Looted = true;
+
         /// EMP/flashbang (Lot 4-5) : l'ennemi ne bouge plus et ne tire plus pendant `seconds`.
         public bool IsSuppressed => Time.time < suppressedUntil;
         public void Suppress(float seconds) => suppressedUntil = Time.time + seconds;
@@ -69,6 +75,7 @@ namespace Game.Runtime
             if (agent != null && agent.enabled) { agent.isStopped = true; agent.enabled = false; }
             var capsule = GetComponent<CapsuleCollider>();
             if (capsule != null) capsule.enabled = false;
+            DropWeaponId = EnemyWeaponDrop.ForEnemy(data);
         }
 
         void Update()

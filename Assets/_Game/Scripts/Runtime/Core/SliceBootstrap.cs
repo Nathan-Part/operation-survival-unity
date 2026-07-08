@@ -107,6 +107,11 @@ namespace Game.Runtime
             melee.Init(weapon.aimCamera.transform, waveManager);
             if (view.inputBridge != null) view.inputBridge.melee = melee;
 
+            // Ramassage d'arme sur cadavre (web #tranche23, G, 2.5 m) : loot run-based, n'altère pas la save.
+            var pickup = motor.gameObject.AddComponent<WeaponPickup>();
+            pickup.Init(motor.transform, weapon, db);
+            if (view.inputBridge != null) view.inputBridge.pickup = pickup;
+
             // Killstreaks (web #58) : rechargement instantané / bouclier / argent ×2
             var killstreak = motor.gameObject.AddComponent<KillstreakController>();
             killstreak.Init(waveManager, weapon, health);

@@ -14,12 +14,13 @@ namespace Game.Runtime
         public ConsumableThrower thrower;
         public LoadoutController loadout;
         public PlayerMelee melee;
+        public WeaponPickup pickup;
 
         InputActionMap map;
         InputAction move, lookAction, jump, dash, reload, sprint, aim, fire, toggleView, fragKey, stickyKey;
         InputAction flashKey, smokeKey, molotovKey, empKey, medkitKey;
         InputAction mineKey, turretKey, airstrikeKey, carePackageKey, dogKey;
-        InputAction burstModeKey, semiModeKey, meleeKey;
+        InputAction burstModeKey, semiModeKey, meleeKey, pickupKey;
 
         void Awake()
         {
@@ -76,6 +77,9 @@ namespace Game.Runtime
             // Mêlée (web #45, X) : coup de crosse à courte portée.
             meleeKey = map.AddAction("Melee", binding: "<Keyboard>/x");
 
+            // Ramassage d'arme sur cadavre (web #tranche23, G) : équipe l'arme du cadavre le plus proche.
+            pickupKey = map.AddAction("Pickup", binding: "<Keyboard>/g");
+
             // Série de points loadout (web #156, Y/L/U/I/4 = mine/turret/airstrike/carepackage/dog)
             mineKey = map.AddAction("Mine", binding: "<Keyboard>/y");
             turretKey = map.AddAction("Turret", binding: "<Keyboard>/l");
@@ -122,6 +126,7 @@ namespace Game.Runtime
                 if (medkitKey.WasPressedThisFrame()) thrower.UseMedkit();
             }
             if (melee != null && meleeKey.WasPressedThisFrame()) melee.Strike();
+            if (pickup != null && pickupKey.WasPressedThisFrame()) pickup.TryPickup();
             if (loadout != null)
             {
                 if (mineKey.WasPressedThisFrame()) loadout.TryTrigger("mine");
