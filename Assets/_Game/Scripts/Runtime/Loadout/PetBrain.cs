@@ -6,7 +6,7 @@ namespace Game.Runtime
     /// suit le joueur sinon, idle quand collé au joueur.
     public static class PetBrain
     {
-        public const float DetectR = 7f, GiveupR = 11f, FollowDist = 1.8f, StopDist = 1.1f, AttackR = 1.3f;
+        public const float DetectR = 7f, GiveupR = 11f, FollowDist = 1.8f, StopDist = 1.1f, AttackR = 1.3f; // web: pet.js DETECT_R/GIVEUP_R/FOLLOW_DIST/STOP_DIST/ATTACK_R
 
         public static PetState Decide(PetState current, bool hasTarget, float distToTarget, float distToPlayer)
         {
