@@ -70,6 +70,13 @@ namespace Game.Runtime
             HealthChanged?.Invoke(Health, MaxHealth);
         }
 
+        public void Heal(float amount)
+        {
+            if (amount <= 0f || Health <= 0f) return;
+            Health = Mathf.Min(MaxHealth, Health + amount);
+            HealthChanged?.Invoke(Health, MaxHealth);
+        }
+
         public void ApplyFallDamage(float fallHeight)
         {
             if (fallDamage == null) return;

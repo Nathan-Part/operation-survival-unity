@@ -15,6 +15,7 @@ namespace Game.Runtime
 
         InputActionMap map;
         InputAction move, lookAction, jump, dash, reload, sprint, aim, fire, toggleView, fragKey, stickyKey;
+        InputAction flashKey, smokeKey, molotovKey, empKey, medkitKey;
 
         void Awake()
         {
@@ -53,9 +54,16 @@ namespace Game.Runtime
 
             toggleView = map.AddAction("ToggleView", binding: "<Keyboard>/v"); // web: V = vue 1re/3e
 
-            // Lancer de consommables (web: B = frag, J = collante ; N/H/K/O au T8)
+            // Lancer de consommables (web: B = frag, J = collante, N = flash, H = fumigène, K = molotov, O = EMP)
             fragKey = map.AddAction("Frag", binding: "<Keyboard>/b");
             stickyKey = map.AddAction("Sticky", binding: "<Keyboard>/j");
+            flashKey = map.AddAction("Flashbang", binding: "<Keyboard>/n");
+            smokeKey = map.AddAction("Smoke", binding: "<Keyboard>/h");
+            molotovKey = map.AddAction("Molotov", binding: "<Keyboard>/k");
+            empKey = map.AddAction("Emp", binding: "<Keyboard>/o");
+
+            // Medkit (web: Z) : consommable instantané, pas un lancer.
+            medkitKey = map.AddAction("Medkit", binding: "<Keyboard>/z");
         }
 
         void OnEnable() { map.Enable(); }
@@ -87,6 +95,11 @@ namespace Game.Runtime
             {
                 if (fragKey.WasPressedThisFrame()) thrower.Throw("frag");
                 if (stickyKey.WasPressedThisFrame()) thrower.Throw("sticky");
+                if (flashKey.WasPressedThisFrame()) thrower.Throw("flashbang");
+                if (smokeKey.WasPressedThisFrame()) thrower.Throw("smoke");
+                if (molotovKey.WasPressedThisFrame()) thrower.Throw("molotov");
+                if (empKey.WasPressedThisFrame()) thrower.Throw("emp");
+                if (medkitKey.WasPressedThisFrame()) thrower.UseMedkit();
             }
         }
     }

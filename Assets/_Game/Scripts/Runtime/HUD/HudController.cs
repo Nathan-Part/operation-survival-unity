@@ -27,7 +27,7 @@ namespace Game.Runtime
         static Font UiFont => Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
 
         public void Init(PlayerHealth health, WeaponController weapon, WaveManager waves, PlayerMotor motor, Transform playerBody,
-            Camera camera = null, PlayerViewController viewController = null, MetaProgress meta = null)
+            Camera camera = null, PlayerViewController viewController = null, MetaProgress meta = null, ConsumableThrower thrower = null)
         {
             this.health = health;
             this.weapon = weapon;
@@ -91,6 +91,7 @@ namespace Game.Runtime
             gameObject.AddComponent<HudCallout>().Init(root, weapon);
             gameObject.AddComponent<HudCombo>().Init(root, waves);
             if (meta != null) gameObject.AddComponent<HudMeta>().Init(root, meta);
+            if (meta != null) gameObject.AddComponent<HudConsumables>().Init(root, meta, thrower);
             if (camera != null)
             {
                 gameObject.AddComponent<HudEnemyBars>().Init(root, waves, camera);

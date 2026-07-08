@@ -92,19 +92,19 @@ namespace Game.Runtime
             if (view.inputBridge != null) view.inputBridge.viewController = view;
             if (viewmodel != null) viewmodel.BindView(view);
 
+            // Lancer/usage de consommables (frag/collante/molotov/emp/flashbang/fumigène/medkit)
+            var thrower = motor.gameObject.AddComponent<ConsumableThrower>();
+            thrower.Init(db, meta, weapon.aimCamera, waveManager, health);
+            if (view.inputBridge != null) view.inputBridge.thrower = thrower;
+
             var hudGo = new GameObject("HUD");
             var hud = hudGo.AddComponent<HudController>();
-            hud.Init(health, weapon, waveManager, motor, motor.transform, weapon.aimCamera, view, meta);
+            hud.Init(health, weapon, waveManager, motor, motor.transform, weapon.aimCamera, view, meta, thrower);
             view.hud = hud;
 
             if (save.settings.defaultView == "third") view.SetMode(ViewMode.Third); // réglage « vue » du web
 
             TouchControlsRoot.CreateIfNeeded(look);
-
-            // Lancer de consommables (frag/collante au T7, autres au T8)
-            var thrower = motor.gameObject.AddComponent<ConsumableThrower>();
-            thrower.Init(db, meta, weapon.aimCamera, waveManager);
-            if (view.inputBridge != null) view.inputBridge.thrower = thrower;
 
             waveManager.Begin();
         }
