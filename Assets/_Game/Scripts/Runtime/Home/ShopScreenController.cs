@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 
 namespace Game.Runtime
 {
-    /// Contrôleur shell de la boutique (Task 11 : structure + onglet Armes ; Tasks 12-14 ajouteront
+    /// Contrôleur shell de la boutique (Task 11 : structure + onglet Armes ; Tasks 12-14 ont ajouté
     /// le contenu des 4 autres onglets dans ce même shell) : clone ShopPanel.uxml dans le conteneur
     /// vide `#shop-panel` de Home.uxml (Task 6), rail latéral 5 onglets, topbar Crédits/Fermer,
     /// flèches Précédent/Suivant (navigation du carrousel de l'onglet actif — seul l'onglet Armes
@@ -44,6 +44,8 @@ namespace Game.Runtime
         ShopWeaponsTab weaponsTab;
         ShopCharacterTab characterTab;
         ShopAccessoriesTab accessoriesTab;
+        ShopBoostTab boostTab;
+        ShopConsumablesTab consumablesTab;
 
         const float HeroRotationRadPerSec = 0.8f; // web: main.js:5450 (shopWeaponObj.rotation.y += dt*0.8)
 
@@ -130,6 +132,12 @@ namespace Game.Runtime
             accessoriesTab = new ShopAccessoriesTab(db, meta, stage);
             if (tabContents.TryGetValue("accessories", out var accessoriesPane)) accessoriesTab.Wire(accessoriesPane);
 
+            boostTab = new ShopBoostTab(db, meta);
+            if (tabContents.TryGetValue("boost", out var boostPane)) boostTab.Wire(boostPane);
+
+            consumablesTab = new ShopConsumablesTab(db, meta);
+            if (tabContents.TryGetValue("consumables", out var consumablesPane)) consumablesTab.Wire(consumablesPane);
+
             SwitchTab("weapons");
         }
 
@@ -209,6 +217,8 @@ namespace Game.Runtime
             if (activeTab == "weapons") weaponsTab?.Render();
             else if (activeTab == "player") characterTab?.Render();
             else if (activeTab == "accessories") accessoriesTab?.Render();
+            else if (activeTab == "boost") boostTab?.Render();
+            else if (activeTab == "consumables") consumablesTab?.Render();
         }
 
         // web: main.js:5450 — rotation du modèle héros uniquement pendant que la boutique est

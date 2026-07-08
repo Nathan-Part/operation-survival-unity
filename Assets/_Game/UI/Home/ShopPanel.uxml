@@ -162,11 +162,21 @@
                         <ui:ScrollView name="shop-dance-grid" mode="Vertical" horizontal-scroller-visibility="Hidden" class="acc-grid" />
                     </ui:VisualElement>
                 </ui:VisualElement>
-                <ui:VisualElement name="shop-tab-content-boost" class="shop-tab-content shop-stub hidden">
-                    <ui:Label text="Boost — bientôt disponible" class="shop-stub-label" />
+                <ui:VisualElement name="shop-tab-content-boost" class="shop-tab-content hidden">
+                    <ui:VisualElement class="shop-acc-head">
+                        <ui:Label text="// Boost" class="eyebrow" />
+                    </ui:VisualElement>
+                    <ui:VisualElement class="shop-acc-view">
+                        <ui:ScrollView name="shop-boost-grid" mode="Vertical" horizontal-scroller-visibility="Hidden" class="acc-grid" />
+                    </ui:VisualElement>
                 </ui:VisualElement>
-                <ui:VisualElement name="shop-tab-content-consumables" class="shop-tab-content shop-stub hidden">
-                    <ui:Label text="Consommables — bientôt disponible" class="shop-stub-label" />
+                <ui:VisualElement name="shop-tab-content-consumables" class="shop-tab-content hidden">
+                    <ui:VisualElement class="shop-acc-head">
+                        <ui:Label text="// Consommables" class="eyebrow" />
+                    </ui:VisualElement>
+                    <ui:VisualElement class="shop-acc-view">
+                        <ui:ScrollView name="shop-consumables-grid" mode="Vertical" horizontal-scroller-visibility="Hidden" class="acc-grid" />
+                    </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
