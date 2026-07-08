@@ -102,6 +102,11 @@ namespace Game.Runtime
             thrower.Init(db, meta, weapon.aimCamera, waveManager, health);
             if (view.inputBridge != null) view.inputBridge.thrower = thrower;
 
+            // Mêlée (web #45, X) : coup de crosse à courte portée.
+            var melee = motor.gameObject.AddComponent<PlayerMelee>();
+            melee.Init(weapon.aimCamera.transform, waveManager);
+            if (view.inputBridge != null) view.inputBridge.melee = melee;
+
             // Killstreaks (web #58) : rechargement instantané / bouclier / argent ×2
             var killstreak = motor.gameObject.AddComponent<KillstreakController>();
             killstreak.Init(waveManager, weapon, health);

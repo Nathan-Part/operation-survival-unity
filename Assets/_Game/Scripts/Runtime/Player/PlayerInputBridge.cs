@@ -13,12 +13,13 @@ namespace Game.Runtime
         public PlayerViewController viewController;
         public ConsumableThrower thrower;
         public LoadoutController loadout;
+        public PlayerMelee melee;
 
         InputActionMap map;
         InputAction move, lookAction, jump, dash, reload, sprint, aim, fire, toggleView, fragKey, stickyKey;
         InputAction flashKey, smokeKey, molotovKey, empKey, medkitKey;
         InputAction mineKey, turretKey, airstrikeKey, carePackageKey, dogKey;
-        InputAction burstModeKey, semiModeKey;
+        InputAction burstModeKey, semiModeKey, meleeKey;
 
         void Awake()
         {
@@ -72,6 +73,9 @@ namespace Game.Runtime
             // Medkit (web: Z) : consommable instantané, pas un lancer.
             medkitKey = map.AddAction("Medkit", binding: "<Keyboard>/z");
 
+            // Mêlée (web #45, X) : coup de crosse à courte portée.
+            meleeKey = map.AddAction("Melee", binding: "<Keyboard>/x");
+
             // Série de points loadout (web #156, Y/L/U/I/4 = mine/turret/airstrike/carepackage/dog)
             mineKey = map.AddAction("Mine", binding: "<Keyboard>/y");
             turretKey = map.AddAction("Turret", binding: "<Keyboard>/l");
@@ -117,6 +121,7 @@ namespace Game.Runtime
                 if (empKey.WasPressedThisFrame()) thrower.Throw("emp");
                 if (medkitKey.WasPressedThisFrame()) thrower.UseMedkit();
             }
+            if (melee != null && meleeKey.WasPressedThisFrame()) melee.Strike();
             if (loadout != null)
             {
                 if (mineKey.WasPressedThisFrame()) loadout.TryTrigger("mine");
