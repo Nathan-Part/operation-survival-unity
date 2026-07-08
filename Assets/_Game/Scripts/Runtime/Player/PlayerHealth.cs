@@ -21,6 +21,10 @@ namespace Game.Runtime
         public float Health { get; private set; }
         public float MaxHealth { get; private set; }
 
+        [System.NonSerialized] public ShieldModel shield; // objet plain C# (pas de MonoBehaviour/ScriptableObject), posé en code
+        public float incomingMult = 1f;      // killstreak ×0.5, kevlar ×0.7, difficulté (posé par les autres systèmes)
+        public bool hardcore;                // posé au Lot 7 (gèle régén PV + bouclier)
+
         public event Action<float, float> HealthChanged;
         public event Action Died;
         public event Action<float, Vector3> DamagedFrom; // dégâts subis + position monde de l'attaquant (indicateurs directionnels)
@@ -49,6 +53,9 @@ namespace Game.Runtime
             float now = timeSource();
             if (amount <= 0f || Health <= 0f || now < invulnerableUntil) return;
             lastDamageTime = now;
+            amount *= incomingMult;                                   // web: kevlar/ks/difficulté
+            if (shield != null) { shield.NoteDamage(now); amount = shield.Absorb(amount); }
+            if (amount <= 0f) { HealthChanged?.Invoke(Health, MaxHealth); return; } // tout absorbé
             Health -= amount;
             if (Health <= 0f)
             {
@@ -86,7 +93,8 @@ namespace Game.Runtime
 
         void Update()
         {
-            if (Health <= 0f || Health >= MaxHealth) return;
+            shield?.Tick(timeSource(), Time.deltaTime, hardcore);
+            if (hardcore || Health <= 0f || Health >= MaxHealth) return; // hardcore: pas de régén PV
             if (timeSource() - lastDamageTime < regenDelaySeconds) return;
             Health = Mathf.Min(MaxHealth, Health + regenRate * Time.deltaTime);
             HealthChanged?.Invoke(Health, MaxHealth);

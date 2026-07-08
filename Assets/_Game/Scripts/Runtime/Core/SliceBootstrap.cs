@@ -50,6 +50,7 @@ namespace Game.Runtime
             int UpgLevel(string key) => save.playerUpgrades.TryGetValue(key, out int lvl) ? lvl : 0;
             motor.Init(db.movementConfig, StatFormulas.SpeedMult(character.baseSpeed, UpgLevel("speed"), 0f));
             health.Init(character, db.movementConfig, UpgLevel("health"), UpgLevel("regen"));
+            health.shield = new ShieldModel();
             weapon.Init(weaponData, ShopRules.WeaponUpgradeLevel(save, weaponData.id));
             motor.FellFrom += health.ApplyFallDamage;
             if (look != null) look.sensitivity = 0.12f * save.settings.sensitivity; // réglage web × base slice

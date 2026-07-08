@@ -88,6 +88,7 @@ namespace Game.Runtime
             gameObject.AddComponent<HudKillFeed>().Init(root, weapon);
             gameObject.AddComponent<HudBossBar>().Init(root, waves);
             gameObject.AddComponent<HudScreenEffects>().Init(root, health);
+            if (health.shield != null) gameObject.AddComponent<HudShield>().Init(root, health);
             gameObject.AddComponent<HudCallout>().Init(root, weapon);
             gameObject.AddComponent<HudCombo>().Init(root, waves);
             if (meta != null) gameObject.AddComponent<HudMeta>().Init(root, meta);
