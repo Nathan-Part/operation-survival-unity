@@ -6,11 +6,13 @@ using UnityEngine.UIElements;
 namespace Game.Runtime
 {
     /// Contrôleur du panneau Map (web : sélection de terrain, `MAP_VISUALS`/§ home) : clone
-    /// MapPanel.uxml dans le conteneur vide `#map-panel` de Home.uxml (Task 6), affiche les maps
-    /// livrées (seule "utopia" est jouable, `MapRules.IsAvailable`) et persiste immédiatement le
-    /// choix. Pas de préchargement de décor ici : le chargement réel de la scène se fait au
-    /// déploiement (GameLauncher + MapRules.SceneNameFor), écart assumé par rapport à un
-    /// hypothétique préchargement au menu.
+    /// MapPanel.uxml dans le conteneur vide `#map-panel` de Home.uxml (Task 6). Cliquabilité et
+    /// état grisé de CHAQUE carte (utopia, urban) sont dérivés à l'exécution de
+    /// `MapRules.IsAvailable` (voir WireMapItem/ApplyAvailability) — rien n'est figé en dur dans
+    /// MapPanel.uxml, donc si `MapRules.IsAvailable("urban")` change un jour, ce panneau suit sans
+    /// retouche manuelle. Persiste immédiatement le choix. Pas de préchargement de décor ici : le
+    /// chargement réel de la scène se fait au déploiement (GameLauncher + MapRules.SceneNameFor),
+    /// écart assumé par rapport à un hypothétique préchargement au menu.
     [RequireComponent(typeof(UIDocument))]
     public class MapPanelController : MonoBehaviour
     {
@@ -25,6 +27,7 @@ namespace Game.Runtime
 
         Button utopiaItem;
         Label utopiaSub;
+        Button urbanItem;
 
         /// N'assigne QUE les références (pas de câblage ici) — voir le commentaire équivalent sur
         /// SettingsPanelController.Init : appelée par HomeSceneBuilder à l'édition, où WireUi()
@@ -58,14 +61,23 @@ namespace Game.Runtime
 
             utopiaItem = container.Q<Button>("map-item-utopia");
             utopiaSub = container.Q<Label>("map-sub-utopia");
+            urbanItem = container.Q<Button>("map-item-urban");
             var backButton = container.Q<Button>("map-back");
 
-            // Seule "utopia" est cliquable : "urban" est un VisualElement (pas un Button) rendu
-            // grisé avec le badge "Bientôt", jamais de handler de clic (MapRules.IsAvailable == false).
-            utopiaItem.clicked += () => SelectMap("utopia");
+            // Câblage du clic dérivé de MapRules.IsAvailable pour chaque carte (via ce helper
+            // partagé, pas de bloc dupliqué par map) : seule une map disponible reçoit un handler,
+            // "urban" n'en reçoit aucun tant que MapRules.IsAvailable("urban") == false. L'état
+            // grisé/désactivé (lui) est réappliqué à chaque Render() plus bas.
+            WireMapItem(utopiaItem, "utopia");
+            WireMapItem(urbanItem, "urban");
             backButton.clicked += () => home?.CloseActivePanel();
 
             Render(meta.Data);
+        }
+
+        void WireMapItem(Button item, string mapId)
+        {
+            if (MapRules.IsAvailable(mapId)) item.clicked += () => SelectMap(mapId);
         }
 
         // web: sélection de map -> persist() synchrone, jamais de batch (même logique que setSetting).
@@ -87,8 +99,19 @@ namespace Game.Runtime
             utopiaSub.text = utopiaCurrent ? "Terrain actuel" : "Choisir ce terrain";
             utopiaSub.EnableInClassList("map-sub-current", utopiaCurrent);
 
-            // "urban" reste grisé/non cliquable en permanence (MapRules.IsAvailable("urban") == false) :
-            // rien à mettre à jour côté rendu, son état est figé dans MapPanel.uxml.
+            // Grisé/désactivé dérivé de MapRules.IsAvailable à chaque rendu — pour les deux cartes,
+            // via le même helper (pas figé dans MapPanel.uxml). "urban" retombe désactivé tant que
+            // MapRules.IsAvailable("urban") == false ; si elle devient disponible un jour, ce
+            // rendu (et le câblage de clic dans WireUi) suivra automatiquement.
+            ApplyAvailability(utopiaItem, "utopia");
+            ApplyAvailability(urbanItem, "urban");
+        }
+
+        void ApplyAvailability(Button item, string mapId)
+        {
+            bool available = MapRules.IsAvailable(mapId);
+            item.SetEnabled(available);
+            item.EnableInClassList("map-item-disabled", !available);
         }
     }
 }

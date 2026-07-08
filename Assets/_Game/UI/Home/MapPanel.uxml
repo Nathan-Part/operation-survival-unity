@@ -11,11 +11,11 @@
                 <ui:Label name="map-sub-utopia" text="Choisir ce terrain" class="map-sub" />
             </ui:Button>
 
-            <ui:VisualElement name="map-item-urban" class="map-item map-item-disabled">
+            <ui:Button name="map-item-urban" class="map-item">
                 <ui:VisualElement name="map-thumb-urban" class="map-thumb map-thumb-urban" />
                 <ui:Label text="Arène urbaine" class="map-name" />
                 <ui:Label text="Bientôt" class="map-badge" />
-            </ui:VisualElement>
+            </ui:Button>
         </ui:VisualElement>
 
         <ui:Button name="map-back" text="◀ Retour" class="panel-back" />

@@ -403,6 +403,12 @@
     background-image: url("/Assets/_Game/Art/UI/map-utopia.png");
 }
 
+.map-thumb-urban {
+    /* Pas d'art dédié tant que la map n'est pas livrée (MapRules.IsAvailable == false) :
+       reprend explicitement le fond neutre de .map-thumb en attendant une vignette réelle. */
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
 .map-name {
     color: var(--color-text);
     font-size: 15px;
