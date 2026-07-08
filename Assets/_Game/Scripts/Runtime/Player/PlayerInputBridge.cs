@@ -140,8 +140,7 @@ namespace Game.Runtime
             }
             if (melee != null && meleeKey.WasPressedThisFrame())
             {
-                melee.Strike();
-                if (audioKit != null) audioKit.Play("melee");
+                if (melee.Strike() && audioKit != null) audioKit.Play("melee");
             }
             if (pickup != null && pickupKey.WasPressedThisFrame()) pickup.TryPickup();
             if (loadout != null)

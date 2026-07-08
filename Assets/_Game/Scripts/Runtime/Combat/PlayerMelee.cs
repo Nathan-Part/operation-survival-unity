@@ -7,9 +7,12 @@ namespace Game.Runtime
         const float Reach = 2.6f, Damage = 150f, Cooldown = 0.6f, ConeDot = 0.3f; // web: REACH=2.6, DAMAGE=150, cooldown=0.6
         Transform aim; WaveManager waves; float nextAt;
         public void Init(Transform aim, WaveManager waves) { this.aim = aim; this.waves = waves; }
-        public void Strike()
+        /// Tente un coup de mêlée. Renvoie true si le coup part réellement (hors cooldown),
+        /// false s'il est ignoré (cooldown actif ou aim absent) — permet à l'appelant de ne
+        /// jouer le son que sur un vrai coup (web main.js:1851-1854).
+        public bool Strike()
         {
-            if (Time.time < nextAt || aim == null) return;
+            if (Time.time < nextAt || aim == null) return false;
             nextAt = Time.time + Cooldown;
             EnemyHealth best = null; float bestD = Reach;
             foreach (var e in waves.Alive)
@@ -21,6 +24,7 @@ namespace Game.Runtime
                 bestD = d; best = e;
             }
             if (best != null) { best.ApplyDamage(Mathf.RoundToInt(Damage)); CalloutEvents.Raise("MÊLÉE"); }
+            return true;
         }
     }
 }
