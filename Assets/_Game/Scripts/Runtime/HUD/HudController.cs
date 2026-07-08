@@ -21,6 +21,7 @@ namespace Game.Runtime
         Text waveText;
         Text streakText;
         GameObject deathPanel;
+        public HudPauseMenu PauseMenu { get; private set; }
         int lastWave;
         int lastAlive;
         bool reloading;
@@ -125,6 +126,10 @@ namespace Game.Runtime
             // repli direct sur Died si le view controller n'existe pas)
             deathPanel = BuildDeathPanel(root);
             if (viewController == null) this.health.Died += ShowDeathScreen;
+
+            // Menu pause (Échap, parité web) — exposé pour être branché sur PlayerInputBridge par l'appelant.
+            PauseMenu = gameObject.AddComponent<HudPauseMenu>();
+            PauseMenu.Init(root);
 
             this.health.HealthChanged += OnHealthChanged;
             this.weapon.AmmoChanged += OnAmmoChanged;

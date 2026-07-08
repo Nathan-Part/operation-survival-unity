@@ -161,6 +161,7 @@ namespace Game.Runtime
             var hud = hudGo.AddComponent<HudController>();
             hud.Init(health, weapon, waveManager, motor, motor.transform, weapon.aimCamera, view, meta, thrower, killstreak, loadout, powerups, tracker);
             view.hud = hud;
+            if (view.inputBridge != null) view.inputBridge.pauseMenu = hud.PauseMenu; // Échap (T25)
 
             if (save.settings.defaultView == "third") view.SetMode(ViewMode.Third); // réglage « vue » du web
 

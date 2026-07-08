@@ -15,12 +15,14 @@ namespace Game.Runtime
         public LoadoutController loadout;
         public PlayerMelee melee;
         public WeaponPickup pickup;
+        public HudPauseMenu pauseMenu;
 
         InputActionMap map;
         InputAction move, lookAction, jump, dash, reload, sprint, aim, fire, toggleView, fragKey, stickyKey;
         InputAction flashKey, smokeKey, molotovKey, empKey, medkitKey;
         InputAction mineKey, turretKey, airstrikeKey, carePackageKey, dogKey;
         InputAction burstModeKey, semiModeKey, meleeKey, pickupKey;
+        InputAction pauseKey, muteKey;
 
         void Awake()
         {
@@ -86,6 +88,11 @@ namespace Game.Runtime
             airstrikeKey = map.AddAction("Airstrike", binding: "<Keyboard>/u");
             carePackageKey = map.AddAction("CarePackage", binding: "<Keyboard>/i");
             dogKey = map.AddAction("Dog", binding: "<Keyboard>/digit4");
+
+            // Menu pause (web: Échap) + mute global (web: M) — doivent marcher même à Time.timeScale=0
+            // (l'Input System interroge les devices en temps réel, indépendamment du timeScale).
+            pauseKey = map.AddAction("Pause", binding: "<Keyboard>/escape");
+            muteKey = map.AddAction("Mute", binding: "<Keyboard>/m");
         }
 
         void OnEnable() { map.Enable(); }
@@ -93,6 +100,11 @@ namespace Game.Runtime
 
         void Update()
         {
+            // Échap/M avant le early-return : ces touches doivent marcher même sans moteur assigné (tests, écran de mort…)
+            // et même à Time.timeScale=0 (l'Input System lit en temps non-scalé, cf. commentaire à la déclaration des actions).
+            if (pauseKey.WasPressedThisFrame() && pauseMenu != null) pauseMenu.Toggle();
+            if (muteKey.WasPressedThisFrame()) ToggleMute();
+
             if (motor == null) return;
             Vector2 m = move.ReadValue<Vector2>();
             // La source active du move : clavier → jamais de course auto ; stick/manette → règle D11.
@@ -135,6 +147,13 @@ namespace Game.Runtime
                 if (carePackageKey.WasPressedThisFrame()) loadout.TryTrigger("carepackage");
                 if (dogKey.WasPressedThisFrame()) loadout.TryTrigger("dog");
             }
+        }
+
+        /// Mute global provisoire (T25) : bascule le volume de l'AudioListener.
+        /// Sera remplacé par AudioKit.ToggleMute() au T26 (vrai mixer/sons).
+        static void ToggleMute()
+        {
+            AudioListener.volume = AudioListener.volume > 0f ? 0f : 1f;
         }
     }
 }
