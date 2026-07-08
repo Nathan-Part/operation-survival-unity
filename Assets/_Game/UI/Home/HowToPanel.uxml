@@ -1,0 +1,204 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="howto-card" class="tac-card howto-card">
+        <ui:Label text="// Manuel de campagne" class="eyebrow" />
+        <ui:Label text="Comment jouer" class="panel-title" />
+        <ui:Label text="Survivez à des vagues d'ennemis infinies et de plus en plus difficiles. Chaque kill et chaque vague nettoyée rapporte de l'argent et de l'XP, à réinvestir pour tenir plus longtemps et battre votre record de vague." class="panel-intro" />
+
+        <ui:VisualElement name="howto-tabs" class="howto-tabs">
+            <ui:Button name="howto-tab-controles" text="Contrôles" class="howto-tab on" />
+            <ui:Button name="howto-tab-combat" text="Combat &amp; Armes" class="howto-tab" />
+            <ui:Button name="howto-tab-ennemis" text="Ennemis" class="howto-tab" />
+            <ui:Button name="howto-tab-powerups" text="Power-ups" class="howto-tab" />
+            <ui:Button name="howto-tab-gadgets" text="Grenades &amp; Gadgets" class="howto-tab" />
+            <ui:Button name="howto-tab-boutique" text="Boutique" class="howto-tab" />
+            <ui:Button name="howto-tab-vagues" text="Vagues &amp; Survie" class="howto-tab" />
+        </ui:VisualElement>
+
+        <ui:ScrollView name="howto-body" class="howto-body" mode="Vertical" horizontal-scroller-visibility="Hidden">
+
+            <!-- Onglet Contrôles : touches clavier — source de vérité = docs/ROADMAP.md
+                 « Parité HUD & contrôles » (et non le relevé brut de game.html), comme demandé. -->
+            <ui:VisualElement name="howto-page-controles" class="howto-page">
+                <ui:VisualElement class="howto-key-row"><ui:Label text="Se déplacer" class="howto-key-action" /><ui:Label text="ZQSD/WASD + flèches" class="howto-key-kbd" /></ui:VisualElement>
+                <ui:VisualElement class="howto-key-row"><ui:Label text="Courir" class="howto-key-action" /><ui:Label text="Shift ou R" class="howto-key-kbd" /></ui:VisualElement>
+                <ui:VisualElement class="howto-key-row"><ui:Label text="Sauter" class="howto-key-action" /><ui:Label text="Espace" class="howto-key-kbd" /></ui:VisualElement>
+                <ui:VisualElement class="howto-key-row"><ui:Label text="Tirer (manuel)" class="howto-key-action" /><ui:Label text="E" class="howto-key-kbd" /></ui:VisualElement>
+                <ui:VisualElement class="howto-key-row"><ui:Label text="Viser (réticule/lunette)" class="howto-key-action" /><ui:Label text="Q (A sur AZERTY)" class="howto-key-kbd" /></ui:VisualElement>
+                <ui:VisualElement class="howto-key-row"><ui:Label text="Recharger" class="howto-key-action" /><ui:Label text="F" class="howto-key-kbd" /></ui:VisualElement>
+                <ui:VisualElement class="howto-key-row"><ui:Label text="Dash" class="howto-key-action" /><ui:Label text="C" class="howto-key-kbd" /></ui:VisualElement>
+                <ui:VisualElement class="howto-key-row"><ui:Label text="Mêlée" class="howto-key-action" /><ui:Label text="X" class="howto-key-kbd" /></ui:VisualElement>
+                <ui:VisualElement class="howto-key-row"><ui:Label text="Ramasser l'arme d'un cadavre" class="howto-key-action" /><ui:Label text="G" class="howto-key-kbd" /></ui:VisualElement>
+                <ui:VisualElement class="howto-key-row"><ui:Label text="Arc de grenade · N flashbang · H fumigène · J collante · K molotov · O EMP" class="howto-key-action" /><ui:Label text="B (maintien)" class="howto-key-kbd" /></ui:VisualElement>
+                <ui:VisualElement class="howto-key-row"><ui:Label text="Trousse de soin" class="howto-key-action" /><ui:Label text="Z" class="howto-key-kbd" /></ui:VisualElement>
+                <ui:VisualElement class="howto-key-row"><ui:Label text="Mode auto/burst · P semi-auto" class="howto-key-action" /><ui:Label text="T" class="howto-key-kbd" /></ui:VisualElement>
+                <ui:VisualElement class="howto-key-row"><ui:Label text="Loadout : claymore / tourelle / frappe aérienne / caisse / chien" class="howto-key-action" /><ui:Label text="Y \ L \ U \ I \ 4" class="howto-key-kbd" /></ui:VisualElement>
+                <ui:VisualElement class="howto-key-row"><ui:Label text="Danses" class="howto-key-action" /><ui:Label text="1 / 2 / 3" class="howto-key-kbd" /></ui:VisualElement>
+                <ui:VisualElement class="howto-key-row"><ui:Label text="Changer de vue 1ʳᵉ/3ᵉ personne" class="howto-key-action" /><ui:Label text="V" class="howto-key-kbd" /></ui:VisualElement>
+                <ui:VisualElement class="howto-key-row"><ui:Label text="Couper le son · Échap : pause / fermer les panneaux" class="howto-key-action" /><ui:Label text="M" class="howto-key-kbd" /></ui:VisualElement>
+            </ui:VisualElement>
+
+            <!-- Onglet Combat &amp; Armes — texte verbatim game.html:325-370. -->
+            <ui:VisualElement name="howto-page-combat" class="howto-page hidden">
+                <ui:Label text="• Visez avec A / clic droit pour plus de précision ; rester immobile en visée déclenche un bonus PRECISION (+30% dégâts)." class="howto-bullet" />
+                <ui:Label text="• Les dégâts dépendent de la zone touchée : tête = critique, torse = normal, jambes = réduit." class="howto-bullet" />
+                <ui:Label text="• Le corps-à-corps (couteau, X) frappe à courte portée devant vous, dégâts élevés et sans munitions." class="howto-bullet" />
+                <ui:Label text="• Rechargez avant que le chargeur soit vide (F) pour un rechargement tactique (+1 munition bonus)." class="howto-bullet" />
+                <ui:Label text="• T bascule auto/rafale, P bascule le mode semi-auto sur une arme automatique." class="howto-bullet" />
+
+                <ui:Label text="Fusils d'assaut" class="howto-group-title" />
+                <ui:Label text="Viper-AR — gratuit, arme de départ équilibrée." class="howto-item" />
+                <ui:Label text="Raptor X5 — 900$, rare, un peu plus de dégâts et de cadence." class="howto-item" />
+                <ui:Label text="Cyclone MK3 — 2000$, épique, gros chargeur (30) et bons dégâts." class="howto-item" />
+
+                <ui:Label text="Mitraillettes (SMG)" class="howto-group-title" />
+                <ui:Label text="Hornet PDW — 700$, rare, cadence très élevée, portée courte." class="howto-item" />
+                <ui:Label text="Storm-9 — 1400$, épique, encore plus rapide, chargeur de 32." class="howto-item" />
+
+                <ui:Label text="Snipers" class="howto-group-title" />
+                <ui:Label text="Eclipse SR — 1500$, épique, dégâts ×3, portée 160m." class="howto-item" />
+                <ui:Label text="Phantom L115 — 2800$, légendaire, dégâts ×4.5, quasi one-shot, portée 200m." class="howto-item" />
+
+                <ui:Label text="Fusils à pompe" class="howto-group-title" />
+                <ui:Label text="Devastator 870 — 1100$, épique, 8 plombs par tir, dévastateur au contact." class="howto-item" />
+                <ui:Label text="Breacher MK2 — 1700$, rare, 10 plombs, encore plus large." class="howto-item" />
+
+                <ui:Label text="Pistolets" class="howto-group-title" />
+                <ui:Label text="Specter-P — 300$, commun, arme de secours fiable." class="howto-item" />
+                <ui:Label text="Jackal-45 — 600$, rare, plus de dégâts, tir semi-auto par défaut." class="howto-item" />
+
+                <ui:Label text="Mitrailleuse lourde" class="howto-group-title" />
+                <ui:Label text="Thunderer LMG — 1800$, légendaire, chargeur de 50, surchauffe si vous tirez trop longtemps." class="howto-item" />
+
+                <ui:Label text="Corps-à-corps" class="howto-group-title" />
+                <ui:Label text="Lame franche — gratuite, couteau de base." class="howto-item" />
+                <ui:Label text="Bowie sanglante — 650$, rare, dégâts ×4." class="howto-item" />
+                <ui:Label text="Lame Fantôme — 1200$, épique, dégâts ×5, la plus tranchante." class="howto-item" />
+
+                <ui:Label text="Chaque arme équipée s'améliore en boutique : dégâts, cadence de tir, recul et taille de chargeur, sur 5 niveaux chacun." class="howto-paragraph" />
+            </ui:VisualElement>
+
+            <!-- Onglet Ennemis — texte verbatim game.html:372-402. -->
+            <ui:VisualElement name="howto-page-ennemis" class="howto-page hidden">
+                <ui:Label text="Ennemis de base" class="howto-group-title" />
+                <ui:Label text="Tireur — Ennemi standard, tire en rafale de 3 balles." class="howto-item" />
+                <ui:Label text="Fonceur — Rapide et fragile, charge droit sur vous au corps-à-corps." class="howto-item" />
+                <ui:Label text="Tank — Lourd et armuré (torse résistant), dégâts élevés au contact." class="howto-item" />
+
+                <ui:Label text="Ennemis spéciaux" class="howto-group-title" />
+                <ui:Label text="Bombardier — Kamikaze : explose au contact ou à sa mort (zone 3.5m)." class="howto-item" />
+                <ui:Label text="Bouclier — Bloque les tirs de face (cône ±60°) — visez son dos ou ses flancs." class="howto-item" />
+                <ui:Label text="Sniper — Engage à longue portée (28m), dégâts ×2.5, tire toutes les 4s." class="howto-item" />
+                <ui:Label text="Berserker — Rapide et violent ; sous 25% PV entre en rage 2s (invincibilité levée, encore plus véloce)." class="howto-item" />
+                <ui:Label text="Médecin — Soigne un allié blessé à proximité (5m) — priorité de cible." class="howto-item" />
+                <ui:Label text="Étourdisseur — Son tir vous ralentit brièvement (0.5s, vitesse ×0.3)." class="howto-item" />
+                <ui:Label text="Grenadier — Lance des grenades à distance (60 dégâts, zone 3.5m)." class="howto-item" />
+                <ui:Label text="Toxique — Laisse un nuage de poison à sa mort (4s) — ne restez pas dedans." class="howto-item" />
+                <ui:Label text="Cryo — Laisse une zone de gel à sa mort (4s) — vous ralentit de moitié, sans dégâts." class="howto-item" />
+                <ui:Label text="Commandant — Tant qu'il est vivant, buff les dégâts de TOUS les ennemis (+20%) — à éliminer en priorité." class="howto-item" />
+
+                <ui:Label text="Élite &amp; Boss" class="howto-group-title" />
+                <ui:Label text="Juggernaut — Élite blindé (vague 10+), armure intégrale sur tout le corps, très lent mais dévastateur." class="howto-item" />
+                <ui:Label text="Boss — Apparaît toutes les 5 vagues, PV ×8, très résistant — grosse récompense à la clé (+300$)." class="howto-item" />
+
+                <ui:Label text="Leurre" class="howto-group-title" />
+                <ui:Label text="Decoy — clone rouge translucide d'un tireur, aucun danger réel, sert à vous distraire (vague 9+)." class="howto-item" />
+
+                <ui:Label text="La couleur de la lueur de chaque ennemi permet de l'identifier au premier coup d'œil — observez-la avant d'engager." class="howto-paragraph" />
+            </ui:VisualElement>
+
+            <!-- Onglet Power-ups — texte verbatim game.html:404-422. -->
+            <ui:VisualElement name="howto-page-powerups" class="howto-page hidden">
+                <ui:Label text="×2 Dégâts — 8s — double vos dégâts." class="howto-item" />
+                <ui:Label text="Tir rapide — 8s — cadence de tir fortement augmentée." class="howto-item" />
+                <ui:Label text="Slow-mo — 8s — ralentit tous les ennemis à 40% de leur vitesse." class="howto-item" />
+                <ui:Label text="Chargeur ×2 — 15s — double la capacité du chargeur." class="howto-item" />
+                <ui:Label text="Bouclier Max — Instantané — recharge immédiatement le bouclier au maximum." class="howto-item" />
+                <ui:Label text="×2 XP — 12s — double toute l'XP gagnée." class="howto-item" />
+                <ui:Label text="Balles Explosives — 8s — chaque impact déclenche une explosion de zone (40 dégâts)." class="howto-item" />
+                <ui:Label text="Sprint ×2 — 6s — double votre vitesse de déplacement." class="howto-item" />
+                <ui:Label text="Vampire — 10s — soigne 20% des dégâts infligés (inactif en hardcore)." class="howto-item" />
+                <ui:Label text="Visée stable — 8s — annule la perte de précision en mouvement/course." class="howto-item" />
+                <ui:Label text="Régén ×2 — 10s — double votre régénération de vie passive." class="howto-item" />
+                <ui:Label text="Munitions perforantes — 8s — vos tirs traversent un premier ennemi et touchent un second aligné." class="howto-item" />
+                <ui:Label text="Munitions incendiaires — 8s — chaque impact allume une zone de feu au sol." class="howto-item" />
+                <ui:Label text="Tir chanceux — 10s — 25% de chance par tir d'infliger le double des dégâts." class="howto-item" />
+                <ui:Label text="Full-auto — 10s — n'importe quelle arme (même semi-auto) tire en continu tant que le clic est maintenu." class="howto-item" />
+            </ui:VisualElement>
+
+            <!-- Onglet Grenades &amp; Gadgets — texte verbatim game.html:424-446. -->
+            <ui:VisualElement name="howto-page-gadgets" class="howto-page hidden">
+                <ui:Label text="Grenades (rechargées chaque vague)" class="howto-group-title" />
+                <ui:Label text="Grenade classique [B (maintenir)] — 3 en stock, 120 dégâts en zone (rayon 4m), rebondit sur les murs." class="howto-item" />
+                <ui:Label text="Flashbang [N] — 2 en stock, aveugle les ennemis dans un rayon de 9m pendant 2s." class="howto-item" />
+                <ui:Label text="Fumigène [H] — 2 en stock, nuage de 4m pendant 5s qui réduit fortement la précision ennemie à l'intérieur." class="howto-item" />
+                <ui:Label text="Grenade collante [J] — 1 en stock, se colle à un ennemi ou au sol, explose après 2s pour 180 dégâts (zone 3m)." class="howto-item" />
+                <ui:Label text="Molotov [K] — 1 en stock, embrase une zone au sol pendant 5s (dégâts périodiques)." class="howto-item" />
+                <ui:Label text="Grenade EMP [O] — 1 en stock, désactive le tir à distance des ennemis dans un rayon de 6m pendant 4s." class="howto-item" />
+
+                <ui:Label text="Déployables" class="howto-group-title" />
+                <ui:Label text="Claymore [Y] — 2 en stock, se déclenche si un ennemi passe à moins de 2m, 200 dégâts (zone 4m)." class="howto-item" />
+                <ui:Label text="Tourelle sentinelle [L] — se pose et tire seule (12 dégâts/tir, portée 15m) pendant 20s, puis 25s avant de pouvoir la redéployer." class="howto-item" />
+
+                <ui:Label text="Pickups au sol" class="howto-group-title" />
+                <ui:Label text="Pack de soin — +30 PV, peut tomber d'un cadavre (25%, garanti sur un boss)." class="howto-item" />
+                <ui:Label text="Pack de munitions — recharge 50% du chargeur, peut tomber d'un cadavre (20%)." class="howto-item" />
+                <ui:Label text="Orbe d'argent — apparaît à chaque kill, ramassez-la pour l'argent." class="howto-item" />
+                <ui:Label text="Caisse de ravitaillement — apparaît toutes les 4 vagues à un endroit aléatoire, récompense aléatoire (argent, résupply de grenades, ou recharge complète)." class="howto-item" />
+            </ui:VisualElement>
+
+            <!-- Onglet Boutique — texte verbatim game.html:448-465. -->
+            <ui:VisualElement name="howto-page-boutique" class="howto-page hidden">
+                <ui:Label text="Rareté" class="howto-group-title" />
+                <ui:Label text="Du plus commun au plus rare (généralement plus cher et plus fort) : Commun · Rare · Épique · Légendaire." class="howto-paragraph" />
+
+                <ui:Label text="Armurerie" class="howto-group-title" />
+                <ui:Label text="15 armes réparties en 6 catégories (assaut, SMG, sniper, pompe, pistolet, LMG) + 3 couteaux, achetables et équipables. Chaque arme équipée s'améliore : dégâts, cadence, recul, taille de chargeur (niveaux 1 à 5)." class="howto-paragraph" />
+
+                <ui:Label text="Personnages" class="howto-group-title" />
+                <ui:Label text="Plusieurs personnages jouables aux statistiques de base différentes (vie, régénération, vitesse) — achetables et équipables comme les armes." class="howto-paragraph" />
+
+                <ui:Label text="Accessoires (cosmétiques)" class="howto-group-title" />
+                <ui:Label text="Casques (Visière, Couronne, Halo) et costumes (Plastron, Cape, Ailes), visibles sur votre personnage." class="howto-paragraph" />
+
+                <ui:Label text="Boosts d'équipement" class="howto-group-title" />
+                <ui:Label text="Gilet (+vie), Bottes (+vitesse), Médaille (+régénération) — 2 niveaux chacun, cumulables, désactivables sans les perdre." class="howto-paragraph" />
+
+                <ui:Label text="Difficulté (Réglages)" class="howto-group-title" />
+                <ui:Label text="Facile, Normal, Difficile — modifie les PV ennemis, les dégâts subis et l'argent gagné." class="howto-paragraph" />
+
+                <ui:Label text="XP &amp; niveaux" class="howto-group-title" />
+                <ui:Label text="25 XP par kill (+25 bonus sur headshot), 100×vague à chaque vague nettoyée, jusqu'au niveau 50 avec 10 titres (Recrue → Légende)." class="howto-paragraph" />
+
+                <ui:Label text="Contrats &amp; succès" class="howto-group-title" />
+                <ui:Label text="Des contrats quotidiens renouvelés chaque jour et des succès permanents à débloquer, tous deux récompensés en argent." class="howto-paragraph" />
+            </ui:VisualElement>
+
+            <!-- Onglet Vagues &amp; Survie — texte verbatim game.html:467-482. -->
+            <ui:VisualElement name="howto-page-vagues" class="howto-page hidden">
+                <ui:Label text="Vagues" class="howto-group-title" />
+                <ui:Label text="Le nombre et les PV des ennemis augmentent à chaque vague. Un boss apparaît toutes les 5 vagues (PV ×8, +300$ à sa mort)." class="howto-paragraph" />
+
+                <ui:Label text="Combo" class="howto-group-title" />
+                <ui:Label text="Enchaînez les kills (fenêtre de 3.5s) pour monter un multiplicateur d'argent/score, jusqu'à ×5." class="howto-paragraph" />
+
+                <ui:Label text="Killstreaks" class="howto-group-title" />
+                <ui:Label text="Sur une fenêtre glissante de 8 secondes : 3 kills = rechargement instantané · 5 kills = bouclier qui réduit de moitié les dégâts subis pendant 5s · 7 kills = argent ×2 pendant 10s · 10 kills = frappe aérienne sur 3 ennemis (150 dégâts chacun)." class="howto-paragraph" />
+
+                <ui:Label text="Zone de danger" class="howto-group-title" />
+                <ui:Label text="Passé un certain point, une zone sûre au sol rétrécit par paliers (tous les 3 vagues) — rester en dehors inflige des dégâts continus." class="howto-paragraph" />
+
+                <ui:Label text="Vie &amp; bouclier" class="howto-group-title" />
+                <ui:Label text="Vos PV se régénèrent après un court délai sans dégât. Un bouclier rechargeable absorbe les coups avant vos PV." class="howto-paragraph" />
+
+                <ui:Label text="Mode hardcore (Réglages)" class="howto-group-title" />
+                <ui:Label text="Désactive toute régénération et tout soin (PV, bouclier, packs, vampire) — un défi bien plus punitif." class="howto-paragraph" />
+
+                <ui:Label text="Pluie (Réglages)" class="howto-group-title" />
+                <ui:Label text="Purement esthétique (ambiance orageuse), aucun effet sur le gameplay." class="howto-paragraph" />
+            </ui:VisualElement>
+
+        </ui:ScrollView>
+
+        <ui:Button name="howto-back" text="◀ Retour" class="panel-back" />
+    </ui:VisualElement>
+</ui:UXML>

@@ -21,6 +21,7 @@ namespace Game.Runtime.Editor
         const string MapPanelUxmlPath = "Assets/_Game/UI/Home/MapPanel.uxml";
         const string LoadoutPanelUxmlPath = "Assets/_Game/UI/Home/LoadoutPanel.uxml";
         const string ShopPanelUxmlPath = "Assets/_Game/UI/Home/ShopPanel.uxml";
+        const string HowToPanelUxmlPath = "Assets/_Game/UI/Home/HowToPanel.uxml";
 
         [MenuItem("Tools/Game/Build Home Scene")]
         public static void Build()
@@ -101,6 +102,14 @@ namespace Game.Runtime.Editor
             if (shopPanelAsset == null)
                 Debug.LogError($"HomeSceneBuilder: ShopPanel.uxml introuvable a {ShopPanelUxmlPath}");
 
+            // HowToPanelController partage aussi le GameObject UIDocument : clone HowToPanel.uxml
+            // dans le conteneur vide #howto-panel au Play Mode (Task 15) — même raison que Map/
+            // Loadout/Settings. Purement informatif (pas de SaveData/MetaProgress à lui passer).
+            var howToPanel = uiGo.AddComponent<HowToPanelController>();
+            var howToPanelAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(HowToPanelUxmlPath);
+            if (howToPanelAsset == null)
+                Debug.LogError($"HomeSceneBuilder: HowToPanel.uxml introuvable a {HowToPanelUxmlPath}");
+
             var controller = uiGo.AddComponent<HomeController>();
             // Init() ne fait qu'assigner les références sérialisées (voir commentaire sur la
             // méthode) : le câblage réel (rendu du lobby, perso 3D affiché) se fait au Play Mode
@@ -110,6 +119,7 @@ namespace Game.Runtime.Editor
             mapPanel.Init(meta, controller, mapPanelAsset);
             loadoutPanel.Init(context.database, meta, controller, loadoutPanelAsset);
             shopScreen.Init(context.database, meta, stage, shopPanelAsset);
+            howToPanel.Init(controller, howToPanelAsset);
 
             System.IO.Directory.CreateDirectory("Assets/_Game/Scenes");
             EditorSceneManager.SaveScene(scene, ScenePath);

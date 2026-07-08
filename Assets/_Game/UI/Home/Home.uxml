@@ -2,6 +2,7 @@
     <Style src="HomeTheme.uss" />
     <Style src="Home.uss" />
     <Style src="Shop.uss" />
+    <Style src="HowTo.uss" />
     <ui:VisualElement name="home-root" class="home-root" picking-mode="Ignore">
         <ui:VisualElement name="lobby" class="lobby">
             <ui:VisualElement name="hub-top" class="hub-top">
