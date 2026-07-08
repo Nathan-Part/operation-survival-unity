@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 namespace Game.Runtime
 {
@@ -6,6 +7,12 @@ namespace Game.Runtime
     {
         const float Reach = 2.6f, Damage = 150f, Cooldown = 0.6f, ConeDot = 0.3f; // web: REACH=2.6, DAMAGE=150, cooldown=0.6
         Transform aim; WaveManager waves; float nextAt;
+
+        /// Levé quand un coup de mêlée achève réellement un ennemi (pour le contrat
+        /// quotidien "melee", corrige la revue finale : melee15/melee5 restaient
+        /// bloqués à 0 faute de signal distinct des kills à distance).
+        public event Action MeleeKill;
+
         public void Init(Transform aim, WaveManager waves) { this.aim = aim; this.waves = waves; }
         /// Tente un coup de mêlée. Renvoie true si le coup part réellement (hors cooldown),
         /// false s'il est ignoré (cooldown actif ou aim absent) — permet à l'appelant de ne
@@ -23,7 +30,12 @@ namespace Game.Runtime
                 if (Vector3.Dot(aim.forward, to.normalized) < ConeDot) continue; // dans le cône avant
                 bestD = d; best = e;
             }
-            if (best != null) { best.ApplyDamage(Mathf.RoundToInt(Damage)); CalloutEvents.Raise("MÊLÉE"); }
+            if (best != null)
+            {
+                best.ApplyDamage(Mathf.RoundToInt(Damage));
+                CalloutEvents.Raise("MÊLÉE");
+                if (best.IsDead) MeleeKill?.Invoke();
+            }
             return true;
         }
     }

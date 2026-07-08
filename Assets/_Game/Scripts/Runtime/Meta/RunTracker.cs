@@ -25,14 +25,16 @@ namespace Game.Runtime
         MetaProgress meta;
         GameDatabase db;
         WaveManager waves;
+        PlayerMelee melee;
         RunStats run;
         int lastLevel;
 
-        public void Init(MetaProgress meta, GameDatabase db, WaveManager waves, WeaponController weapon)
+        public void Init(MetaProgress meta, GameDatabase db, WaveManager waves, WeaponController weapon, PlayerMelee melee = null)
         {
             this.meta = meta;
             this.db = db;
             this.waves = waves;
+            this.melee = melee;
             lastLevel = meta.Level;
 
             var now = DateTime.Now;
@@ -41,10 +43,12 @@ namespace Game.Runtime
 
             waves.EnemyKilled += OnKill;
             waves.WaveCleared += OnWaveCleared;
+            if (melee != null) melee.MeleeKill += OnMeleeKill;
         }
 
         void OnDestroy()
         {
+            if (melee != null) melee.MeleeKill -= OnMeleeKill;
             if (waves == null) return;
             waves.EnemyKilled -= OnKill;
             waves.WaveCleared -= OnWaveCleared;
@@ -61,6 +65,11 @@ namespace Game.Runtime
             CheckAchievements();
             CheckLevelUp();
         }
+
+        /// Coup de mêlée fatal (web #45) : distinct de OnKill (déjà déclenché en cascade
+        /// via WaveManager.EnemyKilled pour "kills"/"headshots") pour alimenter le contrat
+        /// "melee" (melee15/melee5, unity-spec/contracts.json), sinon jamais complétable.
+        void OnMeleeKill() => AdvanceContract("melee", 1);
 
         void OnWaveCleared(int wave)
         {

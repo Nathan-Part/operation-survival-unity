@@ -169,7 +169,7 @@ namespace Game.Runtime
 
             // Suivi de partie (Lot 6, T23) : succès/contrats quotidiens/level-up, toasts HUD.
             var tracker = motor.gameObject.AddComponent<RunTracker>();
-            tracker.Init(meta, db, waveManager, weapon);
+            tracker.Init(meta, db, waveManager, weapon, melee);
 
             var hudGo = new GameObject("HUD");
             var hud = hudGo.AddComponent<HudController>();

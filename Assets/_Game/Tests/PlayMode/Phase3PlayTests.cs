@@ -49,6 +49,38 @@ namespace Game.Runtime.PlayTests
             Assert.AreEqual(EnemyState.Dead, controller.State);
         }
 
+        /// Régression revue finale (task-final) : melee15/melee5 (unity-spec/contracts.json)
+        /// restaient bloqués à 0/target faute de signal distinct des kills à distance.
+        /// Vérifie que PlayerMelee.MeleeKill se déclenche bien quand un coup de mêlée achève
+        /// un ennemi (RunTracker s'y abonne pour avancer le contrat "melee").
+        [UnityTest]
+        public IEnumerator MeleeStrike_FiresMeleeKill_WhenItFinishesAnEnemy()
+        {
+            LoadSlice();
+            yield return null;
+            var waves = Object.FindAnyObjectByType<WaveManager>();
+            yield return WaitForWaveOne(waves);
+            Assert.Greater(waves.AliveCount, 0);
+
+            var melee = Object.FindAnyObjectByType<PlayerMelee>();
+            var view = Object.FindAnyObjectByType<PlayerViewController>();
+            Assert.IsNotNull(melee, "PlayerMelee créé par le bootstrap");
+            Assert.IsNotNull(view != null ? view.playerCamera : null, "caméra de visée absente");
+
+            var enemy = waves.Alive[0];
+            var aim = view.playerCamera.transform;
+            enemy.transform.position = aim.position + aim.forward * 1.5f; // à portée (2.6 m) et dans le cône
+
+            bool fired = false;
+            melee.MeleeKill += () => fired = true;
+            bool struck = melee.Strike();
+            yield return null;
+
+            Assert.IsTrue(struck, "le coup doit partir (hors cooldown)");
+            Assert.IsTrue(enemy.IsDead, "150 dégâts doivent achever un ennemi de vague 1");
+            Assert.IsTrue(fired, "MeleeKill doit se déclencher quand le coup achève l'ennemi");
+        }
+
         [UnityTest]
         public IEnumerator ToggleView_SwitchesModeAndBack()
         {
