@@ -29,5 +29,5 @@ MonoBehaviour:
   - icon: target
     name: "Pr\xE9cision"
     desc: Chaque tir vise juste.
-  image: {fileID: 0}
+  image: {fileID: 21300000, guid: 8f3dbfd27d4d43f4b91cf6bdddfbac6d, type: 3}
   modelPrefab: {fileID: 0}

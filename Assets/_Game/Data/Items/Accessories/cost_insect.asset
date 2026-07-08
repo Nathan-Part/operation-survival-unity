@@ -28,5 +28,5 @@ MonoBehaviour:
   - icon: flash
     name: "R\xE9flexes"
     desc: "Esquive avant m\xEAme de penser."
-  image: {fileID: 0}
+  image: {fileID: 21300000, guid: ecb50c86c060d3946b13c8b6f5ca5baa, type: 3}
   modelPrefab: {fileID: 0}

@@ -377,3 +377,137 @@
 .wcard-lock {
     font-size: 10px;
 }
+
+/* Onglet Accessoires (Task 13) : entête + 3 sous-onglets (Masque/Costume/Danses), grille de tuiles
+   façon .wcard mais plus grandes (image accessoire lisible) + barre d'achat unique sous la grille
+   (masque/costume) ou compteur + tuiles autonomes (danses). */
+.shop-acc-head {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.shop-sub2 {
+    color: var(--color-text-dim);
+    font-size: 11px;
+    margin-bottom: 8px;
+}
+
+.shop-acc-view {
+    flex-grow: 1;
+    flex-direction: column;
+}
+
+.acc-grid {
+    flex-grow: 1;
+}
+
+.acctile {
+    width: 132px;
+    height: 150px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-width: 1px;
+    border-color: var(--color-border);
+    border-radius: 8px;
+    padding: 6px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.acctile.active {
+    border-color: var(--color-purple);
+    border-width: 2px;
+}
+
+.acctile.owned {
+    opacity: 1;
+}
+
+.acctile:not(.owned) {
+    opacity: 0.6;
+}
+
+.acctile-name {
+    color: var(--color-text);
+    font-size: 10px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    white-space: normal;
+}
+
+.acctile-thumb {
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+}
+
+.acctile-glyph {
+    font-size: 32px;
+}
+
+.acctile-img {
+    width: 64px;
+    height: 64px;
+}
+
+.acctile-foot {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.acctile-rarity {
+    font-size: 9px;
+    padding: 1px 6px;
+    margin-right: 0;
+}
+
+.acctile-lock {
+    font-size: 10px;
+}
+
+.acc-buybar {
+    background-color: var(--color-bg-card);
+    border-radius: 10px;
+    border-width: 1px;
+    border-color: var(--color-border);
+    padding: 10px 14px;
+    margin-top: 4px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Tuile de danse (Task 13) : pas de barre d'achat partagée, chaque tuile porte ses propres boutons
+   (▶ + Acheter/Choisir) sur une ligne dédiée en pied de tuile. */
+.dcard {
+    height: 168px;
+}
+
+.dcard-btnrow {
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+    margin-top: 4px;
+}
+
+.dcard-play {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-width: 1px;
+    border-color: var(--color-border);
+    border-radius: 999px;
+    color: var(--color-text);
+    padding: 4px 10px;
+    margin-right: 4px;
+    font-size: 11px;
+}
+
+.dcard-play.on {
+    background-color: var(--color-purple);
+    border-color: var(--color-purple);
+    color: white;
+}

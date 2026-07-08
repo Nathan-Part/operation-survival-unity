@@ -26,5 +26,10 @@ namespace Game.Data
 
         public Sprite image;
         public GameObject modelPrefab;
+
+        // Miroir de WeaponData.ResolveIcon/CharacterData.ResolveIcon (Task 13) : repli sur l'icône
+        // générique si aucune image n'est assignée — la logique n'exige jamais un asset.
+        public Sprite ResolveIcon(PlaceholderLibrary placeholders) =>
+            image != null ? image : placeholders.GetGenericIcon();
     }
 }

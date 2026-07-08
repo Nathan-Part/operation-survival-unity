@@ -28,5 +28,5 @@ MonoBehaviour:
   - icon: flash
     name: Frappe nette
     desc: "Aucune h\xE9sitation au moment d'agir."
-  image: {fileID: 0}
+  image: {fileID: 21300000, guid: d11f22b751e8bec4486f11cefb29df33, type: 3}
   modelPrefab: {fileID: 0}

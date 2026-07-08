@@ -29,5 +29,5 @@ MonoBehaviour:
   - icon: medal
     name: "L\xE9gende"
     desc: "Rien n'\xE9gale un roi sur le terrain."
-  image: {fileID: 0}
+  image: {fileID: 21300000, guid: 6b02c96fddb98a941925111e4f2884e3, type: 3}
   modelPrefab: {fileID: 0}

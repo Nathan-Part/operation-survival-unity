@@ -43,6 +43,7 @@ namespace Game.Runtime
         Transform weaponPivot;
         ShopWeaponsTab weaponsTab;
         ShopCharacterTab characterTab;
+        ShopAccessoriesTab accessoriesTab;
 
         const float HeroRotationRadPerSec = 0.8f; // web: main.js:5450 (shopWeaponObj.rotation.y += dt*0.8)
 
@@ -126,6 +127,9 @@ namespace Game.Runtime
             characterTab = new ShopCharacterTab(db, meta, stage);
             if (tabContents.TryGetValue("player", out var playerPane)) characterTab.Wire(playerPane);
 
+            accessoriesTab = new ShopAccessoriesTab(db, meta, stage);
+            if (tabContents.TryGetValue("accessories", out var accessoriesPane)) accessoriesTab.Wire(accessoriesPane);
+
             SwitchTab("weapons");
         }
 
@@ -141,6 +145,11 @@ namespace Game.Runtime
             // repart toujours du perso réellement équipé (jamais d'un aperçu laissé par la visite
             // précédente de cet onglet).
             if (tab == "player") characterTab?.SelectByEquipped();
+            // web: setShopTab (main.js:1421-1423) — clearAccessoryPreview() à CHAQUE changement
+            // d'onglet, quel que soit l'onglet de départ/d'arrivée (pas seulement en quittant
+            // Accessoires) : un essai masque/costume ne doit jamais persister visuellement une fois
+            // qu'on a quitté l'onglet (ou qu'on y revient après un détour par un autre onglet).
+            stage?.ClearAccessoryPreview();
             UpdateHeroVisualVisibility();
             Render();
         }
@@ -159,6 +168,13 @@ namespace Game.Runtime
             shopPanel.AddToClassList("hidden");
             UpdateHeroVisualVisibility();
             RevertStageToEquippedCharacter();
+            // web: closeShop (main.js:1404-1408) — clearAccessoryPreview() explicite à la fermeture
+            // (en plus de celui de chaque SwitchTab, redondant si on a changé d'onglet juste avant,
+            // mais nécessaire si on ferme direct sans changer d'onglet). Danse : interruption
+            // explicite documentée (voir LobbyCharacterStage.StopDance) plutôt que la laisser
+            // continuer en tâche de fond une fois la boutique refermée.
+            stage?.ClearAccessoryPreview();
+            stage?.StopDance();
         }
 
         // Annule tout essai visuel laissé par le carrousel de l'onglet Personnage (Task 12) —
@@ -192,6 +208,7 @@ namespace Game.Runtime
             creditsLabel.text = meta.Data.money.ToString();
             if (activeTab == "weapons") weaponsTab?.Render();
             else if (activeTab == "player") characterTab?.Render();
+            else if (activeTab == "accessories") accessoriesTab?.Render();
         }
 
         // web: main.js:5450 — rotation du modèle héros uniquement pendant que la boutique est

@@ -21,6 +21,18 @@ namespace Game.Runtime.Editor
         const string GenericEnemyPath = "Assets/_Game/Art/Enemies/enemie-generic.glb";
         const string AnimationLibraryPath = "Assets/_Game/Data/Config/AnimationLibrary.asset";
         const string DefaultWeaponModelPath = "Assets/_Game/Art/Weapons/ar-15.glb";
+
+        // Task 13 (boutique Accessoires) : PNG copiés en Task 1 (Assets/_Game/Art/UI/Accessories/),
+        // jamais branchés sur les ScriptableObjects AccessoryData jusqu'ici — mapping vérifié contre
+        // le rapport de Task 1 (source web exacte par id, voir task-1-report.md).
+        static readonly (string id, string path)[] AccessoryImages =
+        {
+            ("helm:insect", "Assets/_Game/Art/UI/Accessories/insect-viber-mask.png"),
+            ("helm:skull-soldier", "Assets/_Game/Art/UI/Accessories/squelette-soldier.png"),
+            ("helm:skull-ram", "Assets/_Game/Art/UI/Accessories/squelette-belier.png"),
+            ("cost:insect", "Assets/_Game/Art/UI/Accessories/insect-viber-suit.png"),
+            ("cost:bone", "Assets/_Game/Art/UI/Accessories/skeleton-ram-suit.png"),
+        };
         // ar-15.glb mesuré ~2,00 m de long tel qu'exporté (mesh brut, aucune correction d'échelle
         // dans le GLB) — un AR-15 réel fait ~0,85-1,00 m : défaut d'export Blender (même famille de
         // problème que d'autres GLB du projet). Corrigé ici en attendant un ré-export à la bonne
@@ -105,8 +117,24 @@ namespace Game.Runtime.Editor
                 if (Mathf.Approximately(weapon.modelScale, 1f)) { weapon.modelScale = DefaultWeaponModelScale; EditorUtility.SetDirty(weapon); }
             }
 
+            // 5. Images des accessoires (Task 13 : essai en direct boutique) — idempotent, ne touche
+            // jamais un `image` déjà assigné à la main.
+            int accessoryImages = 0;
+            foreach (var (id, path) in AccessoryImages)
+            {
+                var sprite = AssetDatabase.LoadAssetAtPath<Sprite>(path);
+                if (sprite == null) { Debug.LogWarning($"AssignImportedArt: sprite manquant {path}"); continue; }
+                foreach (var accessory in db.accessories)
+                {
+                    if (accessory == null || accessory.id != id || accessory.image != null) continue;
+                    accessory.image = sprite;
+                    EditorUtility.SetDirty(accessory);
+                    accessoryImages++;
+                }
+            }
+
             AssetDatabase.SaveAssets();
-            Debug.Log($"AssignImportedArt: OK - placeholders branches, {assigned} modele(s) de perso, {clips} clip(s) d'animation assigne(s).");
+            Debug.Log($"AssignImportedArt: OK - placeholders branches, {assigned} modele(s) de perso, {clips} clip(s) d'animation assigne(s), {accessoryImages} image(s) d'accessoire assignee(s).");
         }
 
         static AnimationClip FirstClipAt(string assetPath)
