@@ -119,7 +119,12 @@ namespace Game.Runtime
             loadout.Init(save.selectedLoadout, loadoutThresholds, waveManager);
             loadout.SetTrigger("mine", () => ProximityMine.Place(GroundInFront(motor, 1.5f), waveManager));
             loadout.SetTrigger("turret", () => Turret.Deploy(GroundInFront(motor, 1.5f), waveManager));
+            loadout.SetTrigger("airstrike", () => Airstrike.CallOnAim(this, weapon.aimCamera, waveManager));
+            loadout.SetTrigger("carepackage", () => CarePackage.Spawn(GroundInFront(motor, 2f), motor.transform, meta, health, Time.frameCount));
             if (view.inputBridge != null) view.inputBridge.loadout = loadout;
+
+            // Caisse de ravitaillement auto (web #156) : toutes les 4 vagues nettoyées
+            waveManager.CarePackageDue += () => CarePackage.Spawn(GroundInFront(motor, 2f), motor.transform, meta, health, Time.frameCount);
 
             var hudGo = new GameObject("HUD");
             var hud = hudGo.AddComponent<HudController>();

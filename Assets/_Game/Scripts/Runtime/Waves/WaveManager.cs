@@ -29,6 +29,7 @@ namespace Game.Runtime
         public event Action<float> IntermissionStarted;
         public event Action<EnemyHealth, int> EnemyKilled; // ennemi + argent gagné (méta/XP)
         public event Action<int> WaveCleared;              // n° de vague nettoyée (XP_WAVE)
+        public event Action CarePackageDue;                // web: caisse de ravitaillement auto toutes les 4 vagues
 
         public int BestComboThisRun { get; private set; }
 
@@ -55,6 +56,7 @@ namespace Game.Runtime
                 WaveStarted?.Invoke(CurrentWave);
                 while (alive.Count > 0) yield return null;
                 WaveCleared?.Invoke(CurrentWave);
+                if (CurrentWave % 4 == 0) CarePackageDue?.Invoke(); // web: caisse auto toutes les 4 vagues
             }
         }
 
