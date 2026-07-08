@@ -49,6 +49,11 @@ namespace Game.Runtime
 
         public void Init(WeaponData weapon, int upgradeLevel = 0)
         {
+            if (burstRoutine != null)
+            {
+                StopCoroutine(burstRoutine);
+                burstRoutine = null;
+            }
             Weapon = weapon;
             EffectiveCooldown = UpgradeFormulas.WeaponCooldown(weapon.cooldown, upgradeLevel);
             EffectiveDmgMult = UpgradeFormulas.WeaponDamageMult(weapon.dmgMult, upgradeLevel);
@@ -73,6 +78,17 @@ namespace Game.Runtime
             }
             Mode = mode;
             ModeChanged?.Invoke(Mode);
+        }
+
+        /// Coupe la coroutine de rafale en cours si le composant est désactivé (mort du joueur, swap d'arme...) :
+        /// enabled = false n'arrête PAS les coroutines déjà démarrées, il faut le faire explicitement.
+        void OnDisable()
+        {
+            if (burstRoutine != null)
+            {
+                StopCoroutine(burstRoutine);
+                burstRoutine = null;
+            }
         }
 
         /// T : bascule Auto ↔ Burst (uniquement sur les armes qui le permettent, web #).
