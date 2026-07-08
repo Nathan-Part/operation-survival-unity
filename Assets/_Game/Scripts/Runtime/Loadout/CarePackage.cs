@@ -21,7 +21,7 @@ namespace Game.Runtime
             int pick = Mathf.Abs(seed) % 3;
             if (pick == 0) { meta.Data.money += Money; }
             else if (pick == 1) { foreach (var k in new[] { "frag", "flashbang", "smoke" }) meta.Data.consumables[k] = Bundle(k) + 2; }
-            else { if (health != null) health.Heal(30f); meta.Data.consumables["medkit"] = Bundle("medkit") + 2; }
+            else { if (health != null && !health.hardcore) health.Heal(30f); meta.Data.consumables["medkit"] = Bundle("medkit") + 2; } // hardcore: pas de soin de pickup
             meta.Persist(); CalloutEvents.Raise("RAVITAILLEMENT");
             Destroy(gameObject);
         }

@@ -39,8 +39,8 @@ namespace Game.Runtime
         {
             switch (id)
             {
-                case "instant_heal": health?.Heal(40f); break;                                                     // web: INSTANT_HEAL_AMOUNT=40
-                case "shield_orb": health?.shield?.Refill(); break;                                                 // web: bouclier rechargé au max
+                case "instant_heal": if (health != null && !health.hardcore) health.Heal(40f); break;               // web: INSTANT_HEAL_AMOUNT=40 ; hardcore: pas de soin de pickup
+                case "shield_orb": if (health != null && !health.hardcore) health.shield?.Refill(); break;         // web: bouclier rechargé au max ; hardcore: pas de régén bouclier
                 case "nova_blast": if (waves != null) AreaDamage.Apply(waves.Alive, transform.position, 8f, 80f); break; // web: NOVA_RADIUS=8, NOVA_DAMAGE=80
                 // default : id instantané non prioritaire (second_wind_refill...) — suivi Step 7, aucun effet pour l'instant.
             }
