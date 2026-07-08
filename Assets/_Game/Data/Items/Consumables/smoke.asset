@@ -16,4 +16,10 @@ MonoBehaviour:
   displayName: "Fumig\xE8ne"
   price: 50
   iconName: smoke
+  damage: 0
+  radius: 4
+  fuseSeconds: 1.2
+  effectSeconds: 5
+  throwSpeed: 9
+  maxStock: 2
   icon: {fileID: 0}

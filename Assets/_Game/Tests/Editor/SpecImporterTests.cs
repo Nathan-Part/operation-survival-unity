@@ -40,7 +40,7 @@ namespace Game.Data.Tests
             Assert.AreEqual(3, db.powerUps.Length);
             Assert.AreEqual(3, db.accessories.Length);
             Assert.AreEqual(2, db.boosts.Length);
-            Assert.AreEqual(2, db.consumables.Length);
+            Assert.AreEqual(7, db.consumables.Length);
             Assert.AreEqual(2, db.dances.Length);
 
             Assert.IsNotNull(db.movementConfig);

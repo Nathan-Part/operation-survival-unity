@@ -16,4 +16,10 @@ MonoBehaviour:
   displayName: EMP
   price: 150
   iconName: emp
+  damage: 0
+  radius: 6
+  fuseSeconds: 0
+  effectSeconds: 4
+  throwSpeed: 9
+  maxStock: 1
   icon: {fileID: 0}

@@ -16,4 +16,10 @@ MonoBehaviour:
   displayName: Grenade frag
   price: 50
   iconName: grenade
+  damage: 120
+  radius: 4
+  fuseSeconds: 1.4
+  effectSeconds: 0
+  throwSpeed: 9
+  maxStock: 3
   icon: {fileID: 0}

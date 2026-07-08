@@ -16,4 +16,10 @@ MonoBehaviour:
   displayName: Grenade collante
   price: 150
   iconName: sticky
+  damage: 180
+  radius: 3
+  fuseSeconds: 2
+  effectSeconds: 0
+  throwSpeed: 10
+  maxStock: 1
   icon: {fileID: 0}

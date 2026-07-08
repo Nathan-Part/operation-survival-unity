@@ -16,4 +16,10 @@ MonoBehaviour:
   displayName: Flashbang
   price: 60
   iconName: flash
+  damage: 0
+  radius: 9
+  fuseSeconds: 1.5
+  effectSeconds: 2
+  throwSpeed: 8
+  maxStock: 2
   icon: {fileID: 0}

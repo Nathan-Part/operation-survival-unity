@@ -16,4 +16,10 @@ MonoBehaviour:
   displayName: Molotov
   price: 120
   iconName: molotov
+  damage: 6
+  radius: 3
+  fuseSeconds: 0
+  effectSeconds: 5
+  throwSpeed: 9
+  maxStock: 1
   icon: {fileID: 0}

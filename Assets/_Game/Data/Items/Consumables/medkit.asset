@@ -16,4 +16,10 @@ MonoBehaviour:
   displayName: Trousse de soin
   price: 80
   iconName: heart
+  damage: 30
+  radius: 0
+  fuseSeconds: 0
+  effectSeconds: 0
+  throwSpeed: 0
+  maxStock: 3
   icon: {fileID: 0}

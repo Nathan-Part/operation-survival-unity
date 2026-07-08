@@ -24,11 +24,11 @@
   "consumables": {
     "items": [
       { "key": "frag", "name": "Grenade frag", "price": 50, "damage": 120, "radius": 4, "fuseSeconds": 1.4, "effectSeconds": 0, "throwSpeed": 9, "maxStock": 3, "assets": { "icon": "grenade" } },
-      { "key": "flashbang", "name": "Flashbang", "price": 60, "damage": 0, "radius": 3.5, "fuseSeconds": 0.5, "effectSeconds": 3, "throwSpeed": 8, "maxStock": 2, "assets": { "icon": "flash" } },
-      { "key": "smoke", "name": "Fumigène", "price": 50, "damage": 0, "radius": 5, "fuseSeconds": 0, "effectSeconds": 6, "throwSpeed": 7, "maxStock": 2, "assets": { "icon": "smoke" } },
-      { "key": "sticky", "name": "Grenade collante", "price": 150, "damage": 180, "radius": 4, "fuseSeconds": 2, "effectSeconds": 0, "throwSpeed": 6, "maxStock": 2, "assets": { "icon": "sticky" } },
-      { "key": "molotov", "name": "Molotov", "price": 120, "damage": 30, "radius": 6, "fuseSeconds": 0.5, "effectSeconds": 5, "throwSpeed": 8, "maxStock": 2, "assets": { "icon": "molotov" } },
-      { "key": "emp", "name": "EMP", "price": 150, "damage": 0, "radius": 4, "fuseSeconds": 0.5, "effectSeconds": 4, "throwSpeed": 7, "maxStock": 2, "assets": { "icon": "emp" } },
+      { "key": "flashbang", "name": "Flashbang", "price": 60, "damage": 0, "radius": 9, "fuseSeconds": 1.5, "effectSeconds": 2, "throwSpeed": 8, "maxStock": 2, "assets": { "icon": "flash" } },
+      { "key": "smoke", "name": "Fumigène", "price": 50, "damage": 0, "radius": 4, "fuseSeconds": 1.2, "effectSeconds": 5, "throwSpeed": 9, "maxStock": 2, "assets": { "icon": "smoke" } },
+      { "key": "sticky", "name": "Grenade collante", "price": 150, "damage": 180, "radius": 3, "fuseSeconds": 2, "effectSeconds": 0, "throwSpeed": 10, "maxStock": 1, "assets": { "icon": "sticky" } },
+      { "key": "molotov", "name": "Molotov", "price": 120, "damage": 6, "radius": 3, "fuseSeconds": 0, "effectSeconds": 5, "throwSpeed": 9, "maxStock": 1, "assets": { "icon": "molotov" } },
+      { "key": "emp", "name": "EMP", "price": 150, "damage": 0, "radius": 6, "fuseSeconds": 0, "effectSeconds": 4, "throwSpeed": 9, "maxStock": 1, "assets": { "icon": "emp" } },
       { "key": "medkit", "name": "Trousse de soin", "price": 80, "damage": 30, "radius": 0, "fuseSeconds": 0, "effectSeconds": 0, "throwSpeed": 0, "maxStock": 3, "assets": { "icon": "heart" } }
     ]
   },
