@@ -49,7 +49,7 @@ namespace Game.Data.Save
         public string difficulty = "normal";
         public bool hardcore;
         public bool rain;
-        public string mapId = "portal";
+        public string mapId = "utopia";
     }
 
     public class SaveLifetime
