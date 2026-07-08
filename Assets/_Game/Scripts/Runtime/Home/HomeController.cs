@@ -28,6 +28,7 @@ namespace Game.Runtime
         [SerializeField] SettingsPanelController settingsPanel;
         [SerializeField] MapPanelController mapPanel;
         [SerializeField] LoadoutPanelController loadoutPanel;
+        [SerializeField] ShopScreenController shopScreen;
 
         bool wired;
 
@@ -55,7 +56,7 @@ namespace Game.Runtime
         /// Play Mode. Si WireUi() créait des GameObjects (perso 3D) dès cet appel, ils seraient
         /// sérialisés tels quels dans la scène puis dupliqués par le vrai câblage runtime (Start())
         /// au Play Mode suivant — d'où la séparation stricte affectation (Init) / câblage (Start).
-        public void Init(GameDatabase database, MetaProgress metaProgress, LobbyCharacterStage characterStage, GameLauncher gameLauncher, SettingsPanelController settingsPanelController, MapPanelController mapPanelController, LoadoutPanelController loadoutPanelController)
+        public void Init(GameDatabase database, MetaProgress metaProgress, LobbyCharacterStage characterStage, GameLauncher gameLauncher, SettingsPanelController settingsPanelController, MapPanelController mapPanelController, LoadoutPanelController loadoutPanelController, ShopScreenController shopScreenController)
         {
             db = database;
             meta = metaProgress;
@@ -64,6 +65,7 @@ namespace Game.Runtime
             settingsPanel = settingsPanelController;
             mapPanel = mapPanelController;
             loadoutPanel = loadoutPanelController;
+            shopScreen = shopScreenController;
         }
 
         void Start()
@@ -111,7 +113,9 @@ namespace Game.Runtime
             var tileMap = root.Q<Button>("tile-map");
             var tileTraining = root.Q<Button>("tile-training"); // pas de panneau : lancement direct (Task 7)
 
-            panels["shop"] = root.Q<VisualElement>("shop-panel");
+            // "shop" n'est PAS dans ce dict : ShopScreenController possède son propre cycle
+            // Open()/Close()/Render() (rail d'onglets, topbar) — voir le cas particulier dans
+            // OpenPanel/CloseActivePanel ci-dessous, plutôt qu'un simple toggle de classe "hidden".
             panels["loadout"] = root.Q<VisualElement>("loadout-panel");
             panels["map"] = root.Q<VisualElement>("map-panel");
             panels["settings"] = root.Q<VisualElement>("settings-panel");
@@ -170,11 +174,24 @@ namespace Game.Runtime
 
         /// Affiche le panneau demandé ("shop"|"loadout"|"map"|"settings"|"howto") et masque le
         /// panneau concurrent éventuellement ouvert (un seul overlay actif à la fois, comme le web).
+        /// Cas particulier "shop" : délégué à ShopScreenController.Open() (rail d'onglets propre,
+        /// pas un simple élément du dict `panels`) plutôt que dupliqué ici.
         public void OpenPanel(string name)
         {
+            if (name == "shop")
+            {
+                if (activePanel != null && activePanel != "shop") CloseActivePanel();
+                shopScreen?.Open();
+                activePanel = "shop";
+                return;
+            }
+
             if (!panels.TryGetValue(name, out var panel) || panel == null) return;
-            if (activePanel != null && activePanel != name && panels.TryGetValue(activePanel, out var previous))
-                previous.AddToClassList("hidden");
+            if (activePanel != null && activePanel != name)
+            {
+                if (activePanel == "shop") shopScreen?.Close();
+                else if (panels.TryGetValue(activePanel, out var previous)) previous.AddToClassList("hidden");
+            }
             panel.RemoveFromClassList("hidden");
             activePanel = name;
         }
@@ -183,7 +200,8 @@ namespace Game.Runtime
         public void CloseActivePanel()
         {
             if (activePanel == null) return;
-            if (panels.TryGetValue(activePanel, out var panel)) panel.AddToClassList("hidden");
+            if (activePanel == "shop") shopScreen?.Close();
+            else if (panels.TryGetValue(activePanel, out var panel)) panel.AddToClassList("hidden");
             activePanel = null;
         }
 

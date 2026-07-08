@@ -20,6 +20,7 @@ namespace Game.Runtime.Editor
         const string SettingsPanelUxmlPath = "Assets/_Game/UI/Home/SettingsPanel.uxml";
         const string MapPanelUxmlPath = "Assets/_Game/UI/Home/MapPanel.uxml";
         const string LoadoutPanelUxmlPath = "Assets/_Game/UI/Home/LoadoutPanel.uxml";
+        const string ShopPanelUxmlPath = "Assets/_Game/UI/Home/ShopPanel.uxml";
 
         [MenuItem("Tools/Game/Build Home Scene")]
         public static void Build()
@@ -90,14 +91,25 @@ namespace Game.Runtime.Editor
             if (loadoutPanelAsset == null)
                 Debug.LogError($"HomeSceneBuilder: LoadoutPanel.uxml introuvable a {LoadoutPanelUxmlPath}");
 
+            // ShopScreenController partage aussi le GameObject UIDocument : clone ShopPanel.uxml
+            // dans le conteneur vide #shop-panel au Play Mode (Task 11) — même raison que les autres
+            // contrôleurs de panneau. Contrairement à Map/Loadout/Settings, ne reçoit PAS de référence
+            // à HomeController (voir commentaire sur ShopScreenController) : son bouton "Fermer" est
+            // autonome, HomeController tient la référence inverse pour router Échap.
+            var shopScreen = uiGo.AddComponent<ShopScreenController>();
+            var shopPanelAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(ShopPanelUxmlPath);
+            if (shopPanelAsset == null)
+                Debug.LogError($"HomeSceneBuilder: ShopPanel.uxml introuvable a {ShopPanelUxmlPath}");
+
             var controller = uiGo.AddComponent<HomeController>();
             // Init() ne fait qu'assigner les références sérialisées (voir commentaire sur la
             // méthode) : le câblage réel (rendu du lobby, perso 3D affiché) se fait au Play Mode
             // via HomeController.Start(), jamais ici (pas de GameObject runtime à sérialiser dans la scène).
-            controller.Init(context.database, meta, stage, launcher, settingsPanel, mapPanel, loadoutPanel);
+            controller.Init(context.database, meta, stage, launcher, settingsPanel, mapPanel, loadoutPanel, shopScreen);
             settingsPanel.Init(meta, controller, settingsPanelAsset);
             mapPanel.Init(meta, controller, mapPanelAsset);
             loadoutPanel.Init(context.database, meta, controller, loadoutPanelAsset);
+            shopScreen.Init(context.database, meta, stage, shopPanelAsset);
 
             System.IO.Directory.CreateDirectory("Assets/_Game/Scenes");
             EditorSceneManager.SaveScene(scene, ScenePath);

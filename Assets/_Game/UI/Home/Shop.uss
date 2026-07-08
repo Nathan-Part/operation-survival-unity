@@ -1,0 +1,371 @@
+/* Panneau Boutique (Task 11, shell + onglet Armes ; contenu cloné depuis ShopPanel.uxml dans
+   #shop-panel). Le perso 3D lobby (et le modèle héros de l'onglet Armes) doivent rester visibles
+   par transparence : #shop-panel a un fond plus clair que .panel (settings/map/loadout, opaque à
+   85%) pour laisser passer la scène 3D derrière — parité web (vitrine boutique = scène éclairée,
+   pas un simple dialogue par-dessus un fond noir). */
+
+#shop-panel {
+    background-color: rgba(6, 7, 12, 0.4);
+}
+
+.shop-card {
+    width: 92%;
+    height: 88%;
+    flex-direction: column;
+}
+
+.shop-topbar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.shop-nav {
+    flex-direction: row;
+}
+
+.shop-nav-btn {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-width: 1px;
+    border-color: var(--color-border);
+    border-radius: 8px;
+    color: var(--color-text);
+    padding: 6px 14px;
+    margin-left: 6px;
+}
+
+.shop-close-btn {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-width: 1px;
+    border-color: var(--color-border);
+    border-radius: 8px;
+    color: var(--color-text);
+    padding: 6px 14px;
+}
+
+.shop-body {
+    flex-grow: 1;
+    flex-direction: row;
+}
+
+.shop-rail {
+    width: 170px;
+    flex-direction: column;
+    margin-right: 14px;
+}
+
+.shop-tab {
+    background-color: var(--color-bg-card);
+    border-width: 1px;
+    border-color: var(--color-border);
+    border-radius: 8px;
+    color: var(--color-text-dim);
+    padding: 10px 12px;
+    margin-bottom: 6px;
+    -unity-text-align: middle-left;
+}
+
+.shop-tab.on {
+    background-color: var(--color-purple);
+    border-color: var(--color-purple);
+    color: white;
+    -unity-font-style: bold;
+}
+
+.shop-content {
+    flex-grow: 1;
+    flex-direction: column;
+}
+
+.shop-tab-content {
+    flex-grow: 1;
+    flex-direction: column;
+}
+
+.shop-stub {
+    align-items: center;
+    justify-content: center;
+}
+
+.shop-stub-label {
+    color: var(--color-text-dim);
+    font-size: 16px;
+}
+
+.shop-hero-row {
+    flex-grow: 1;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+/* Pas de fond : le texte flotte au-dessus de la vitrine 3D (parité web, hero en haut-gauche). */
+.shop-hero {
+    width: 320px;
+}
+
+.shop-wname-row {
+    flex-direction: row;
+    align-items: center;
+    margin-top: 4px;
+}
+
+.shop-wname {
+    color: var(--color-text);
+    font-size: 24px;
+    -unity-font-style: bold;
+    margin-right: 8px;
+}
+
+.rarity-badge {
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 999px;
+    padding: 2px 10px;
+    font-size: 11px;
+    -unity-font-style: bold;
+    margin-right: 8px;
+}
+
+.shop-rating {
+    color: var(--color-gold);
+    font-size: 12px;
+    -unity-font-style: bold;
+}
+
+.shop-desc {
+    color: var(--color-text-dim);
+    font-size: 12px;
+    margin-top: 6px;
+    white-space: normal;
+    max-width: 300px;
+}
+
+.shop-stats-panel {
+    width: 300px;
+}
+
+.sp-h {
+    color: var(--color-text);
+    font-size: 14px;
+    -unity-font-style: bold;
+    margin-bottom: 8px;
+}
+
+.stat-row {
+    flex-direction: row;
+    align-items: center;
+    margin-top: 6px;
+}
+
+.stat-label {
+    width: 70px;
+    color: var(--color-text-dim);
+    font-size: 11px;
+}
+
+.stat-bar {
+    flex-grow: 1;
+    height: 8px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-left: 6px;
+    margin-right: 6px;
+}
+
+.stat-bar-fill {
+    height: 100%;
+    width: 0%;
+    background-color: var(--color-purple);
+}
+
+.stat-value {
+    width: 42px;
+    color: var(--color-text);
+    font-size: 11px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-right;
+}
+
+.shop-upgrades {
+    margin-top: 10px;
+    border-top-width: 1px;
+    border-top-color: var(--color-border);
+    padding-top: 8px;
+}
+
+.upg-row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 6px;
+}
+
+.upg-name {
+    color: var(--color-text);
+    font-size: 11px;
+    width: 90px;
+}
+
+.upg-level {
+    color: var(--color-text-dim);
+    font-size: 11px;
+    width: 46px;
+}
+
+.upg-buy {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-width: 1px;
+    border-color: var(--color-border);
+    border-radius: 8px;
+    color: var(--color-text);
+    padding: 4px 10px;
+    font-size: 11px;
+}
+
+.sp-btns {
+    flex-direction: column;
+    margin-top: 14px;
+}
+
+.shop-cta {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-width: 1px;
+    border-color: var(--color-border);
+    border-radius: 8px;
+    color: var(--color-text);
+    padding: 8px 14px;
+    margin-top: 6px;
+    -unity-font-style: bold;
+}
+
+.shop-cta.buy {
+    background-color: var(--color-gold);
+    border-color: var(--color-gold);
+    color: #201a08;
+}
+
+.shop-cta.ameliorer {
+    background-color: var(--color-purple);
+    border-color: var(--color-purple);
+    color: white;
+}
+
+.shop-badge {
+    background-color: rgba(78, 209, 128, 0.2);
+    border-width: 1px;
+    border-color: rgba(78, 209, 128, 0.6);
+    border-radius: 8px;
+    color: #6ee7a0;
+    padding: 8px 14px;
+    margin-top: 6px;
+    -unity-text-align: middle-center;
+    -unity-font-style: bold;
+}
+
+.shop-bottombar {
+    background-color: var(--color-bg-card);
+    border-radius: 10px;
+    border-width: 1px;
+    border-color: var(--color-border);
+    padding: 10px;
+    margin-top: 12px;
+}
+
+.shop-wcats {
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+}
+
+.subtab {
+    background-color: rgba(255, 255, 255, 0.06);
+    border-width: 1px;
+    border-color: var(--color-border);
+    border-radius: 999px;
+    color: var(--color-text-dim);
+    padding: 4px 12px;
+    margin-right: 6px;
+    margin-bottom: 4px;
+    font-size: 11px;
+}
+
+.subtab.on {
+    background-color: var(--color-purple);
+    border-color: var(--color-purple);
+    color: white;
+}
+
+.shop-carousel {
+    height: 130px;
+}
+
+.wcard {
+    width: 108px;
+    height: 118px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-width: 1px;
+    border-color: var(--color-border);
+    border-radius: 8px;
+    padding: 6px;
+    margin-right: 8px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.wcard.active {
+    border-color: var(--color-purple);
+    border-width: 2px;
+}
+
+.wcard.owned {
+    opacity: 1;
+}
+
+.wcard:not(.owned) {
+    opacity: 0.6;
+}
+
+.wcard-top {
+    align-items: center;
+}
+
+.wcard-name {
+    color: var(--color-text);
+    font-size: 10px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    white-space: normal;
+}
+
+.wcard-thumb {
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+}
+
+.wcard-glyph {
+    font-size: 28px;
+}
+
+.thumb-img {
+    width: 48px;
+    height: 48px;
+}
+
+.wcard-foot {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.wcard-rating {
+    color: var(--color-gold);
+    font-size: 9px;
+}
+
+.wcard-lock {
+    font-size: 10px;
+}

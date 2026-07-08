@@ -1,0 +1,107 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="shop-card" class="shop-card">
+        <ui:VisualElement name="shop-topbar" class="shop-topbar">
+            <ui:VisualElement class="chip shop-credits-chip">
+                <ui:Label text="🪙" />
+                <ui:Label name="shop-credits" text="0" />
+            </ui:VisualElement>
+            <ui:VisualElement name="shop-nav" class="shop-nav">
+                <ui:Button name="shop-prev" text="◀ Précédent" class="shop-nav-btn" />
+                <ui:Button name="shop-next" text="Suivant ▶" class="shop-nav-btn" />
+            </ui:VisualElement>
+            <ui:Button name="shop-close" text="✕ Fermer" class="shop-close-btn" />
+        </ui:VisualElement>
+
+        <ui:VisualElement name="shop-body" class="shop-body">
+            <ui:VisualElement name="shop-rail" class="shop-rail">
+                <ui:Button name="shop-tab-weapons" text="Armes" class="shop-tab on" />
+                <ui:Button name="shop-tab-player" text="Personnage" class="shop-tab" />
+                <ui:Button name="shop-tab-accessories" text="Accessoires" class="shop-tab" />
+                <ui:Button name="shop-tab-boost" text="Boost" class="shop-tab" />
+                <ui:Button name="shop-tab-consumables" text="Consommables" class="shop-tab" />
+            </ui:VisualElement>
+
+            <ui:VisualElement name="shop-content" class="shop-content">
+                <ui:VisualElement name="shop-tab-content-weapons" class="shop-tab-content">
+                    <ui:VisualElement name="shop-hero-row" class="shop-hero-row">
+                        <ui:VisualElement name="shop-hero" class="shop-hero">
+                            <ui:Label text="// Arme" class="eyebrow" />
+                            <ui:VisualElement class="shop-wname-row">
+                                <ui:Label name="shop-wname" text="—" class="shop-wname" />
+                                <ui:Label name="shop-rarity-badge" text="" class="rarity-badge" />
+                                <ui:Label name="shop-rating" text="★ 0/0" class="shop-rating" />
+                            </ui:VisualElement>
+                            <ui:Label name="shop-wdesc" text="" class="shop-desc" />
+                        </ui:VisualElement>
+
+                        <ui:VisualElement name="shop-stats-panel" class="tac-card shop-stats-panel">
+                            <ui:Label text="Statistiques" class="sp-h" />
+
+                            <ui:VisualElement class="stat-row">
+                                <ui:Label text="Dégâts" class="stat-label" />
+                                <ui:VisualElement class="stat-bar"><ui:VisualElement name="stat-damage-fill" class="stat-bar-fill" /></ui:VisualElement>
+                                <ui:Label name="stat-damage-value" text="0" class="stat-value" />
+                            </ui:VisualElement>
+                            <ui:VisualElement class="stat-row">
+                                <ui:Label text="Cadence" class="stat-label" />
+                                <ui:VisualElement class="stat-bar"><ui:VisualElement name="stat-firerate-fill" class="stat-bar-fill" /></ui:VisualElement>
+                                <ui:Label name="stat-firerate-value" text="0" class="stat-value" />
+                            </ui:VisualElement>
+                            <ui:VisualElement class="stat-row">
+                                <ui:Label text="Chargeur" class="stat-label" />
+                                <ui:VisualElement class="stat-bar"><ui:VisualElement name="stat-mag-fill" class="stat-bar-fill" /></ui:VisualElement>
+                                <ui:Label name="stat-mag-value" text="0" class="stat-value" />
+                            </ui:VisualElement>
+                            <ui:VisualElement class="stat-row">
+                                <ui:Label text="Stabilité" class="stat-label" />
+                                <ui:VisualElement class="stat-bar"><ui:VisualElement name="stat-stability-fill" class="stat-bar-fill" /></ui:VisualElement>
+                                <ui:Label name="stat-stability-value" text="0" class="stat-value" />
+                            </ui:VisualElement>
+                            <ui:VisualElement class="stat-row">
+                                <ui:Label text="Portée" class="stat-label" />
+                                <ui:VisualElement class="stat-bar"><ui:VisualElement name="stat-range-fill" class="stat-bar-fill" /></ui:VisualElement>
+                                <ui:Label name="stat-range-value" text="0" class="stat-value" />
+                            </ui:VisualElement>
+
+                            <ui:VisualElement name="shop-upgrades" class="shop-upgrades" />
+
+                            <ui:VisualElement class="sp-btns">
+                                <ui:Button name="shop-ameliorer" text="★ Améliorer" class="shop-cta ameliorer" />
+                                <ui:Button name="shop-buy" text="Acheter" class="shop-cta buy" />
+                                <ui:Button name="shop-equip" text="Équiper" class="shop-cta" />
+                                <ui:Label name="shop-equipped-badge" text="✓ Équipée" class="shop-badge" />
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+
+                    <ui:VisualElement name="shop-bottombar" class="shop-bottombar">
+                        <ui:VisualElement name="shop-wcats" class="shop-wcats">
+                            <ui:Button name="shop-wcat-all" text="Tout" class="subtab on" />
+                            <ui:Button name="shop-wcat-assault" text="Assaut" class="subtab" />
+                            <ui:Button name="shop-wcat-smg" text="SMG" class="subtab" />
+                            <ui:Button name="shop-wcat-sniper" text="Sniper" class="subtab" />
+                            <ui:Button name="shop-wcat-shotgun" text="Pompe" class="subtab" />
+                            <ui:Button name="shop-wcat-pistol" text="Pistol" class="subtab" />
+                            <ui:Button name="shop-wcat-lmg" text="LMG" class="subtab" />
+                            <ui:Button name="shop-wcat-melee" text="Mêlée" class="subtab" />
+                        </ui:VisualElement>
+                        <ui:ScrollView name="shop-carousel" horizontal-scroller-visibility="Hidden" mode="Horizontal" class="shop-carousel" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+
+                <ui:VisualElement name="shop-tab-content-player" class="shop-tab-content shop-stub hidden">
+                    <ui:Label text="Personnage — bientôt disponible" class="shop-stub-label" />
+                </ui:VisualElement>
+                <ui:VisualElement name="shop-tab-content-accessories" class="shop-tab-content shop-stub hidden">
+                    <ui:Label text="Accessoires — bientôt disponible" class="shop-stub-label" />
+                </ui:VisualElement>
+                <ui:VisualElement name="shop-tab-content-boost" class="shop-tab-content shop-stub hidden">
+                    <ui:Label text="Boost — bientôt disponible" class="shop-stub-label" />
+                </ui:VisualElement>
+                <ui:VisualElement name="shop-tab-content-consumables" class="shop-tab-content shop-stub hidden">
+                    <ui:Label text="Consommables — bientôt disponible" class="shop-stub-label" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
