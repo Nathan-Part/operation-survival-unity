@@ -78,6 +78,15 @@ namespace Game.Runtime
             Died?.Invoke(this);
         }
 
+        /// Dégâts bruts sans zone d'impact (explosions, gadgets, chien) — falloff calculé par l'appelant.
+        public void ApplyDamage(int amount)
+        {
+            if (Health <= 0 || amount <= 0) return;
+            Health -= amount;
+            Damaged?.Invoke(this);
+            if (Health <= 0) { Health = 0; Died?.Invoke(this); }
+        }
+
         /// Cible VIP (web #140) : teinte or, argent ×2 à la mort.
         public void MarkVip()
         {

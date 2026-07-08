@@ -131,6 +131,17 @@ namespace Game.Runtime.Tests
         }
 
         [Test]
+        public void ApplyDamage_ReducesHealth_AndRaisesDied()
+        {
+            health.Init(shooter, 1, 1f, Zones());
+            bool died = false;
+            health.Died += _ => died = true;
+            health.ApplyDamage(health.MaxHealth);
+            Assert.AreEqual(0, health.Health);
+            Assert.IsTrue(died);
+        }
+
+        [Test]
         public void TakeHit_ReturnsZoneAndKilled()
         {
             health.Init(shooter, 1, 1f, Zones());

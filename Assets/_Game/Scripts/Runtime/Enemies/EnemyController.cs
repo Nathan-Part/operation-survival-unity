@@ -26,7 +26,13 @@ namespace Game.Runtime
         int burstRemaining;
         float burstTimer;
 
+        float suppressedUntil = float.NegativeInfinity;
+
         public EnemyState State => brain != null ? brain.State : EnemyState.Idle;
+
+        /// EMP/flashbang (Lot 4-5) : l'ennemi ne bouge plus et ne tire plus pendant `seconds`.
+        public bool IsSuppressed => Time.time < suppressedUntil;
+        public void Suppress(float seconds) => suppressedUntil = Time.time + seconds;
 
         /// Levé à chaque coup tiré (rafale ranged) : muzzle flash côté visuel.
         public event Action Fired;
@@ -69,6 +75,7 @@ namespace Game.Runtime
         {
             if (player == null || brain == null) return;
             if (brain.State == EnemyState.Dead) return;
+            if (IsSuppressed) { agent.isStopped = true; return; }
             float dt = Time.deltaTime;
             float dist = Vector3.Distance(transform.position, player.position);
             var state = brain.Tick(dt, dist);
