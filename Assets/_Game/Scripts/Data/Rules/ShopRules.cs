@@ -3,7 +3,8 @@ using Game.Data.Save;
 
 namespace Game.Data.Rules
 {
-    /// Logique d'achat (boutique web) : armes, persos, upgrades d'arme.
+    /// Logique d'achat (boutique web) : armes, persos, upgrades d'arme, accessoires,
+    /// boosts, danses, consommables, upgrades joueur, loadout.
     /// Pure : mutations du SaveData uniquement, l'UI viendra en Phase 5.
     public static class ShopRules
     {
@@ -18,11 +19,25 @@ namespace Game.Data.Rules
             return true;
         }
 
+        public static bool EquipWeapon(SaveData save, string weaponId)
+        {
+            if (save == null || !save.ownedWeapons.Contains(weaponId)) return false;
+            save.selectedWeapon = weaponId;
+            return true;
+        }
+
         public static bool BuyCharacter(SaveData save, string characterId, int price)
         {
             if (!CanBuy(save, save.ownedCharacters, characterId, price)) return false;
             save.money -= price;
             save.ownedCharacters.Add(characterId);
+            return true;
+        }
+
+        public static bool SelectCharacter(SaveData save, string characterId)
+        {
+            if (save == null || !save.ownedCharacters.Contains(characterId)) return false;
+            save.selectedCharacterId = characterId;
             return true;
         }
 
@@ -41,6 +56,109 @@ namespace Game.Data.Rules
             if (save.money < cost || !save.ownedWeapons.Contains(weaponId)) return false;
             save.money -= cost;
             save.weaponUpgrades[weaponId] = level + 1;
+            return true;
+        }
+
+        public static bool BuyAccessory(SaveData save, string id, int price)
+        {
+            if (!CanBuy(save, save.ownedAccessories, id, price)) return false;
+            save.money -= price;
+            save.ownedAccessories.Add(id);
+            return true;
+        }
+
+        public static bool EquipAccessory(SaveData save, string id, AccessoryType type)
+        {
+            if (save == null || !save.ownedAccessories.Contains(id)) return false;
+            save.equipped[type == AccessoryType.Helmet ? "helmet" : "costume"] = id;
+            return true;
+        }
+
+        public static bool BuyBoost(SaveData save, string id, int price)
+        {
+            if (!CanBuy(save, save.ownedBoosts, id, price)) return false;
+            save.money -= price;
+            save.ownedBoosts.Add(id);
+            return true;
+        }
+
+        /// Équipe le boost sur son slot ; re-cliquer sur le boost déjà équipé le retire.
+        /// Équiper un autre boost sur un slot déjà occupé remplace l'ancien (jamais additif).
+        public static bool ToggleBoost(SaveData save, string id, BoostSlot slot)
+        {
+            if (save == null || !save.ownedBoosts.Contains(id)) return false;
+            string slotKey = slot.ToString().ToLowerInvariant();
+            if (save.equippedBoosts.TryGetValue(slotKey, out string current) && current == id)
+                save.equippedBoosts.Remove(slotKey);
+            else
+                save.equippedBoosts[slotKey] = id;
+            return true;
+        }
+
+        public static bool BuyDance(SaveData save, string id, int price)
+        {
+            if (!CanBuy(save, save.ownedDances, id, price)) return false;
+            save.money -= price;
+            save.ownedDances.Add(id);
+            return true;
+        }
+
+        /// web (main.js toggleDance) : retire si sélectionnée ; sinon l'ajoute et, si ça
+        /// dépasse `max`, retire la plus ancienne (FIFO) — jamais de refus par plafond.
+        public static bool ToggleDanceSelection(SaveData save, string id, int max = 3)
+        {
+            if (save == null || !save.ownedDances.Contains(id)) return false;
+            var arr = save.selectedDances;
+            int i = arr.IndexOf(id);
+            if (i >= 0) arr.RemoveAt(i);
+            else
+            {
+                arr.Add(id);
+                if (arr.Count > max) arr.RemoveAt(0);
+            }
+            return true;
+        }
+
+        public static bool BuyConsumable(SaveData save, string key, int price)
+        {
+            if (save == null || save.money < price) return false;
+            if (!save.consumables.ContainsKey(key)) save.consumables[key] = 0;
+            save.money -= price;
+            save.consumables[key] += 1;
+            return true;
+        }
+
+        public static int PlayerUpgradeLevel(SaveData save, string stat) =>
+            save.playerUpgrades.TryGetValue(stat, out int level) ? level : 0;
+
+        /// Coût du prochain niveau (miroir de NextWeaponUpgradeCost).
+        public static int NextPlayerUpgradeCost(SaveData save, string stat, int baseCost) =>
+            UpgradeFormulas.Cost(baseCost, PlayerUpgradeLevel(save, stat));
+
+        public static bool BuyPlayerUpgrade(SaveData save, string stat, int baseCost, int maxLevel)
+        {
+            int level = PlayerUpgradeLevel(save, stat);
+            if (level >= maxLevel) return false;
+            int cost = UpgradeFormulas.Cost(baseCost, level);
+            if (save.money < cost) return false;
+            save.money -= cost;
+            save.playerUpgrades[stat] = level + 1;
+            return true;
+        }
+
+        /// web (main.js toggleLoadoutBonus) : retire si présent ; sinon l'ajoute et, si ça
+        /// dépasse `max`, retire le plus ancien (FIFO) — jamais de refus par plafond.
+        public static bool ToggleLoadout(SaveData save, string key, int max = 3)
+        {
+            if (save == null) return false;
+            var arr = save.selectedLoadout;
+            int i = arr.IndexOf(key);
+            if (i >= 0) arr.RemoveAt(i);
+            else
+            {
+                arr.Add(key);
+                if (arr.Count > max) arr.RemoveAt(0);
+            }
             return true;
         }
     }
