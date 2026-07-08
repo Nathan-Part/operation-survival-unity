@@ -13,11 +13,13 @@ namespace Game.Runtime
         WeaponController weapon;
         WaveManager waves;
         PlayerMotor motor;
+        KillstreakController killstreak;
 
         RectTransform healthFill;
         RectTransform staminaFill;
         Text ammoText;
         Text waveText;
+        Text streakText;
         GameObject deathPanel;
         int lastWave;
         int lastAlive;
@@ -27,12 +29,14 @@ namespace Game.Runtime
         static Font UiFont => Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
 
         public void Init(PlayerHealth health, WeaponController weapon, WaveManager waves, PlayerMotor motor, Transform playerBody,
-            Camera camera = null, PlayerViewController viewController = null, MetaProgress meta = null, ConsumableThrower thrower = null)
+            Camera camera = null, PlayerViewController viewController = null, MetaProgress meta = null, ConsumableThrower thrower = null,
+            KillstreakController killstreak = null)
         {
             this.health = health;
             this.weapon = weapon;
             this.waves = waves;
             this.motor = motor;
+            this.killstreak = killstreak;
 
             if (FindAnyObjectByType<UnityEngine.EventSystems.EventSystem>() == null)
             {
@@ -70,6 +74,16 @@ namespace Game.Runtime
             waveRect.pivot = new Vector2(0.5f, 1f);
             waveRect.anchoredPosition = new Vector2(0f, -24f);
             waveRect.sizeDelta = new Vector2(800f, 50f);
+
+            // Compteur de killstreak (web #58) : 🔥 + nombre, affiché à partir de 2 kills
+            streakText = MakeText(root, "", 32, TextAnchor.UpperCenter);
+            var streakRect = streakText.rectTransform;
+            streakRect.anchorMin = streakRect.anchorMax = new Vector2(0.5f, 1f);
+            streakRect.pivot = new Vector2(0.5f, 1f);
+            streakRect.anchoredPosition = new Vector2(0f, -74f);
+            streakRect.sizeDelta = new Vector2(400f, 46f);
+            streakText.color = new Color(1f, 0.5f, 0.1f);
+            streakText.gameObject.SetActive(false);
 
             // Réticule (centre)
             var crosshair = MakeImage(root, new Color(1f, 1f, 1f, 0.8f));
@@ -120,6 +134,15 @@ namespace Game.Runtime
         {
             if (motor != null && motor.StaminaMax > 0f)
                 staminaFill.anchorMax = new Vector2(Mathf.Clamp01(motor.StaminaCurrent / motor.StaminaMax), 1f);
+            RefreshStreakText();
+        }
+
+        void RefreshStreakText()
+        {
+            int count = killstreak != null ? killstreak.StreakCount : 0;
+            bool show = count >= 2;
+            if (streakText.gameObject.activeSelf != show) streakText.gameObject.SetActive(show);
+            if (show) streakText.text = $"🔥 {count}";
         }
 
         void OnHealthChanged(float current, float max)

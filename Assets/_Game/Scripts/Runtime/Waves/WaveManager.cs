@@ -19,6 +19,7 @@ namespace Game.Runtime
 
         public int CurrentWave { get; private set; }
         public int Money { get; private set; }
+        public float bonusMoneyMult = 1f; // web #58 : killstreak ×2 pendant 10 s
         public int AliveCount => alive.Count;
         public IReadOnlyList<EnemyHealth> Alive => alive;
         public ComboModel Combo { get; } = new ComboModel(); // web #29 : multiplicateur d'argent (HUD combo)
@@ -30,6 +31,8 @@ namespace Game.Runtime
         public event Action<int> WaveCleared;              // n° de vague nettoyée (XP_WAVE)
 
         public int BestComboThisRun { get; private set; }
+
+        public void AddBonusMoney(int n) => Money += n;
 
         public void Begin()
         {
@@ -96,9 +99,9 @@ namespace Game.Runtime
             int gained = eco != null
                 ? EconomyRules.MoneyForKill(eco.perKillMoney, mult, difficulty.moneyMult, vip, SpecialRules.VipMoneyMult)
                 : 0; // web: MONEY_PER_KILL × combo × difficulté × VIP
-            Money += gained;
+            Money += Mathf.RoundToInt(gained * bonusMoneyMult); // web #58 : killstreak ×2
             if (vip) CalloutEvents.Raise("VIP ÉLIMINÉ!"); // web #140
-            EnemyKilled?.Invoke(enemy, gained);
+            EnemyKilled?.Invoke(enemy, gained); // montant de base (hors bonus killstreak) pour l'XP/méta
             AliveCountChanged?.Invoke(alive.Count);
         }
 

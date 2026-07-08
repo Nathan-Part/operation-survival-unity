@@ -98,9 +98,13 @@ namespace Game.Runtime
             thrower.Init(db, meta, weapon.aimCamera, waveManager, health);
             if (view.inputBridge != null) view.inputBridge.thrower = thrower;
 
+            // Killstreaks (web #58) : rechargement instantané / bouclier / argent ×2
+            var killstreak = motor.gameObject.AddComponent<KillstreakController>();
+            killstreak.Init(waveManager, weapon, health);
+
             var hudGo = new GameObject("HUD");
             var hud = hudGo.AddComponent<HudController>();
-            hud.Init(health, weapon, waveManager, motor, motor.transform, weapon.aimCamera, view, meta, thrower);
+            hud.Init(health, weapon, waveManager, motor, motor.transform, weapon.aimCamera, view, meta, thrower, killstreak);
             view.hud = hud;
 
             if (save.settings.defaultView == "third") view.SetMode(ViewMode.Third); // réglage « vue » du web
