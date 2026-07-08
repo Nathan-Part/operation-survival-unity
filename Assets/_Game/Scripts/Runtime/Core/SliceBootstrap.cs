@@ -101,6 +101,11 @@ namespace Game.Runtime
 
             TouchControlsRoot.CreateIfNeeded(look);
 
+            // Lancer de consommables (frag/collante au T7, autres au T8)
+            var thrower = motor.gameObject.AddComponent<ConsumableThrower>();
+            thrower.Init(db, meta, weapon.aimCamera, waveManager);
+            if (view.inputBridge != null) view.inputBridge.thrower = thrower;
+
             waveManager.Begin();
         }
     }

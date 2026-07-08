@@ -11,9 +11,10 @@ namespace Game.Runtime
         public PlayerLook look;
         public WeaponController weapon;
         public PlayerViewController viewController;
+        public ConsumableThrower thrower;
 
         InputActionMap map;
-        InputAction move, lookAction, jump, dash, reload, sprint, aim, fire, toggleView;
+        InputAction move, lookAction, jump, dash, reload, sprint, aim, fire, toggleView, fragKey, stickyKey;
 
         void Awake()
         {
@@ -51,6 +52,10 @@ namespace Game.Runtime
             fire.AddBinding("<Mouse>/leftButton");                 // le web accepte aussi clic gauche
 
             toggleView = map.AddAction("ToggleView", binding: "<Keyboard>/v"); // web: V = vue 1re/3e
+
+            // Lancer de consommables (web: B = frag, J = collante ; N/H/K/O au T8)
+            fragKey = map.AddAction("Frag", binding: "<Keyboard>/b");
+            stickyKey = map.AddAction("Sticky", binding: "<Keyboard>/j");
         }
 
         void OnEnable() { map.Enable(); }
@@ -77,6 +82,11 @@ namespace Game.Runtime
             {
                 viewController.AimHeld = aim.IsPressed();
                 if (toggleView.WasPressedThisFrame()) viewController.ToggleView();
+            }
+            if (thrower != null)
+            {
+                if (fragKey.WasPressedThisFrame()) thrower.Throw("frag");
+                if (stickyKey.WasPressedThisFrame()) thrower.Throw("sticky");
             }
         }
     }
