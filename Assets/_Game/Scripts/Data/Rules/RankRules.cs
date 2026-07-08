@@ -18,5 +18,11 @@ namespace Game.Data.Rules
         }
 
         public static bool CanPrestige(int level) => level >= 50; // web: seuil de prestige
+
+        // Rang opérateur (carte Intel de l'accueil), dérivé du meilleur wave atteint —
+        // distinct des titres/prestige ci-dessus. web: updateHomeMeta (main.js:56-57).
+        public static int OperatorRank(int bestWave) => bestWave / 2 + 1; // web: Math.floor(bw / 2) + 1
+
+        public static float OperatorRankFill(int bestWave) => (bestWave % 2) / 2f; // web: (bw % 2) / 2 * 100
     }
 }
