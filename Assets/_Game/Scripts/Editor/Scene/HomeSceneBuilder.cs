@@ -61,11 +61,15 @@ namespace Game.Runtime.Editor
             if (document.visualTreeAsset == null)
                 Debug.LogError($"HomeSceneBuilder: Home.uxml introuvable a {UxmlPath}");
 
+            // GameLauncher partage le GameObject UIDocument : sa propre requête #boot-loading
+            // se fait aussi dans son Start() (même raison — cf. commentaire sur GameLauncher).
+            var launcher = uiGo.AddComponent<GameLauncher>();
+
             var controller = uiGo.AddComponent<HomeController>();
             // Init() ne fait qu'assigner les références sérialisées (voir commentaire sur la
             // méthode) : le câblage réel (rendu du lobby, perso 3D affiché) se fait au Play Mode
             // via HomeController.Start(), jamais ici (pas de GameObject runtime à sérialiser dans la scène).
-            controller.Init(context.database, meta, stage);
+            controller.Init(context.database, meta, stage, launcher);
 
             System.IO.Directory.CreateDirectory("Assets/_Game/Scenes");
             EditorSceneManager.SaveScene(scene, ScenePath);

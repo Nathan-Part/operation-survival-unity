@@ -140,5 +140,9 @@
         <ui:VisualElement name="map-panel" class="panel hidden" />
         <ui:VisualElement name="settings-panel" class="panel hidden" />
         <ui:VisualElement name="howto-panel" class="panel hidden" />
+
+        <ui:VisualElement name="boot-loading" class="boot-loading hidden" picking-mode="Ignore">
+            <ui:Label text="Chargement du décor…" class="boot-loading-label" />
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

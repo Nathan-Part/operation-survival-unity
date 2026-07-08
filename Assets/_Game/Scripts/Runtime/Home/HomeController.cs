@@ -24,6 +24,7 @@ namespace Game.Runtime
         [SerializeField] GameDatabase db;
         [SerializeField] MetaProgress meta;
         [SerializeField] LobbyCharacterStage stage;
+        [SerializeField] GameLauncher launcher;
 
         bool wired;
 
@@ -51,11 +52,12 @@ namespace Game.Runtime
         /// Play Mode. Si WireUi() créait des GameObjects (perso 3D) dès cet appel, ils seraient
         /// sérialisés tels quels dans la scène puis dupliqués par le vrai câblage runtime (Start())
         /// au Play Mode suivant — d'où la séparation stricte affectation (Init) / câblage (Start).
-        public void Init(GameDatabase database, MetaProgress metaProgress, LobbyCharacterStage characterStage)
+        public void Init(GameDatabase database, MetaProgress metaProgress, LobbyCharacterStage characterStage, GameLauncher gameLauncher)
         {
             db = database;
             meta = metaProgress;
             stage = characterStage;
+            launcher = gameLauncher;
         }
 
         void Start()
@@ -101,7 +103,7 @@ namespace Game.Runtime
             var tileShop = root.Q<Button>("tile-shop");
             var tileLoadout = root.Q<Button>("tile-loadout");
             var tileMap = root.Q<Button>("tile-map");
-            // tile-training : pas de panneau associé (D7, lancement direct branché Task 7).
+            var tileTraining = root.Q<Button>("tile-training"); // pas de panneau : lancement direct (Task 7)
 
             panels["shop"] = root.Q<VisualElement>("shop-panel");
             panels["loadout"] = root.Q<VisualElement>("loadout-panel");
@@ -116,6 +118,7 @@ namespace Game.Runtime
             tileShop.clicked += () => OpenPanel("shop");
             tileLoadout.clicked += () => OpenPanel("loadout");
             tileMap.clicked += () => OpenPanel("map");
+            tileTraining.clicked += () => launcher?.Deploy(meta, training: true);
             deployButton.clicked += TryDeploy;
 
             BuildInputMap();
@@ -156,11 +159,8 @@ namespace Game.Runtime
             if (closeAction.WasPressedThisFrame()) CloseActivePanel();
         }
 
-        // Branché en Task 7 (GameLauncher.Deploy) : persist + chargement de la map choisie.
-        // No-op sûr pour l'instant — ni Entrée/Espace ni le bouton "Déployer" ne doivent planter ici.
-        void TryDeploy()
-        {
-        }
+        // Bouton "Déployer" + Entrée/Espace : lance la partie normale (pas d'entraînement).
+        void TryDeploy() => launcher?.Deploy(meta, training: false);
 
         /// Affiche le panneau demandé ("shop"|"loadout"|"map"|"settings"|"howto") et masque le
         /// panneau concurrent éventuellement ouvert (un seul overlay actif à la fois, comme le web).
