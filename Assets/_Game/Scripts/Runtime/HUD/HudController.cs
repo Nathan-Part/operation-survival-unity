@@ -108,6 +108,7 @@ namespace Game.Runtime
             if (meta != null) gameObject.AddComponent<HudMeta>().Init(root, meta);
             if (meta != null) gameObject.AddComponent<HudConsumables>().Init(root, meta, thrower);
             if (loadout != null && loadout.Model != null) gameObject.AddComponent<HudLoadout>().Init(root, loadout);
+            gameObject.AddComponent<HudPetBar>().Init(root, () => PetController.Current);
             if (camera != null)
             {
                 gameObject.AddComponent<HudEnemyBars>().Init(root, waves, camera);

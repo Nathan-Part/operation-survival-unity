@@ -121,6 +121,7 @@ namespace Game.Runtime
             loadout.SetTrigger("turret", () => Turret.Deploy(GroundInFront(motor, 1.5f), waveManager));
             loadout.SetTrigger("airstrike", () => Airstrike.CallOnAim(this, weapon.aimCamera, waveManager));
             loadout.SetTrigger("carepackage", () => CarePackage.Spawn(GroundInFront(motor, 2f), motor.transform, meta, health, Time.frameCount));
+            loadout.SetTrigger("dog", () => PetController.Summon(GroundInFront(motor, 1.2f), motor.transform, waveManager, null)); // modèle pets/chien2 à copier plus tard (T15)
             if (view.inputBridge != null) view.inputBridge.loadout = loadout;
 
             // Caisse de ravitaillement auto (web #156) : toutes les 4 vagues nettoyées
