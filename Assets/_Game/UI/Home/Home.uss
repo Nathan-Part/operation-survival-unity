@@ -255,6 +255,107 @@
     right: 0;
     bottom: 0;
     background-color: rgba(6, 7, 12, 0.85);
+    justify-content: center;
+    align-items: center;
+}
+
+/* Panneau Réglages (Task 8, contenu cloné depuis SettingsPanel.uxml dans #settings-panel). */
+.settings-card {
+    width: 420px;
+}
+
+.panel-title {
+    color: var(--color-text);
+    font-size: 26px;
+    -unity-font-style: bold;
+    margin-top: 2px;
+    margin-bottom: 14px;
+}
+
+.set-row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.set-row-column {
+    align-items: flex-start;
+}
+
+.set-label {
+    color: var(--color-text);
+    font-size: 13px;
+}
+
+.set-label-group {
+    flex-direction: column;
+}
+
+.set-label-sub {
+    color: var(--color-text-dim);
+    font-size: 10px;
+}
+
+.set-slider {
+    width: 160px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.set-val {
+    color: var(--color-text);
+    font-size: 12px;
+    -unity-font-style: bold;
+    min-width: 42px;
+    -unity-text-align: middle-right;
+}
+
+.set-toggle {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-width: 1px;
+    border-color: var(--color-border);
+    border-radius: 8px;
+    color: var(--color-text);
+    padding: 6px 14px;
+}
+
+.set-toggle.toggle-on {
+    background-color: var(--color-purple);
+    border-color: var(--color-purple);
+    color: white;
+}
+
+.set-diff {
+    flex-direction: row;
+    margin-top: 6px;
+}
+
+.set-diff-btn {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-width: 1px;
+    border-color: var(--color-border);
+    border-radius: 8px;
+    color: var(--color-text);
+    padding: 6px 12px;
+    margin-right: 8px;
+}
+
+.set-diff-btn.diff-active {
+    background-color: var(--color-purple);
+    border-color: var(--color-purple);
+    color: white;
+}
+
+.panel-back {
+    margin-top: 18px;
+    background-color: rgba(255, 255, 255, 0.08);
+    border-width: 1px;
+    border-color: var(--color-border);
+    border-radius: 8px;
+    color: var(--color-text);
+    padding: 6px 14px;
+    align-self: flex-start;
 }
 
 /* Overlay plein écran anti-flash affiché avant le chargement de la map (parité web §3.7). */

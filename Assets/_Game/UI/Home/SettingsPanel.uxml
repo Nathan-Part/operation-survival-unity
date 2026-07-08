@@ -1,0 +1,50 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="settings-card" class="tac-card settings-card">
+        <ui:Label text="// Paramètres" class="eyebrow" />
+        <ui:Label text="Réglages" class="panel-title" />
+
+        <ui:VisualElement class="set-row">
+            <ui:Label text="Sensibilité souris" class="set-label" />
+            <ui:Slider name="set-sensitivity" low-value="0.2" high-value="3" value="1" class="set-slider" />
+            <ui:Label name="set-sensitivity-val" text="1.0×" class="set-val" />
+        </ui:VisualElement>
+
+        <ui:VisualElement class="set-row">
+            <ui:Label text="Volume" class="set-label" />
+            <ui:Slider name="set-volume" low-value="0" high-value="1" value="0.3" class="set-slider" />
+            <ui:Label name="set-volume-val" text="30%" class="set-val" />
+        </ui:VisualElement>
+
+        <ui:VisualElement class="set-row">
+            <ui:Label text="Vue par défaut" class="set-label" />
+            <ui:Button name="set-view" text="3e personne" class="set-toggle" />
+        </ui:VisualElement>
+
+        <ui:VisualElement class="set-row set-row-column">
+            <ui:Label text="Difficulté" class="set-label" />
+            <ui:VisualElement class="set-diff">
+                <ui:Button name="set-diff-facile" text="Facile" class="set-diff-btn" />
+                <ui:Button name="set-diff-normal" text="Normal" class="set-diff-btn" />
+                <ui:Button name="set-diff-difficile" text="Difficile" class="set-diff-btn" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <ui:VisualElement class="set-row">
+            <ui:VisualElement class="set-label-group">
+                <ui:Label text="Mode hardcore" class="set-label" />
+                <ui:Label text="(pas de régén/soins)" class="set-label-sub" />
+            </ui:VisualElement>
+            <ui:Button name="set-hardcore" text="Désactivé" class="set-toggle" />
+        </ui:VisualElement>
+
+        <ui:VisualElement class="set-row">
+            <ui:VisualElement class="set-label-group">
+                <ui:Label text="Pluie" class="set-label" />
+                <ui:Label text="(ambiance orageuse)" class="set-label-sub" />
+            </ui:VisualElement>
+            <ui:Button name="set-rain" text="Désactivé" class="set-toggle" />
+        </ui:VisualElement>
+
+        <ui:Button name="settings-back" text="◀ Retour" class="panel-back" />
+    </ui:VisualElement>
+</ui:UXML>

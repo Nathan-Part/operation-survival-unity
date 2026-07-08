@@ -17,6 +17,7 @@ namespace Game.Runtime.Editor
         const string BackgroundPath = "Assets/_Game/Art/UI/lobby-bg.jpg";
         const string PanelSettingsPath = "Assets/_Game/UI/Home/HomePanelSettings.asset";
         const string UxmlPath = "Assets/_Game/UI/Home/Home.uxml";
+        const string SettingsPanelUxmlPath = "Assets/_Game/UI/Home/SettingsPanel.uxml";
 
         [MenuItem("Tools/Game/Build Home Scene")]
         public static void Build()
@@ -65,11 +66,20 @@ namespace Game.Runtime.Editor
             // se fait aussi dans son Start() (même raison — cf. commentaire sur GameLauncher).
             var launcher = uiGo.AddComponent<GameLauncher>();
 
+            // SettingsPanelController partage aussi le GameObject UIDocument : clone SettingsPanel.uxml
+            // dans le conteneur vide #settings-panel au Play Mode (Task 8) — jamais à l'édition (Init()
+            // seul ici, câblage réel en Start(), même raison que les autres contrôleurs de cette scène).
+            var settingsPanel = uiGo.AddComponent<SettingsPanelController>();
+            var settingsPanelAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(SettingsPanelUxmlPath);
+            if (settingsPanelAsset == null)
+                Debug.LogError($"HomeSceneBuilder: SettingsPanel.uxml introuvable a {SettingsPanelUxmlPath}");
+
             var controller = uiGo.AddComponent<HomeController>();
             // Init() ne fait qu'assigner les références sérialisées (voir commentaire sur la
             // méthode) : le câblage réel (rendu du lobby, perso 3D affiché) se fait au Play Mode
             // via HomeController.Start(), jamais ici (pas de GameObject runtime à sérialiser dans la scène).
-            controller.Init(context.database, meta, stage, launcher);
+            controller.Init(context.database, meta, stage, launcher, settingsPanel);
+            settingsPanel.Init(meta, controller, settingsPanelAsset);
 
             System.IO.Directory.CreateDirectory("Assets/_Game/Scenes");
             EditorSceneManager.SaveScene(scene, ScenePath);
