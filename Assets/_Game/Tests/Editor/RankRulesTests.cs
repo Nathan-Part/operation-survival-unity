@@ -38,5 +38,16 @@ namespace Game.Data.Tests
             Assert.AreEqual(0f, RankRules.OperatorRankFill(2));
             Assert.AreEqual(0.5f, RankRules.OperatorRankFill(7));
         }
+
+        [Test]
+        public void ComboMultiplier_CapsAtFive()
+        {
+            Assert.AreEqual(1, RankRules.ComboMultiplier(0));
+            Assert.AreEqual(1, RankRules.ComboMultiplier(2));
+            Assert.AreEqual(2, RankRules.ComboMultiplier(3));
+            Assert.AreEqual(3, RankRules.ComboMultiplier(6));
+            Assert.AreEqual(5, RankRules.ComboMultiplier(12));
+            Assert.AreEqual(5, RankRules.ComboMultiplier(100)); // cap à 5 au-delà
+        }
     }
 }

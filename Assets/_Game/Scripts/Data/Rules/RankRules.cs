@@ -24,5 +24,9 @@ namespace Game.Data.Rules
         public static int OperatorRank(int bestWave) => bestWave / 2 + 1; // web: Math.floor(bw / 2) + 1
 
         public static float OperatorRankFill(int bestWave) => (bestWave % 2) / 2f; // web: (bw % 2) / 2 * 100
+
+        // Multiplicateur affiché sur le chip "Meilleur combo xM" du lobby.
+        // web: function comboMultiplier(n) (main.js:4666) => Math.min(5, 1 + Math.floor(n/3))
+        public static int ComboMultiplier(int bestCombo) => System.Math.Min(5, 1 + bestCombo / 3);
     }
 }

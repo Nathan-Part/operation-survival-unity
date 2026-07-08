@@ -192,7 +192,7 @@ namespace Game.Runtime
             rankLabel.text = $"Rang {rank}";
             rankBarFill.style.width = new Length(fill * 100f, LengthUnit.Percent);
 
-            int comboMultiplier = Math.Min(5, 1 + save.bestCombo / 3); // web: chip "Meilleur combo xM"
+            int comboMultiplier = RankRules.ComboMultiplier(save.bestCombo);
             creditsChip.text = save.money.ToString();
             waveChip.text = $"Vague {save.bestWave}";
             comboChip.text = $"Meilleur combo x{comboMultiplier}";
