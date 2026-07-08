@@ -56,9 +56,9 @@ namespace Game.Runtime
                     break;
                 case "molotov":
                     // Flaque de feu : visuel via GroundZoneEffect (pas de cible joueur ici),
-                    // dégâts périodiques aux ennemis dans le rayon via AreaDamage (comme frag/sticky).
+                    // dégâts périodiques FLAT (pas de falloff) à tout ennemi dans le rayon — comme la zone toxique (EnemySpecials).
                     GroundZoneEffect.Create(point, new Color(1f, 0.5f, 0.1f, 0.35f), d.radius, d.effectSeconds, null);
-                    StartCoroutine(TickAreaDamage(point, d.radius, 6f, 0.5f, d.effectSeconds)); // web: MOLOTOV_TICK_DMG=6
+                    StartCoroutine(TickFlatDamage(point, d.radius, 6, 0.5f, d.effectSeconds)); // web: MOLOTOV_TICK_DMG=6
                     break;
                 case "emp":
                     foreach (var e in waves.Alive)
@@ -84,15 +84,24 @@ namespace Game.Runtime
             }
         }
 
-        /// Dégâts répétés dans un rayon, réutilise AreaDamage.Apply à chaque tick (molotov).
-        IEnumerator TickAreaDamage(Vector3 point, float radius, float tickDamage, float interval, float duration)
+        /// Dégâts répétés dans un rayon, montant FLAT par tick — pas de falloff par distance
+        /// (contrairement à AreaDamage/ExplosionDamage, réservé aux explosions instantanées).
+        /// Mirroring EnemySpecials (zone toxique) : dégâts identiques partout dans le rayon.
+        IEnumerator TickFlatDamage(Vector3 point, float radius, int tickDamage, float interval, float duration)
         {
             float elapsed = 0f;
             while (elapsed < duration)
             {
                 yield return new WaitForSeconds(interval);
                 elapsed += interval;
-                if (waves != null) AreaDamage.Apply(waves.Alive, point, radius, tickDamage);
+                if (waves == null) continue;
+                var alive = waves.Alive;
+                for (int i = 0; i < alive.Count; i++)
+                {
+                    var e = alive[i];
+                    if (e == null || e.IsDead) continue;
+                    if (Vector3.Distance(point, e.transform.position) <= radius) e.ApplyDamage(tickDamage);
+                }
             }
         }
     }
