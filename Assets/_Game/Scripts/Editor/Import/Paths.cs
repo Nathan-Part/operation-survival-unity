@@ -12,6 +12,7 @@ namespace Game.Data.Editor.Import
         public const string Consumables = DataRoot + "/Items/Consumables";
         public const string Dances = DataRoot + "/Items/Dances";
         public const string Achievements = DataRoot + "/Achievements";
+        public const string Contracts = DataRoot + "/Contracts";
         public const string ConfigRoot = DataRoot + "/Config";
         public const string MovementConfig = ConfigRoot + "/MovementConfig.asset";
         public const string EnemyCombatConfig = ConfigRoot + "/EnemyCombatConfig.asset";

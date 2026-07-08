@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -27,6 +28,8 @@ namespace Game.Data.Save
                 if (save.lifetime == null) save.lifetime = new SaveLifetime();
                 if (save.ownedWeapons == null) save.ownedWeapons = new SaveData().ownedWeapons;
                 if (save.consumables == null) save.consumables = new SaveData().consumables;
+                if (save.daily == null) save.daily = new SaveDaily();
+                if (save.daily.contracts == null) save.daily.contracts = new List<SaveContract>();
                 if (!save.ownedWeapons.Contains("knife")) save.ownedWeapons.Add("knife");       // web #50
                 if (!save.consumables.ContainsKey("medkit")) save.consumables["medkit"] = 3;    // web #178
                 return save;

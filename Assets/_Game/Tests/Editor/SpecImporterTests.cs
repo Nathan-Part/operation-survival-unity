@@ -19,7 +19,8 @@ namespace Game.Data.Tests
             Items = "items.test.json",
             PowerUps = "powerups.test.json",
             Waves = "waves.test.json",
-            Achievements = "achievements.test.json"
+            Achievements = "achievements.test.json",
+            Contracts = "contracts.test.json"
         };
 
         [TearDown]
@@ -44,6 +45,7 @@ namespace Game.Data.Tests
             Assert.AreEqual(7, db.consumables.Length);
             Assert.AreEqual(2, db.dances.Length);
             Assert.AreEqual(26, db.achievements.Length);
+            Assert.AreEqual(8, db.contracts.Length);
 
             Assert.IsNotNull(db.movementConfig);
             Assert.IsNotNull(db.enemyCombatConfig);

@@ -1,0 +1,13 @@
+{
+  "_doc": "8 contrats quotidiens extraits de main.js:3131-3160. Tirage déterministe de 3/jour côté Unity via DailyContractRules (seed = année*10000+mois*100+jour, LCG identique au web).",
+  "contracts": [
+    { "id": "kills50", "desc": "Éliminer 50 ennemis", "type": "kills", "target": 50, "reward": 800 },
+    { "id": "kills100", "desc": "Éliminer 100 ennemis", "type": "kills", "target": 100, "reward": 1500 },
+    { "id": "heads20", "desc": "20 headshots", "type": "headshots", "target": 20, "reward": 1000 },
+    { "id": "heads10", "desc": "10 headshots", "type": "headshots", "target": 10, "reward": 600 },
+    { "id": "wave10", "desc": "Atteindre la vague 10", "type": "wave", "target": 10, "reward": 2000 },
+    { "id": "wave5", "desc": "Atteindre la vague 5", "type": "wave", "target": 5, "reward": 900 },
+    { "id": "melee15", "desc": "15 kills au couteau", "type": "melee", "target": 15, "reward": 1200 },
+    { "id": "melee5", "desc": "5 kills au couteau", "type": "melee", "target": 5, "reward": 500 }
+  ]
+}

@@ -13,6 +13,7 @@ namespace Game.Data.Editor.Import
         public string PowerUps = "powerups.json";
         public string Waves = "waves.json";
         public string Achievements = "achievements.json";
+        public string Contracts = "contracts.json";
     }
 
     public static class SpecImporter
@@ -47,6 +48,7 @@ namespace Game.Data.Editor.Import
             var consumablesFolder = $"{dataRoot}/Items/Consumables";
             var dancesFolder = $"{dataRoot}/Items/Dances";
             var achievementsFolder = $"{dataRoot}/Achievements";
+            var contractsFolder = $"{dataRoot}/Contracts";
             var configRoot = $"{dataRoot}/Config";
             var upgradeConfigPath = $"{configRoot}/UpgradeConfig.asset";
 
@@ -58,6 +60,7 @@ namespace Game.Data.Editor.Import
             var powerUpResult = PowerUpImporter.Import($"{specRoot}/{fileNames.PowerUps}", powerUpsFolder, $"{configRoot}/PowerUpConfig.asset", report);
             var waveConfig = WaveConfigImporter.Import($"{specRoot}/{fileNames.Waves}", $"{configRoot}/WaveConfig.asset", report);
             var achievements = AchievementImporter.Import($"{specRoot}/{fileNames.Achievements}", achievementsFolder, report);
+            var contracts = ContractImporter.Import($"{specRoot}/{fileNames.Contracts}", contractsFolder, report);
 
             var databasePath = $"{dataRoot}/GameDatabase.asset";
             var database = AssetImportUtil.FindOrCreateSingleton<GameDatabase>(databasePath);
@@ -70,6 +73,7 @@ namespace Game.Data.Editor.Import
             database.consumables = itemsResult.Consumables.ToArray();
             database.dances = itemsResult.Dances.ToArray();
             database.achievements = achievements.ToArray();
+            database.contracts = contracts.ToArray();
             database.movementConfig = characterResult.MovementConfig;
             database.enemyCombatConfig = enemyResult.CombatConfig;
             database.waveConfig = waveConfig;

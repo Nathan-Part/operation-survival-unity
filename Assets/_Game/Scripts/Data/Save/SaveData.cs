@@ -12,7 +12,7 @@ namespace Game.Data.Save
         public int bestScore;
         public int bestCombo;
         public long xp;
-        public string daily;
+        public SaveDaily daily = new SaveDaily();
         public string selectedCharacterId;
         public List<string> ownedWeapons = new List<string> { "default", "knife" }; // knife gratuit (#50)
         public string selectedWeapon = "default";

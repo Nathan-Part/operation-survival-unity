@@ -15,6 +15,7 @@ namespace Game.Data
         public ConsumableData[] consumables = Array.Empty<ConsumableData>();
         public DanceData[] dances = Array.Empty<DanceData>();
         public AchievementData[] achievements = Array.Empty<AchievementData>();
+        public ContractData[] contracts = Array.Empty<ContractData>();
 
         public MovementConfig movementConfig;
         public EnemyCombatConfig enemyCombatConfig;

@@ -14,6 +14,7 @@ Ce dossier est la **référence d'équilibrage et de contenu** pour la version U
 | `items.json` | Accessoires, boosts, consommables, danses | ScriptableObjects par catégorie |
 | `powerups.json` | 24 power-ups (durées, effets) + drop rates | ScriptableObjects `PowerUpData` |
 | `achievements.json` | 26 succès (id/nom/desc/conditionType/target) | ScriptableObjects `AchievementData` + `AchievementRules.IsUnlocked` |
+| `contracts.json` | 8 contrats quotidiens (id/desc/type/target/reward), tirage de 3/jour | ScriptableObjects `ContractData` + `DailyContractRules` |
 
 ## Principe de modularité (important)
 
@@ -39,7 +40,7 @@ Le jeu web est équilibré **contre des bots**. Chaque power-up porte une recomm
 
 ## Ce qui n'est PAS encore extrait (à compléter avant/pendant la phase 2)
 
-- Contrats quotidiens, prestige — extraction facile, même méthode.
+- Prestige — extraction facile, même méthode.
 - Killstreaks/bonus de kill (#139/#149/#161/#166/#182/#187/#190) — les valeurs sont dans main.js.
 - Maps : la géométrie vient des `.blend` (voir `docs/ROADMAP.md`, Phase 3), pas de ce dossier.
 
