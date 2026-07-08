@@ -42,6 +42,7 @@ namespace Game.Runtime
 
         Transform weaponPivot;
         ShopWeaponsTab weaponsTab;
+        ShopCharacterTab characterTab;
 
         const float HeroRotationRadPerSec = 0.8f; // web: main.js:5450 (shopWeaponObj.rotation.y += dt*0.8)
 
@@ -94,8 +95,16 @@ namespace Game.Runtime
             }
 
             closeButton.clicked += Close;
-            prevButton.clicked += () => { if (activeTab == "weapons") weaponsTab.Prev(); };
-            nextButton.clicked += () => { if (activeTab == "weapons") weaponsTab.Next(); };
+            prevButton.clicked += () =>
+            {
+                if (activeTab == "weapons") weaponsTab.Prev();
+                else if (activeTab == "player") characterTab.Prev();
+            };
+            nextButton.clicked += () =>
+            {
+                if (activeTab == "weapons") weaponsTab.Next();
+                else if (activeTab == "player") characterTab.Next();
+            };
 
             // Pivot du modèle 3D héros de l'onglet Armes : GameObject dédié (pas un enfant de
             // LobbyCharacterStage — on ne touche jamais son visuel perso), positionné à côté du
@@ -114,6 +123,9 @@ namespace Game.Runtime
             weaponsTab = new ShopWeaponsTab(db, meta, weaponPivot);
             if (tabContents.TryGetValue("weapons", out var weaponsPane)) weaponsTab.Wire(weaponsPane);
 
+            characterTab = new ShopCharacterTab(db, meta, stage);
+            if (tabContents.TryGetValue("player", out var playerPane)) characterTab.Wire(playerPane);
+
             SwitchTab("weapons");
         }
 
@@ -122,7 +134,13 @@ namespace Game.Runtime
             activeTab = tab;
             foreach (var kv in tabButtons) kv.Value.EnableInClassList("on", kv.Key == tab);
             foreach (var kv in tabContents) kv.Value.EnableInClassList("hidden", kv.Key != tab);
-            if (navRow != null) navRow.EnableInClassList("hidden", tab != "weapons"); // pas de carrousel sur les onglets stub
+            // web: updateShopTabs (main.js:1393) — flèches Précédent/Suivant visibles sur les
+            // onglets Armes ET Personnage (les seuls avec un carrousel), masquées sur les 3 stubs.
+            if (navRow != null) navRow.EnableInClassList("hidden", tab != "weapons" && tab != "player");
+            // web: switchTab (main.js:1426) — en entrant sur l'onglet Personnage, le carrousel
+            // repart toujours du perso réellement équipé (jamais d'un aperçu laissé par la visite
+            // précédente de cet onglet).
+            if (tab == "player") characterTab?.SelectByEquipped();
             UpdateHeroVisualVisibility();
             Render();
         }
@@ -140,6 +158,21 @@ namespace Game.Runtime
             if (shopPanel == null) return;
             shopPanel.AddToClassList("hidden");
             UpdateHeroVisualVisibility();
+            RevertStageToEquippedCharacter();
+        }
+
+        // Annule tout essai visuel laissé par le carrousel de l'onglet Personnage (Task 12) —
+        // s'applique quel que soit l'onglet actif à la fermeture (pas seulement "player" : l'aperçu
+        // reste affiché sur le stage tant qu'on ne quitte pas la boutique, voir ShopCharacterTab).
+        // Repli sur le 1er perso du catalogue si aucune sélection encore faite (save neuve, avant
+        // le premier `SelectCharacter` — mêmes règles que HomeController.RenderCharacterSelector).
+        void RevertStageToEquippedCharacter()
+        {
+            if (stage == null || meta?.Data == null) return;
+            string equippedId = !string.IsNullOrEmpty(meta.Data.selectedCharacterId)
+                ? meta.Data.selectedCharacterId
+                : (db != null && db.characters.Length > 0 ? db.characters[0].id : null);
+            if (equippedId != null) stage.ShowCharacter(equippedId);
         }
 
         // Finding 1 (revue Task 11) : le pivot (donc le modèle héros/la capsule de secours qu'il
@@ -158,6 +191,7 @@ namespace Game.Runtime
             if (!wired || meta?.Data == null || creditsLabel == null) return;
             creditsLabel.text = meta.Data.money.ToString();
             if (activeTab == "weapons") weaponsTab?.Render();
+            else if (activeTab == "player") characterTab?.Render();
         }
 
         // web: main.js:5450 — rotation du modèle héros uniquement pendant que la boutique est

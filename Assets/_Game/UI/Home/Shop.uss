@@ -214,6 +214,14 @@
     width: 46px;
 }
 
+/* Effet par niveau des upgrades joueur (Task 12 : "+20", "+6%"...) — même gabarit que .upg-level,
+   pas de bouton dédié dans l'onglet Armes (une seule ligne "Niveau" y suffit, voir ShopWeaponsTab). */
+.upg-effect {
+    color: var(--color-gold);
+    font-size: 11px;
+    width: 46px;
+}
+
 .upg-buy {
     background-color: rgba(255, 255, 255, 0.08);
     border-width: 1px;

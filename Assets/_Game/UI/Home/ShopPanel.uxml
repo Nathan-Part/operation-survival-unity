@@ -89,8 +89,50 @@
                     </ui:VisualElement>
                 </ui:VisualElement>
 
-                <ui:VisualElement name="shop-tab-content-player" class="shop-tab-content shop-stub hidden">
-                    <ui:Label text="Personnage — bientôt disponible" class="shop-stub-label" />
+                <ui:VisualElement name="shop-tab-content-player" class="shop-tab-content hidden">
+                    <ui:VisualElement name="shop-char-hero-row" class="shop-hero-row">
+                        <ui:VisualElement name="shop-char-hero" class="shop-hero">
+                            <ui:Label text="// Personnage" class="eyebrow" />
+                            <ui:VisualElement class="shop-wname-row">
+                                <ui:Label name="shop-cname" text="—" class="shop-wname" />
+                                <ui:Label name="shop-crarity-badge" text="" class="rarity-badge" />
+                            </ui:VisualElement>
+                            <ui:Label name="shop-cdesc" text="" class="shop-desc" />
+                        </ui:VisualElement>
+
+                        <ui:VisualElement name="shop-char-stats-panel" class="tac-card shop-stats-panel">
+                            <ui:Label text="Statistiques" class="sp-h" />
+
+                            <ui:VisualElement class="stat-row">
+                                <ui:Label text="Vie" class="stat-label" />
+                                <ui:VisualElement class="stat-bar"><ui:VisualElement name="stat-chealth-fill" class="stat-bar-fill" /></ui:VisualElement>
+                                <ui:Label name="stat-chealth-value" text="0" class="stat-value" />
+                            </ui:VisualElement>
+                            <ui:VisualElement class="stat-row">
+                                <ui:Label text="Régén" class="stat-label" />
+                                <ui:VisualElement class="stat-bar"><ui:VisualElement name="stat-cregen-fill" class="stat-bar-fill" /></ui:VisualElement>
+                                <ui:Label name="stat-cregen-value" text="0" class="stat-value" />
+                            </ui:VisualElement>
+                            <ui:VisualElement class="stat-row">
+                                <ui:Label text="Vitesse" class="stat-label" />
+                                <ui:VisualElement class="stat-bar"><ui:VisualElement name="stat-cspeed-fill" class="stat-bar-fill" /></ui:VisualElement>
+                                <ui:Label name="stat-cspeed-value" text="0" class="stat-value" />
+                            </ui:VisualElement>
+
+                            <ui:VisualElement name="shop-cupgrades" class="shop-upgrades" />
+
+                            <ui:VisualElement class="sp-btns">
+                                <ui:Button name="shop-cameliorer" text="★ Améliorer" class="shop-cta ameliorer" />
+                                <ui:Button name="shop-cbuy" text="Acheter" class="shop-cta buy" />
+                                <ui:Button name="shop-cequip" text="Équiper" class="shop-cta" />
+                                <ui:Label name="shop-cequipped-badge" text="✓ Équipé" class="shop-badge" />
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+
+                    <ui:VisualElement name="shop-char-bottombar" class="shop-bottombar">
+                        <ui:ScrollView name="shop-char-carousel" horizontal-scroller-visibility="Hidden" mode="Horizontal" class="shop-carousel" />
+                    </ui:VisualElement>
                 </ui:VisualElement>
                 <ui:VisualElement name="shop-tab-content-accessories" class="shop-tab-content shop-stub hidden">
                     <ui:Label text="Accessoires — bientôt disponible" class="shop-stub-label" />
