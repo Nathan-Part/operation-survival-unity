@@ -104,6 +104,11 @@ namespace Game.Runtime
             // le web SHOP_CENTER_POS) : simplification assumée, documentée dans le rapport de tâche.
             var pivotGo = new GameObject("ShopWeaponPivot");
             pivotGo.transform.position = new Vector3(1.3f, 1.3f, 0.3f);
+            // Finding 1 (revue Task 11) : caché par défaut à la création — sinon le modèle héros (ou
+            // la capsule de secours) reste visible dans le lobby avant même la première ouverture de
+            // la boutique. Parité web : main.js:1365,1406 (shopWeaponObj.visible toggle sur
+            // entrée/sortie de l'onglet Armes).
+            pivotGo.SetActive(false);
             weaponPivot = pivotGo.transform;
 
             weaponsTab = new ShopWeaponsTab(db, meta, weaponPivot);
@@ -118,6 +123,7 @@ namespace Game.Runtime
             foreach (var kv in tabButtons) kv.Value.EnableInClassList("on", kv.Key == tab);
             foreach (var kv in tabContents) kv.Value.EnableInClassList("hidden", kv.Key != tab);
             if (navRow != null) navRow.EnableInClassList("hidden", tab != "weapons"); // pas de carrousel sur les onglets stub
+            UpdateHeroVisualVisibility();
             Render();
         }
 
@@ -125,6 +131,7 @@ namespace Game.Runtime
         {
             if (!wired || shopPanel == null) return;
             shopPanel.RemoveFromClassList("hidden");
+            UpdateHeroVisualVisibility();
             Render();
         }
 
@@ -132,6 +139,17 @@ namespace Game.Runtime
         {
             if (shopPanel == null) return;
             shopPanel.AddToClassList("hidden");
+            UpdateHeroVisualVisibility();
+        }
+
+        // Finding 1 (revue Task 11) : le pivot (donc le modèle héros/la capsule de secours qu'il
+        // contient) n'est actif que boutique ouverte ET onglet Armes actif — même condition que la
+        // rotation dans Update() ci-dessous, et parité du toggle shopWeaponObj.visible du web.
+        void UpdateHeroVisualVisibility()
+        {
+            if (weaponPivot == null) return;
+            bool shopOpen = shopPanel != null && !shopPanel.ClassListContains("hidden");
+            weaponPivot.gameObject.SetActive(shopOpen && activeTab == "weapons");
         }
 
         /// Rendu idempotent (peut être rejoué à volonté) : topbar crédits + contenu de l'onglet actif.

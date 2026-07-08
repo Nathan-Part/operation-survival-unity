@@ -196,12 +196,14 @@ namespace Game.Runtime
             ApplyRarityClass(rarityBadge, w.rarity);
             wdesc.text = w.desc;
 
-            // web: lvlTotal = somme des 4 niveaux, lvlMax = 4 specs * 5 (main.js:1470) — ici le niveau
-            // est partagé (voir commentaire WeaponStatsView), donc lvlTotal = level * nb specs.
-            int specCount = db.upgradeConfig != null ? db.upgradeConfig.weaponUpgrades.Length : 0;
-            int lvlMax = 0;
-            if (db.upgradeConfig != null) foreach (var spec in db.upgradeConfig.weaponUpgrades) lvlMax += spec.maxLevel;
-            rating.text = $"★ {level * specCount}/{lvlMax}";
+            // Finding 2 (revue Task 11) : ShopRules ne suit qu'UN seul niveau partagé par arme
+            // (`save.weaponUpgrades[weaponId]`, pas une clé par stat) — le rating affiche donc
+            // directement ce niveau réel (★ level/maxLevel), plutôt qu'un total "level*4 specs/20"
+            // qui laissait croire à 4 progressions indépendantes alors qu'il n'y en a qu'une.
+            int weaponUpgradeMaxLevel = (db.upgradeConfig != null && db.upgradeConfig.weaponUpgrades.Length > 0)
+                ? db.upgradeConfig.weaponUpgrades[0].maxLevel
+                : 0;
+            rating.text = $"★ {level}/{weaponUpgradeMaxLevel}";
 
             SetBar(statDamageFill, statDamageValue, WeaponStatsView.Damage(w, level), WeaponStatsView.DamageRaw(w, level).ToString());
             SetBar(statFireRateFill, statFireRateValue, WeaponStatsView.FireRate(w, level), WeaponStatsView.FireRateRaw(w, level).ToString());
@@ -224,7 +226,7 @@ namespace Game.Runtime
             upgradesContainer.style.display = upgradesVisible ? DisplayStyle.Flex : DisplayStyle.None;
             if (upgradesVisible) RenderUpgradeRows(save, w, level);
 
-            RenderCarousel(fw, w.id, specCount);
+            RenderCarousel(fw, w.id);
             UpdateHeroVisual(w);
         }
 
@@ -234,54 +236,64 @@ namespace Game.Runtime
             value.text = text;
         }
 
-        // web: upgRow2 par UPGRADE_SPECS (main.js:1490) — 4 lignes construites depuis UpgradeConfig,
-        // jamais figées en dur (si un 5e stat d'amélioration est ajouté un jour, ça suit sans retouche).
+        // Finding 2 (revue Task 11) : ShopRules ne suit qu'UN SEUL niveau partagé par arme
+        // (`save.weaponUpgrades[weaponId]`, pas une clé par stat — voir ShopRules.WeaponUpgradeLevel/
+        // BuyWeaponUpgrade, non modifiés, hors scope de cette correction). La version précédente
+        // dessinait 4 lignes (Dégâts/Cadence/Chargeur/Recul) avec chacune son propre coût "suivant"
+        // et son propre niveau affiché, laissant croire à 4 progressions indépendantes — alors
+        // qu'acheter n'importe laquelle avançait silencieusement les 3 autres au même niveau. Une
+        // seule ligne reflète honnêtement ce modèle à niveau unique. Coût/maxLevel basés sur la
+        // 1ère spec du catalogue (weaponUpgrades[0]) : ShopRules n'expose pas de "coût global arme"
+        // dédié (chaque spec a son propre baseCost dans unity-spec/weapons.json), donc ce choix est
+        // une simplification de présentation assumée (documentée dans le rapport de tâche) — pas une
+        // tentative de reconstituer un vrai modèle per-stat côté ShopRules/SaveData (hors scope).
         void RenderUpgradeRows(Game.Data.Save.SaveData save, WeaponData w, int level)
         {
             upgradesContainer.Clear();
-            if (db.upgradeConfig == null) return;
+            if (db.upgradeConfig == null || db.upgradeConfig.weaponUpgrades.Length == 0) return;
 
-            foreach (var spec in db.upgradeConfig.weaponUpgrades)
+            var spec = db.upgradeConfig.weaponUpgrades[0];
+
+            var row = new VisualElement();
+            row.AddToClassList("upg-row");
+
+            var name = new Label("Niveau");
+            name.AddToClassList("upg-name");
+            row.Add(name);
+
+            var levelLabel = new Label($"{level}/{spec.maxLevel}");
+            levelLabel.AddToClassList("upg-level");
+            row.Add(levelLabel);
+
+            bool atMax = level >= spec.maxLevel;
+            int cost = ShopRules.NextWeaponUpgradeCost(save, w.id, spec.baseCost);
+            var buy = new Button { text = atMax ? "MAX" : $"🪙{cost}" };
+            buy.AddToClassList("upg-buy");
+            buy.SetEnabled(!atMax && save.money >= cost);
+            buy.clicked += () =>
             {
-                var row = new VisualElement();
-                row.AddToClassList("upg-row");
-
-                var name = new Label(spec.displayName);
-                name.AddToClassList("upg-name");
-                row.Add(name);
-
-                var levelLabel = new Label($"{level}/{spec.maxLevel}");
-                levelLabel.AddToClassList("upg-level");
-                row.Add(levelLabel);
-
-                bool atMax = level >= spec.maxLevel;
-                int cost = ShopRules.NextWeaponUpgradeCost(save, w.id, spec.baseCost);
-                var buy = new Button { text = atMax ? "MAX" : $"🪙{cost}" };
-                buy.AddToClassList("upg-buy");
-                buy.SetEnabled(!atMax && save.money >= cost);
-                var capturedSpec = spec; // capture locale
-                buy.clicked += () =>
+                if (ShopRules.BuyWeaponUpgrade(save, w.id, spec.baseCost, spec.maxLevel))
                 {
-                    if (ShopRules.BuyWeaponUpgrade(save, w.id, capturedSpec.baseCost, capturedSpec.maxLevel))
-                    {
-                        meta.Persist();
-                        Render();
-                    }
-                };
-                row.Add(buy);
+                    meta.Persist();
+                    Render();
+                }
+            };
+            row.Add(buy);
 
-                upgradesContainer.Add(row);
-            }
+            upgradesContainer.Add(row);
         }
 
         // web: weaponCard (main.js:1449-1460) — carte icône (pas de modèle 3D par carte, voir
         // commentaire en tête de fichier), clic = arme héros (main.js:1633-1636, data-wcard).
-        void RenderCarousel(List<WeaponData> fw, string heroId, int specCount)
+        void RenderCarousel(List<WeaponData> fw, string heroId)
         {
             carousel.Clear();
             var save = meta.Data;
-            int lvlMax = 0;
-            if (db.upgradeConfig != null) foreach (var spec in db.upgradeConfig.weaponUpgrades) lvlMax += spec.maxLevel;
+            // Finding 2 : même niveau unique que le rating de l'arme héros (pas de lvlMax*specCount,
+            // voir RenderUpgradeRows) — chaque carte affiche son propre niveau réel.
+            int weaponUpgradeMaxLevel = (db.upgradeConfig != null && db.upgradeConfig.weaponUpgrades.Length > 0)
+                ? db.upgradeConfig.weaponUpgrades[0].maxLevel
+                : 0;
 
             foreach (var candidate in fw)
             {
@@ -316,7 +328,7 @@ namespace Game.Runtime
                 card.Add(thumb);
 
                 var foot = new VisualElement(); foot.AddToClassList("wcard-foot");
-                var ratingLabel = new Label($"★ {lvl * specCount}/{lvlMax}"); ratingLabel.AddToClassList("wcard-rating");
+                var ratingLabel = new Label($"★ {lvl}/{weaponUpgradeMaxLevel}"); ratingLabel.AddToClassList("wcard-rating");
                 foot.Add(ratingLabel);
                 if (!owned)
                 {
