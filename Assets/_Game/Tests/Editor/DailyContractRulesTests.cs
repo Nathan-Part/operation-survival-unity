@@ -128,5 +128,39 @@ namespace Game.Data.Tests
             Assert.IsNull(doneAgain);
             Assert.AreEqual(1, daily.contracts[0].progress);
         }
+
+        /// Régression T23 : deux contrats "wave" du même pool (wave5/wave10, comme dans
+        /// unity-spec/contracts.json) ne doivent jamais perdre leur complétion. Advance
+        /// ne renvoie que le DERNIER contrat franchi si un appel fait franchir plusieurs
+        /// seuils du même type d'un coup (limite connue de Advance, tâche 21) — RunTracker
+        /// évite ce piège en appelant Advance("wave", 1) une fois par vague nettoyée
+        /// (jamais plus d'un seuil par appel). Ce test simule cet appel séquentiel.
+        [Test]
+        public void Advance_SequentialWaveIncrements_NeverLosesEitherContractCompletion()
+        {
+            var pool = new List<ContractData>();
+            void C(string id, int target, int reward)
+            {
+                var c = ScriptableObject.CreateInstance<ContractData>();
+                c.id = id; c.type = "wave"; c.target = target; c.reward = reward;
+                pool.Add(c);
+            }
+            C("wave5", 5, 900);
+            C("wave10", 10, 2000);
+
+            var daily = new SaveDaily();
+            DailyContractRules.EnsureToday(daily, 20260707L, pool);
+
+            var completed = new List<string>();
+            for (int wave = 1; wave <= 10; wave++)
+            {
+                var done = DailyContractRules.Advance(daily, pool, "wave", 1);
+                if (done != null) completed.Add(done.id);
+            }
+
+            CollectionAssert.AreEquivalent(new[] { "wave5", "wave10" }, completed);
+            Assert.IsTrue(daily.contracts.Find(c => c.id == "wave5").done);
+            Assert.IsTrue(daily.contracts.Find(c => c.id == "wave10").done);
+        }
     }
 }

@@ -145,9 +145,13 @@ namespace Game.Runtime
             // Caisse de ravitaillement auto (web #156) : toutes les 4 vagues nettoyées
             waveManager.CarePackageDue += () => CarePackage.Spawn(GroundInFront(motor, 2f), motor.transform, meta, health, Time.frameCount);
 
+            // Suivi de partie (Lot 6, T23) : succès/contrats quotidiens/level-up, toasts HUD.
+            var tracker = motor.gameObject.AddComponent<RunTracker>();
+            tracker.Init(meta, db, waveManager, weapon);
+
             var hudGo = new GameObject("HUD");
             var hud = hudGo.AddComponent<HudController>();
-            hud.Init(health, weapon, waveManager, motor, motor.transform, weapon.aimCamera, view, meta, thrower, killstreak, loadout, powerups);
+            hud.Init(health, weapon, waveManager, motor, motor.transform, weapon.aimCamera, view, meta, thrower, killstreak, loadout, powerups, tracker);
             view.hud = hud;
 
             if (save.settings.defaultView == "third") view.SetMode(ViewMode.Third); // réglage « vue » du web
