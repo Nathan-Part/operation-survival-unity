@@ -18,6 +18,7 @@ namespace Game.Runtime.Editor
         const string PanelSettingsPath = "Assets/_Game/UI/Home/HomePanelSettings.asset";
         const string UxmlPath = "Assets/_Game/UI/Home/Home.uxml";
         const string SettingsPanelUxmlPath = "Assets/_Game/UI/Home/SettingsPanel.uxml";
+        const string MapPanelUxmlPath = "Assets/_Game/UI/Home/MapPanel.uxml";
 
         [MenuItem("Tools/Game/Build Home Scene")]
         public static void Build()
@@ -74,12 +75,20 @@ namespace Game.Runtime.Editor
             if (settingsPanelAsset == null)
                 Debug.LogError($"HomeSceneBuilder: SettingsPanel.uxml introuvable a {SettingsPanelUxmlPath}");
 
+            // MapPanelController partage aussi le GameObject UIDocument : clone MapPanel.uxml dans
+            // le conteneur vide #map-panel au Play Mode (Task 9) — même raison que SettingsPanelController.
+            var mapPanel = uiGo.AddComponent<MapPanelController>();
+            var mapPanelAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(MapPanelUxmlPath);
+            if (mapPanelAsset == null)
+                Debug.LogError($"HomeSceneBuilder: MapPanel.uxml introuvable a {MapPanelUxmlPath}");
+
             var controller = uiGo.AddComponent<HomeController>();
             // Init() ne fait qu'assigner les références sérialisées (voir commentaire sur la
             // méthode) : le câblage réel (rendu du lobby, perso 3D affiché) se fait au Play Mode
             // via HomeController.Start(), jamais ici (pas de GameObject runtime à sérialiser dans la scène).
-            controller.Init(context.database, meta, stage, launcher, settingsPanel);
+            controller.Init(context.database, meta, stage, launcher, settingsPanel, mapPanel);
             settingsPanel.Init(meta, controller, settingsPanelAsset);
+            mapPanel.Init(meta, controller, mapPanelAsset);
 
             System.IO.Directory.CreateDirectory("Assets/_Game/Scenes");
             EditorSceneManager.SaveScene(scene, ScenePath);

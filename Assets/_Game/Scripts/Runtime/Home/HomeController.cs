@@ -26,6 +26,7 @@ namespace Game.Runtime
         [SerializeField] LobbyCharacterStage stage;
         [SerializeField] GameLauncher launcher;
         [SerializeField] SettingsPanelController settingsPanel;
+        [SerializeField] MapPanelController mapPanel;
 
         bool wired;
 
@@ -53,13 +54,14 @@ namespace Game.Runtime
         /// Play Mode. Si WireUi() créait des GameObjects (perso 3D) dès cet appel, ils seraient
         /// sérialisés tels quels dans la scène puis dupliqués par le vrai câblage runtime (Start())
         /// au Play Mode suivant — d'où la séparation stricte affectation (Init) / câblage (Start).
-        public void Init(GameDatabase database, MetaProgress metaProgress, LobbyCharacterStage characterStage, GameLauncher gameLauncher, SettingsPanelController settingsPanelController)
+        public void Init(GameDatabase database, MetaProgress metaProgress, LobbyCharacterStage characterStage, GameLauncher gameLauncher, SettingsPanelController settingsPanelController, MapPanelController mapPanelController)
         {
             db = database;
             meta = metaProgress;
             stage = characterStage;
             launcher = gameLauncher;
             settingsPanel = settingsPanelController;
+            mapPanel = mapPanelController;
         }
 
         void Start()
@@ -119,7 +121,7 @@ namespace Game.Runtime
             howtoButton.clicked += () => OpenPanel("howto");
             tileShop.clicked += () => OpenPanel("shop");
             tileLoadout.clicked += () => OpenPanel("loadout");
-            tileMap.clicked += () => OpenPanel("map");
+            tileMap.clicked += () => { mapPanel?.Render(meta.Data); OpenPanel("map"); }; // web: parité openSettings — rend puis ouvre
             tileTraining.clicked += () => launcher?.Deploy(meta, training: true);
             deployButton.clicked += TryDeploy;
 

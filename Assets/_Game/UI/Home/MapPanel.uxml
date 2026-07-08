@@ -1,0 +1,23 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="map-card" class="tac-card map-card">
+        <ui:Label text="// Terrain d'opération" class="eyebrow" />
+        <ui:Label text="Map" class="panel-title" />
+        <ui:Label text="Choisis la map. Le changement s'applique immédiatement." class="panel-intro" />
+
+        <ui:VisualElement name="map-list" class="map-list">
+            <ui:Button name="map-item-utopia" class="map-item">
+                <ui:VisualElement name="map-thumb-utopia" class="map-thumb map-thumb-utopia" />
+                <ui:Label text="Cité utopique" class="map-name" />
+                <ui:Label name="map-sub-utopia" text="Choisir ce terrain" class="map-sub" />
+            </ui:Button>
+
+            <ui:VisualElement name="map-item-urban" class="map-item map-item-disabled">
+                <ui:VisualElement name="map-thumb-urban" class="map-thumb map-thumb-urban" />
+                <ui:Label text="Arène urbaine" class="map-name" />
+                <ui:Label text="Bientôt" class="map-badge" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <ui:Button name="map-back" text="◀ Retour" class="panel-back" />
+    </ui:VisualElement>
+</ui:UXML>
