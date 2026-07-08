@@ -100,6 +100,7 @@ namespace Game.Runtime
             // HUD de combat phase 3 (parité web) — chaque composant s'abonne à ses événements
             gameObject.AddComponent<HudHitmarker>().Init(root, weapon);
             gameObject.AddComponent<HudKillFeed>().Init(root, weapon);
+            gameObject.AddComponent<HudFireMode>().Init(root, weapon);
             gameObject.AddComponent<HudBossBar>().Init(root, waves);
             gameObject.AddComponent<HudScreenEffects>().Init(root, health);
             if (health.shield != null) gameObject.AddComponent<HudShield>().Init(root, health);

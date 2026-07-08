@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Game.Data;
 using Game.Data.Rules;
 using UnityEngine;
@@ -25,8 +26,13 @@ namespace Game.Runtime
         AmmoModel ammo;
         float cooldownRemaining;
         bool wasReloading;
+        bool firePrev;
+        Coroutine burstRoutine;
 
         public WeaponData Weapon { get; private set; }
+
+        /// Mode de tir du tir MANUEL (E/clic) — T (burst) / P (semi) ; l'auto-fire mobile (D1) reste full-auto, indépendant.
+        public FireMode Mode { get; private set; }
 
         // Stats effectives = fiche × formules d'upgrade (niveau depuis la save) — la fiche SO n'est jamais mutée
         public float EffectiveCooldown { get; private set; }
@@ -39,6 +45,7 @@ namespace Game.Runtime
         public event Action<HitZone, bool, EnemyHealth> HitConfirmed;    // zone, killed, cible : hitmarker/kill feed/callouts
         public event Action<Vector3> TracerRequested;                    // point d'impact ou fin de portée (l'origine vient du viewmodel)
         public event Action<int, int> LongShot;                          // argent, xp — tir confirmé à ≥ 30 m (web #)
+        public event Action<FireMode> ModeChanged;                       // T (burst) / P (semi) : indicateur HUD
 
         public void Init(WeaponData weapon, int upgradeLevel = 0)
         {
@@ -47,12 +54,39 @@ namespace Game.Runtime
             EffectiveDmgMult = UpgradeFormulas.WeaponDamageMult(weapon.dmgMult, upgradeLevel);
             EffectiveRecoil = UpgradeFormulas.WeaponRecoil(weapon.recoil, upgradeLevel);
             ammo = new AmmoModel(UpgradeFormulas.WeaponMag(weapon.mag, upgradeLevel), weapon.reload);
+            Mode = FireModeModel.Default(weapon.id, weapon.semiAuto);
             AmmoChanged?.Invoke(ammo.InMag, ammo.MagSize);
         }
 
         public void RequestReload()
         {
             if (Weapon != null) ammo.StartReload();
+        }
+
+        void SetMode(FireMode mode)
+        {
+            if (Mode == mode) return;
+            if (mode != FireMode.Burst && burstRoutine != null)
+            {
+                StopCoroutine(burstRoutine);
+                burstRoutine = null;
+            }
+            Mode = mode;
+            ModeChanged?.Invoke(Mode);
+        }
+
+        /// T : bascule Auto ↔ Burst (uniquement sur les armes qui le permettent, web #).
+        public void ToggleBurst()
+        {
+            if (Weapon == null || !FireModeModel.CanToggleBurst(Weapon.id)) return;
+            SetMode(Mode == FireMode.Burst ? FireMode.Auto : FireMode.Burst);
+        }
+
+        /// P : bascule Auto ↔ Semi (sauf armes en semi-auto forcé, web #).
+        public void ToggleSemi()
+        {
+            if (Weapon == null || FireModeModel.ForcesSemi(Weapon.id)) return;
+            SetMode(Mode == FireMode.Semi ? FireMode.Auto : FireMode.Semi);
         }
 
         void Update()
@@ -82,11 +116,49 @@ namespace Game.Runtime
 
             bool ammoReady = !ammo.IsReloading && ammo.InMag > 0;
             bool auto = AutoFireDecider.ShouldFire(onTarget, distance, Weapon.range, cooldownRemaining, ammoReady);
-            if (AutoFireDecider.ShouldFireWithManual(auto, FireHeld, cooldownRemaining, ammoReady) && (!isLmg || overheat.CanFire))
-                Fire();
+            bool weaponCanFire = !isLmg || overheat.CanFire;
+            bool fireEdge = FireHeld && !firePrev;
+            firePrev = FireHeld;
+
+            if (auto && weaponCanFire)
+            {
+                Fire(); // tir auto mobile (D1) : full-auto, indépendant du mode de tir manuel
+            }
+            else if (weaponCanFire && cooldownRemaining <= 0f && ammoReady)
+            {
+                switch (Mode)
+                {
+                    case FireMode.Semi:
+                        if (fireEdge) Fire(); // un coup par appui, jamais par frame maintenue
+                        break;
+                    case FireMode.Burst:
+                        if (fireEdge && burstRoutine == null) burstRoutine = StartCoroutine(BurstRoutine());
+                        break;
+                    default: // Auto : comportement manuel historique, tire tant que E est maintenu
+                        if (FireHeld) Fire();
+                        break;
+                }
+            }
 
             if (ammo.InMag == 0 && !ammo.IsReloading)
                 ammo.StartReload(); // l'événement ReloadingChanged partira au prochain Update via wasReloading
+        }
+
+        /// Burst manuel (T) : BurstSize coups espacés de BurstDelay, s'arrête si les munitions manquent en cours de rafale.
+        IEnumerator BurstRoutine()
+        {
+            for (int i = 0; i < FireModeModel.BurstSize; i++)
+            {
+                if (i > 0)
+                {
+                    yield return new WaitForSeconds(FireModeModel.BurstDelay);
+                    while (cooldownRemaining > 0f) yield return null; // respecte la cadence de l'arme
+                }
+                bool ammoReady = !ammo.IsReloading && ammo.InMag > 0;
+                if (!ammoReady) break; // arrêt anticipé : plus de munitions en cours de rafale
+                Fire();
+            }
+            burstRoutine = null;
         }
 
         void Fire()

@@ -18,6 +18,7 @@ namespace Game.Runtime
         InputAction move, lookAction, jump, dash, reload, sprint, aim, fire, toggleView, fragKey, stickyKey;
         InputAction flashKey, smokeKey, molotovKey, empKey, medkitKey;
         InputAction mineKey, turretKey, airstrikeKey, carePackageKey, dogKey;
+        InputAction burstModeKey, semiModeKey;
 
         void Awake()
         {
@@ -55,6 +56,10 @@ namespace Game.Runtime
             fire.AddBinding("<Mouse>/leftButton");                 // le web accepte aussi clic gauche
 
             toggleView = map.AddAction("ToggleView", binding: "<Keyboard>/v"); // web: V = vue 1re/3e
+
+            // Modes de tir manuel (web #) : T = auto ↔ burst, P = auto ↔ semi
+            burstModeKey = map.AddAction("ToggleBurst", binding: "<Keyboard>/t");
+            semiModeKey = map.AddAction("ToggleSemi", binding: "<Keyboard>/p");
 
             // Lancer de consommables (web: B = frag, J = collante, N = flash, H = fumigène, K = molotov, O = EMP)
             fragKey = map.AddAction("Frag", binding: "<Keyboard>/b");
@@ -94,6 +99,8 @@ namespace Game.Runtime
             {
                 weapon.FireHeld = fire.IsPressed();
                 weapon.AimHeld = aim.IsPressed();
+                if (burstModeKey.WasPressedThisFrame()) weapon.ToggleBurst();
+                if (semiModeKey.WasPressedThisFrame()) weapon.ToggleSemi();
             }
             if (viewController != null)
             {
