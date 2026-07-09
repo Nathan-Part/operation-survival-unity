@@ -264,6 +264,10 @@ namespace Game.Runtime
                 card.AddToClassList("wcard");
                 card.EnableInClassList("active", active);
                 card.EnableInClassList("owned", owned);
+                // Parite shop-perso.png : le perso selectionne est en pleine taille/opacite, les
+                // voisins sont estompes (pas de nouveau rendu 3D cote a cote, cf. plan Task 7).
+                card.style.opacity = active ? 1f : 0.45f;
+                card.style.scale = new Scale(active ? Vector3.one : new Vector3(0.85f, 0.85f, 1f));
 
                 var top = new VisualElement(); top.AddToClassList("wcard-top");
                 var name = new Label(candidate.displayName); name.AddToClassList("wcard-name");
