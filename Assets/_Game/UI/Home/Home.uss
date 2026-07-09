@@ -43,7 +43,7 @@
 
 .rank-bar {
     height: 6px;
-    background-color: rgba(255, 255, 255, 0.12);
+    background-color: rgba(23, 26, 38, 0.1);
     border-radius: 3px;
     margin-top: 6px;
     overflow: hidden;
@@ -91,7 +91,7 @@
 
 .icon-button {
     margin-left: 8px;
-    background-color: rgba(255, 255, 255, 0.08);
+    background-color: rgba(255, 255, 255, 0.9);
     border-width: 1px;
     border-color: var(--color-border);
     border-radius: 8px;
@@ -113,7 +113,7 @@
     margin-right: 18px;
 }
 
-.hub-main-col > .tac-card {
+.hub-card-slot {
     margin-bottom: 14px;
     width: 260px;
 }
@@ -139,12 +139,10 @@
     align-items: center;
 }
 
+/* Fond/coins coupes/degrade fournis par TacticalButton (Painter2D) — cf. Tactical/TacticalButton.cs. */
 .deploy-button {
     width: 260px;
     height: 140px;
-    background-color: var(--color-purple);
-    border-radius: 14px;
-    border-width: 0;
     justify-content: center;
     align-items: center;
 }
@@ -162,13 +160,16 @@
     align-items: center;
     justify-content: center;
     margin-top: 16px;
+    background-color: rgba(255, 255, 255, 0.92);
+    border-radius: 999px;
+    padding: 6px 18px;
 }
 
 .char-arrow {
     width: 32px;
     height: 32px;
     border-radius: 16px;
-    background-color: rgba(255, 255, 255, 0.08);
+    background-color: transparent;
     color: var(--color-text);
 }
 
@@ -190,7 +191,7 @@
     width: 8px;
     height: 8px;
     border-radius: 4px;
-    background-color: rgba(255, 255, 255, 0.25);
+    background-color: rgba(23, 26, 38, 0.3);
     margin-left: 3px;
     margin-right: 3px;
 }
@@ -220,16 +221,21 @@
     margin-top: 20px;
 }
 
+/* Fond/coins coupes fournis par TacticalButton (Painter2D) pour les .hub-tile transformees en boutons tactiques. */
 .hub-tile {
     flex-grow: 1;
     margin-left: 6px;
     margin-right: 6px;
-    background-color: rgba(255, 255, 255, 0.05);
+    padding: 10px;
+    align-items: center;
+}
+
+/* tile-indicator (Difficulté) reste une VisualElement simple (pas cliquable) : garde un fond leger. */
+.hub-indicator-bg {
+    background-color: rgba(255, 255, 255, 0.7);
     border-radius: 10px;
     border-width: 1px;
     border-color: var(--color-border);
-    padding: 10px;
-    align-items: center;
 }
 
 .tile-title {

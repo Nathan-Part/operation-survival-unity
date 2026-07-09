@@ -6,10 +6,12 @@
     --color-purple-dark: #5b32c2;
     --color-blue: #4f9dff;
     --color-gold: #ffd15c;
-    --color-bg-card: rgba(18, 20, 32, 0.82);
-    --color-border: rgba(255, 255, 255, 0.1);
-    --color-text: #eef1f8;
-    --color-text-dim: #9aa3b2;
+    /* Playtest Phase 5.1 (2026-07-09) : le web a des cartes CLAIRES sur fond photo, pas des
+       cartes sombres — le theme etait invente a l'envers en Phase 5. --color-bg-card n'est
+       plus utilise (TacticalPanel dessine son propre fond, cf. Tactical/TacticalPanel.cs). */
+    --color-border: rgba(124, 77, 255, 0.25);
+    --color-text: #171a26;
+    --color-text-dim: #5b6272;
     --rarity-common: #9aa3b2;
     --rarity-rare: #4f9dff;
     --rarity-epic: #b066ff;
@@ -20,18 +22,18 @@
     display: none;
 }
 
+/* Le fond/bordure/coin coupe des cartes viennent desormais de TacticalPanel (Painter2D) —
+   cette classe ne fournit plus que l'espacement interne, appliquee en plus du composant. */
 .tac-card {
-    background-color: var(--color-bg-card);
-    border-width: 1px;
-    border-color: var(--color-border);
-    border-radius: 10px;
     padding: 14px;
 }
 
 .chip {
     flex-direction: row;
     align-items: center;
-    background-color: rgba(255, 255, 255, 0.07);
+    background-color: rgba(255, 255, 255, 0.9);
+    border-width: 1px;
+    border-color: var(--color-border);
     border-radius: 999px;
     padding: 4px 12px;
     margin-left: 6px;
