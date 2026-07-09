@@ -60,9 +60,15 @@ namespace Game.Runtime
             if (panel == null) return; // #settings-panel absent de Home.uxml : rien à faire, pas de plantage
 
             // Playtest Phase 5.1 (2026-07-09) : le contenu clone va desormais DANS le cadre de modale
-            // tactique (TacticalModalFrame.Content), pas directement dans le voile plein ecran.
+            // tactique (TacticalModalFrame.Content), pas directement dans le voile plein ecran. Le
+            // cadre est construit en code (voir TacticalUiKit pour la raison — pas de tag UXML custom).
             var frame = panel.Q<TacticalModalFrame>("settings-frame");
-            var container = frame != null ? frame.Content : panel;
+            if (frame == null)
+            {
+                frame = new TacticalModalFrame { name = "settings-frame" };
+                panel.Add(frame);
+            }
+            var container = frame.Content;
             container.Clear();
             panelAsset.CloneTree(container);
 

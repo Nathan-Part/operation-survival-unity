@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Game.Data;
 using Game.Data.Rules;
+using Game.Runtime.UI.Tactical;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
@@ -82,6 +83,24 @@ namespace Game.Runtime
 
             var document = GetComponent<UIDocument>();
             root = document.rootVisualElement;
+
+            // Playtest Phase 5.1 (2026-07-09) : coins tactiques appliques EN CODE (voir
+            // TacticalUiKit pour la raison — les tags UXML custom <Tactical.TacticalPanel> ne se
+            // resolvent pas dans cette version d'editeur). Doit tourner AVANT les Q<Button>()
+            // ci-dessous : les elements de remplacement gardent le meme nom, donc les requetes
+            // suivantes les trouvent normalement.
+            TacticalUiKit.ReplaceWithPanel(root.Q<VisualElement>("hub-operator"), TacticalCorners.TopRight, showAccent: true);
+            TacticalUiKit.ReplaceWithPanel(root.Q<VisualElement>("intel-card"), TacticalCorners.TopRight, showAccent: true);
+            TacticalUiKit.ReplaceWithPanel(root.Q<VisualElement>("equipment-card"), TacticalCorners.TopRight, showAccent: true);
+            TacticalUiKit.ReplaceWithPanel(root.Q<VisualElement>("objectif-card"), TacticalCorners.TopRight, showAccent: true);
+            TacticalUiKit.ReplaceWithButton(root.Q<Button>("deploy-button"), TacticalCorners.TopLeft | TacticalCorners.BottomRight, 18f,
+                new Color(0.631f, 0.4f, 1f), new Color(0.318f, 0.169f, 0.788f));
+            var lightTileA = new Color(0.965f, 0.965f, 0.98f);
+            var lightTileB = new Color(0.933f, 0.941f, 0.961f);
+            TacticalUiKit.ReplaceWithButton(root.Q<Button>("tile-shop"), TacticalCorners.TopRight, 10f, lightTileA, lightTileB);
+            TacticalUiKit.ReplaceWithButton(root.Q<Button>("tile-loadout"), TacticalCorners.TopRight, 10f, lightTileA, lightTileB);
+            TacticalUiKit.ReplaceWithButton(root.Q<Button>("tile-training"), TacticalCorners.TopRight, 10f, lightTileA, lightTileB);
+            TacticalUiKit.ReplaceWithButton(root.Q<Button>("tile-map"), TacticalCorners.TopRight, 10f, lightTileA, lightTileB);
 
             rankLabel = root.Q<Label>("rank-label");
             rankBarFill = root.Q<VisualElement>("rank-bar-fill");

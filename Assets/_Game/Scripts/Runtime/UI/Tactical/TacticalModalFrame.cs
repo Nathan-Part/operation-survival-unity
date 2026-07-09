@@ -5,11 +5,10 @@ namespace Game.Runtime.UI.Tactical
 {
     /// Cadre de modale centre : fond TacticalPanel + brackets de coin decoratifs (haut-droite, bas-gauche).
     /// Le contenu existant d'un panneau (clone par son controleur) doit etre ajoute a `Content`, pas directement a l'element racine.
-    public class TacticalModalFrame : VisualElement
+    /// [UxmlElement] (Unity 6) — cf. TacticalPanel pour la raison de l'abandon de UxmlFactory/UxmlTraits.
+    [UxmlElement]
+    public partial class TacticalModalFrame : VisualElement
     {
-        public new class UxmlFactory : UxmlFactory<TacticalModalFrame, UxmlTraits> { }
-        public new class UxmlTraits : VisualElement.UxmlTraits { }
-
         public VisualElement Content { get; }
         readonly TacticalPanel m_Background;
 

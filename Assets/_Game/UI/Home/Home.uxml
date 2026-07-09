@@ -1,4 +1,4 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:Tactical="Game.Runtime.UI.Tactical" editor-extension-mode="False">
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
     <Style src="HomeTheme.uss" />
     <Style src="Home.uss" />
     <Style src="Shop.uss" />
@@ -6,13 +6,13 @@
     <ui:VisualElement name="home-root" class="home-root" picking-mode="Ignore">
         <ui:VisualElement name="lobby" class="lobby">
             <ui:VisualElement name="hub-top" class="hub-top">
-                <Tactical.TacticalPanel name="hub-operator" class="hub-col tac-card" corners="TopRight" show-accent="true">
+                <ui:VisualElement name="hub-operator" class="hub-col tac-card">
                     <ui:Label text="Opérateur" class="eyebrow" />
                     <ui:Label name="rank-label" text="Rang 1" class="rank-label" />
                     <ui:VisualElement name="rank-bar" class="rank-bar">
                         <ui:VisualElement name="rank-bar-fill" class="rank-bar-fill" />
                     </ui:VisualElement>
-                </Tactical.TacticalPanel>
+                </ui:VisualElement>
 
                 <ui:VisualElement name="hub-warzone" class="hub-col hub-center">
                     <ui:Label text="// Zone de guerre" class="eyebrow" />
@@ -45,7 +45,7 @@
 
             <ui:VisualElement name="hub-main" class="hub-main">
                 <ui:VisualElement name="hub-main-left" class="hub-main-col">
-                    <Tactical.TacticalPanel name="intel-card" class="tac-card hub-card-slot" corners="TopRight" show-accent="true">
+                    <ui:VisualElement name="intel-card" class="tac-card hub-card-slot">
                         <ui:Label text="// Intel" class="eyebrow" />
                         <ui:VisualElement class="intel-row">
                             <ui:Label text="Record vague" class="intel-key" />
@@ -71,9 +71,9 @@
                             <ui:Label text="Crédits" class="intel-key" />
                             <ui:Label name="intel-credits" text="0" class="intel-value gold-text" />
                         </ui:VisualElement>
-                    </Tactical.TacticalPanel>
+                    </ui:VisualElement>
 
-                    <Tactical.TacticalPanel name="equipment-card" class="tac-card hub-card-slot" corners="TopRight" show-accent="true">
+                    <ui:VisualElement name="equipment-card" class="tac-card hub-card-slot">
                         <ui:Label text="// Équipement" class="eyebrow" />
                         <ui:VisualElement class="intel-row">
                             <ui:Label text="Arme" class="intel-key" />
@@ -87,15 +87,15 @@
                             <ui:Label text="Costume" class="intel-key" />
                             <ui:Label name="equip-costume" text="—" class="intel-value" />
                         </ui:VisualElement>
-                    </Tactical.TacticalPanel>
+                    </ui:VisualElement>
                 </ui:VisualElement>
 
                 <ui:VisualElement name="hub-main-center" class="hub-main-col hub-deploy-col">
-                    <Tactical.TacticalButton name="deploy-button" class="deploy-button" cut-size="18" corners="TopLeft, BottomRight" color-a="#a166ff" color-b="#5127c9">
+                    <ui:Button name="deploy-button" class="deploy-button">
                         <ui:Label text="// Mode survie" class="eyebrow" />
                         <ui:Label text="Déployer" class="deploy-title" />
                         <ui:Label text="Survie — vagues infinies" class="subtitle" />
-                    </Tactical.TacticalButton>
+                    </ui:Button>
 
                     <ui:VisualElement name="char-selector" class="char-selector">
                         <ui:Button name="char-prev" text="‹" class="char-arrow" />
@@ -106,31 +106,31 @@
                 </ui:VisualElement>
 
                 <ui:VisualElement name="hub-main-right" class="hub-main-col">
-                    <Tactical.TacticalPanel name="objectif-card" class="tac-card hub-card-slot" corners="TopRight" show-accent="true">
+                    <ui:VisualElement name="objectif-card" class="tac-card hub-card-slot">
                         <ui:Label text="// Objectif" class="eyebrow" />
                         <ui:VisualElement name="objectif-thumb" class="objectif-thumb" />
                         <ui:Label text="Survivez le plus longtemps possible. Affrontez des vagues d'ennemis toujours plus redoutables." class="objectif-text" />
-                    </Tactical.TacticalPanel>
+                    </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
 
             <ui:VisualElement name="hub-deploy" class="hub-deploy">
-                <Tactical.TacticalButton name="tile-shop" class="hub-tile" cut-size="10" corners="TopRight" color-a="#f6f6fa" color-b="#eef0f5">
+                <ui:Button name="tile-shop" class="hub-tile">
                     <ui:Label text="Armurerie" class="tile-title" />
                     <ui:Label text="Équipez vos armes" class="tile-subtitle" />
-                </Tactical.TacticalButton>
-                <Tactical.TacticalButton name="tile-loadout" class="hub-tile" cut-size="10" corners="TopRight" color-a="#f6f6fa" color-b="#eef0f5">
+                </ui:Button>
+                <ui:Button name="tile-loadout" class="hub-tile">
                     <ui:Label text="Série de points" class="tile-title" />
                     <ui:Label text="Choisissez vos bonus" class="tile-subtitle" />
-                </Tactical.TacticalButton>
-                <Tactical.TacticalButton name="tile-training" class="hub-tile" cut-size="10" corners="TopRight" color-a="#f6f6fa" color-b="#eef0f5">
+                </ui:Button>
+                <ui:Button name="tile-training" class="hub-tile">
                     <ui:Label text="Entraînement" class="tile-title" />
                     <ui:Label text="Munitions illimitées" class="tile-subtitle" />
-                </Tactical.TacticalButton>
-                <Tactical.TacticalButton name="tile-map" class="hub-tile" cut-size="10" corners="TopRight" color-a="#f6f6fa" color-b="#eef0f5">
+                </ui:Button>
+                <ui:Button name="tile-map" class="hub-tile">
                     <ui:Label text="Map" class="tile-title" />
                     <ui:Label text="Choisissez le terrain" class="tile-subtitle" />
-                </Tactical.TacticalButton>
+                </ui:Button>
                 <ui:VisualElement name="tile-indicator" class="hub-tile hub-indicator hub-indicator-bg" picking-mode="Ignore">
                     <ui:Label text="Difficulté Croissante" class="tile-title" />
                 </ui:VisualElement>
@@ -138,18 +138,10 @@
         </ui:VisualElement>
 
         <ui:VisualElement name="shop-panel" class="panel hidden" />
-        <ui:VisualElement name="loadout-panel" class="panel hidden">
-            <Tactical.TacticalModalFrame name="loadout-frame" />
-        </ui:VisualElement>
-        <ui:VisualElement name="map-panel" class="panel hidden">
-            <Tactical.TacticalModalFrame name="map-frame" />
-        </ui:VisualElement>
-        <ui:VisualElement name="settings-panel" class="panel hidden">
-            <Tactical.TacticalModalFrame name="settings-frame" />
-        </ui:VisualElement>
-        <ui:VisualElement name="howto-panel" class="panel hidden">
-            <Tactical.TacticalModalFrame name="howto-frame" />
-        </ui:VisualElement>
+        <ui:VisualElement name="loadout-panel" class="panel hidden" />
+        <ui:VisualElement name="map-panel" class="panel hidden" />
+        <ui:VisualElement name="settings-panel" class="panel hidden" />
+        <ui:VisualElement name="howto-panel" class="panel hidden" />
 
         <ui:VisualElement name="boot-loading" class="boot-loading hidden" picking-mode="Ignore">
             <ui:Label text="Chargement du décor…" class="boot-loading-label" />

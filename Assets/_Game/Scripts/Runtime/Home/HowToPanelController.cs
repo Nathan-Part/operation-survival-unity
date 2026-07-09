@@ -54,7 +54,12 @@ namespace Game.Runtime
             if (panel == null) return; // #howto-panel absent de Home.uxml : rien à faire, pas de plantage
 
             var frame = panel.Q<TacticalModalFrame>("howto-frame");
-            var container = frame != null ? frame.Content : panel;
+            if (frame == null)
+            {
+                frame = new TacticalModalFrame { name = "howto-frame" };
+                panel.Add(frame);
+            }
+            var container = frame.Content;
             container.Clear();
             panelAsset.CloneTree(container);
 
