@@ -145,6 +145,9 @@
 
         <ui:VisualElement name="boot-loading" class="boot-loading hidden" picking-mode="Ignore">
             <ui:Label text="Chargement du décor…" class="boot-loading-label" />
+            <ui:VisualElement name="boot-loading-track" class="boot-loading-track">
+                <ui:VisualElement name="boot-loading-bar" class="boot-loading-bar" />
+            </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

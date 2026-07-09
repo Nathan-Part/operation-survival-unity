@@ -18,11 +18,14 @@ namespace Game.Runtime
         // rechargée depuis le disque, donc toute référence VisualElement prise à l'édition
         // serait de toute façon invalide pour l'instance réelle (même logique que HomeController).
         VisualElement overlay;
+        VisualElement progressBar;
         bool deploying;
 
         void Start()
         {
-            overlay = GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("boot-loading");
+            var root = GetComponent<UIDocument>().rootVisualElement;
+            overlay = root.Q<VisualElement>("boot-loading");
+            progressBar = root.Q<VisualElement>("boot-loading-bar");
         }
 
         /// Persiste la save puis lance la map choisie. `training` bascule SliceBootstrap en mode
@@ -39,12 +42,31 @@ namespace Game.Runtime
             StartCoroutine(LoadAfterOverlay(mapId));
         }
 
+        // Playtest Phase 5.1 (2026-07-09, G1) : chargement asynchrone avec vraie barre de progression
+        // au lieu d'un LoadScene synchrone bloquant derriere un voile anti-flash sans retour visuel.
+        // allowSceneActivation reste faux jusqu'a 90% (palier standard Unity : la derniere tranche
+        // 90-100% est l'activation elle-meme, quasi instantanee, la retarder evite un saut visuel).
         IEnumerator LoadAfterOverlay(string mapId)
         {
             overlay?.RemoveFromClassList("hidden");
+            SetProgress(0f);
             yield return null; // laisse l'overlay s'afficher au moins une frame avant le chargement (anti-flash)
             yield return null;
-            SceneManager.LoadScene(MapRules.SceneNameFor(mapId));
+
+            var op = SceneManager.LoadSceneAsync(MapRules.SceneNameFor(mapId));
+            op.allowSceneActivation = false;
+            while (op.progress < 0.9f)
+            {
+                SetProgress(op.progress / 0.9f);
+                yield return null;
+            }
+            SetProgress(1f);
+            op.allowSceneActivation = true;
+        }
+
+        void SetProgress(float t)
+        {
+            if (progressBar != null) progressBar.style.width = Length.Percent(Mathf.Clamp01(t) * 100f);
         }
     }
 }
