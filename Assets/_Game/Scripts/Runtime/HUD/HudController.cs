@@ -110,6 +110,7 @@ namespace Game.Runtime
             gameObject.AddComponent<HudCombo>().Init(root, waves);
             if (meta != null) gameObject.AddComponent<HudMeta>().Init(root, meta);
             if (meta != null) gameObject.AddComponent<HudConsumables>().Init(root, meta, thrower);
+            if (meta != null) gameObject.AddComponent<HudChallenges>().Init(root, meta); // Defis (Phase 5.1, contrats deja tires par RunTracker)
             if (tracker != null) gameObject.AddComponent<HudToasts>().Init(root, tracker); // succès/contrats/level-up (Lot 6)
             if (loadout != null && loadout.Model != null) gameObject.AddComponent<HudLoadout>().Init(root, loadout);
             if (powerups != null) gameObject.AddComponent<HudPowerUps>().Init(root, powerups);

@@ -25,7 +25,7 @@ namespace Game.Runtime
             this.meta = meta;
             this.thrower = thrower;
 
-            const float rowHeight = 26f, startY = -84f; // sous le bloc credits (voir HudMeta)
+            const float rowHeight = 26f, startY = -112f; // sous credits/niveau/XP (voir HudMeta, jusqu'a y=-94)
             rows = new Text[Slots.Length];
             for (int i = 0; i < Slots.Length; i++)
             {
