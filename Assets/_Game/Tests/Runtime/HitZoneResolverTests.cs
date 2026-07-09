@@ -32,26 +32,28 @@ namespace Game.Runtime.Tests
         [Test]
         public void Damage_UsesZoneTimesWeaponMult()
         {
-            Assert.AreEqual(60, HitZoneResolver.Damage(HitZone.Head, Zones(), 1f, ArmorType.None, 0.5f));
-            Assert.AreEqual(25, HitZoneResolver.Damage(HitZone.Torso, Zones(), 1f, ArmorType.None, 0.5f));
-            Assert.AreEqual(15, HitZoneResolver.Damage(HitZone.Legs, Zones(), 1f, ArmorType.None, 0.5f));
-            Assert.AreEqual(180, HitZoneResolver.Damage(HitZone.Head, Zones(), 3f, ArmorType.None, 0.5f)); // sniper dmgMult 3
+            Assert.AreEqual(60, HitZoneResolver.Damage(HitZone.Head, Zones(), 1f, ArmorType.None));
+            Assert.AreEqual(25, HitZoneResolver.Damage(HitZone.Torso, Zones(), 1f, ArmorType.None));
+            Assert.AreEqual(15, HitZoneResolver.Damage(HitZone.Legs, Zones(), 1f, ArmorType.None));
+            Assert.AreEqual(180, HitZoneResolver.Damage(HitZone.Head, Zones(), 3f, ArmorType.None)); // sniper dmgMult 3
         }
 
+        // Playtest Phase 5.1 (2026-07-09) : valeurs reelles web (ArmorTorsoMult=0.7, ArmorFullMult=0.6),
+        // remplacent l'ancien multiplicateur flat 0.5 partage par les deux types d'armure.
         [Test]
         public void Damage_TorsoArmorOnlyProtectsTorso()
         {
-            Assert.AreEqual(13, HitZoneResolver.Damage(HitZone.Torso, Zones(), 1f, ArmorType.Torso, 0.5f)); // 12.5 -> 13 (away from zero)
-            Assert.AreEqual(60, HitZoneResolver.Damage(HitZone.Head, Zones(), 1f, ArmorType.Torso, 0.5f));  // headshot passe intégralement
-            Assert.AreEqual(15, HitZoneResolver.Damage(HitZone.Legs, Zones(), 1f, ArmorType.Torso, 0.5f));
+            Assert.AreEqual(18, HitZoneResolver.Damage(HitZone.Torso, Zones(), 1f, ArmorType.Torso)); // 25*0.7=17.5 -> 18 (away from zero)
+            Assert.AreEqual(60, HitZoneResolver.Damage(HitZone.Head, Zones(), 1f, ArmorType.Torso));  // headshot passe intégralement
+            Assert.AreEqual(15, HitZoneResolver.Damage(HitZone.Legs, Zones(), 1f, ArmorType.Torso));
         }
 
         [Test]
         public void Damage_FullArmorProtectsEverything()
         {
-            Assert.AreEqual(30, HitZoneResolver.Damage(HitZone.Head, Zones(), 1f, ArmorType.Full, 0.5f));
-            Assert.AreEqual(13, HitZoneResolver.Damage(HitZone.Torso, Zones(), 1f, ArmorType.Full, 0.5f));
-            Assert.AreEqual(8, HitZoneResolver.Damage(HitZone.Legs, Zones(), 1f, ArmorType.Full, 0.5f)); // 7.5 -> 8
+            Assert.AreEqual(36, HitZoneResolver.Damage(HitZone.Head, Zones(), 1f, ArmorType.Full));  // 60*0.6
+            Assert.AreEqual(15, HitZoneResolver.Damage(HitZone.Torso, Zones(), 1f, ArmorType.Full)); // 25*0.6
+            Assert.AreEqual(9, HitZoneResolver.Damage(HitZone.Legs, Zones(), 1f, ArmorType.Full));   // 15*0.6=9
         }
     }
 }

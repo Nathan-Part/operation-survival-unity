@@ -16,8 +16,6 @@ namespace Game.Runtime
 
     public class EnemyHealth : MonoBehaviour
     {
-        [SerializeField] float armorDamageMult = 0.5f; // TODO(spec-web): réduction d'armure non extraite du web
-
         EnemyData data;
         HitZoneSettings zones;
 
@@ -56,7 +54,7 @@ namespace Game.Runtime
             if (BlockCheck != null && BlockCheck(shooterPos))
                 return new HitResult { valid = true, zone = zone, blocked = true }; // web #119 : dégâts 0
             LastHitHead = zone == HitZone.Head;
-            Health -= HitZoneResolver.Damage(zone, zones, weaponDmgMult, data.armor, armorDamageMult);
+            Health -= HitZoneResolver.Damage(zone, zones, weaponDmgMult, data.armor);
             Damaged?.Invoke(this);
             bool killed = Health <= 0;
             if (killed) Died?.Invoke(this);

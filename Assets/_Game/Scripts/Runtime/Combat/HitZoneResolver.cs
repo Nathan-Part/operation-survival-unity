@@ -17,13 +17,22 @@ namespace Game.Runtime
             return HitZone.Torso;
         }
 
-        public static int Damage(HitZone zone, HitZoneSettings zones, float weaponDmgMult, ArmorType armor, float armorDamageMult)
+        // Valeurs reelles web (main.js:2322-2331, #114 Armor system) — playtest Phase 5.1 (2026-07-09) :
+        // remplace l'ancien multiplicateur flat 0.5 (TODO(spec-web) leve) par 2 constantes distinctes.
+        // Torse (tank/boss) : reduction UNIQUEMENT si la zone touchee est le torse (un headshot passe
+        // toujours a plein degats). Integrale (juggernaut) : reduction sur TOUTE zone.
+        public const float ArmorTorsoMult = 0.7f;
+        public const float ArmorFullMult = 0.6f;
+
+        public static int Damage(HitZone zone, HitZoneSettings zones, float weaponDmgMult, ArmorType armor)
         {
             int zoneDamage = zone == HitZone.Head ? zones.headDamage
                 : zone == HitZone.Legs ? zones.legsDamage
                 : zones.torsoDamage;
-            bool isProtected = armor == ArmorType.Full || (armor == ArmorType.Torso && zone == HitZone.Torso);
-            double damage = zoneDamage * weaponDmgMult * (isProtected ? armorDamageMult : 1f);
+            float armorMult = armor == ArmorType.Full ? ArmorFullMult
+                : (armor == ArmorType.Torso && zone == HitZone.Torso) ? ArmorTorsoMult
+                : 1f;
+            double damage = zoneDamage * weaponDmgMult * armorMult;
             return (int)Math.Round(damage, MidpointRounding.AwayFromZero);
         }
     }
