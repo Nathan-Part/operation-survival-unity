@@ -5,11 +5,18 @@ using UnityEngine.UI;
 namespace Game.Runtime
 {
     /// Radar : blips des ennemis vivants, position relative au joueur (rotation incluse),
-    /// couleur = radarColor du type. // TODO(spec-web): portée radar non extraite (20 m par défaut).
+    /// couleur = radarColor du type. Portee et marqueur joueur : valeurs reelles du web
+    /// (RADAR_RANGE=28, triangle vert #7dff9e fixe au centre, main.js:4225-4268) — playtest
+    /// Phase 5.1 (2026-07-09), corrige le TODO(spec-web) (20m par defaut) et le marqueur joueur
+    /// manquant (D2, relevé par Nathan).
     public class HudRadar : MonoBehaviour
     {
-        const float RangeMeters = 20f;
+        const float RangeMeters = 28f;
         const float RadiusPixels = 110f;
+        // TODO(spec-web) : le web double RangeMeters quand le power-up "radar_boost" est actif
+        // (main.js:4225). Aucune trace de "radar_boost" dans le projet Unity (grep negatif,
+        // 2026-07-09) — la portee reste fixe a 28m tant que ce power-up n'existe pas cote Unity.
+        static readonly Color PlayerMarkerColor = new Color(0.49f, 1f, 0.62f); // #7dff9e
 
         WaveManager waves;
         Transform player;
@@ -28,6 +35,49 @@ namespace Game.Runtime
             var background = gameObject.AddComponent<Image>();
             background.color = new Color(0f, 0f, 0f, 0.35f);
             background.raycastTarget = false;
+
+            // Marqueur joueur : triangle pointant vers le haut (= direction du regard, la scene
+            // tournant autour du joueur, pas le marqueur), dessine EN DERNIER (LateUpdate) donc
+            // toujours au-dessus des blips ennemis — parite web (le canvas radar dessine le joueur
+            // en tout dernier, ligne 4267-4268).
+            var markerGo = new GameObject("PlayerMarker");
+            markerGo.transform.SetParent(transform, false);
+            var markerImage = markerGo.AddComponent<Image>();
+            markerImage.sprite = BuildTriangleSprite();
+            markerImage.color = PlayerMarkerColor;
+            markerImage.raycastTarget = false;
+            var markerRect = (RectTransform)markerGo.transform;
+            markerRect.anchorMin = markerRect.anchorMax = markerRect.pivot = new Vector2(0.5f, 0.5f);
+            markerRect.anchoredPosition = Vector2.zero;
+            markerRect.sizeDelta = new Vector2(14f, 14f);
+            markerGo.transform.SetAsLastSibling();
+        }
+
+        static Sprite cachedTriangleSprite;
+
+        static Sprite BuildTriangleSprite()
+        {
+            if (cachedTriangleSprite != null) return cachedTriangleSprite;
+            const int size = 32;
+            var tex = new Texture2D(size, size, TextureFormat.RGBA32, false) { name = "RadarPlayerTriangle" };
+            var pixels = new Color32[size * size];
+            for (int y = 0; y < size; y++)
+            {
+                // Texture2D : y=0 = ligne du BAS (convention Unity SetPixels32). Triangle pointant vers
+                // le haut = etroit en haut (y=size-1) et large en bas (y=0) -> t decroit avec y.
+                float t = 1f - (float)y / (size - 1);
+                int halfWidth = Mathf.RoundToInt(t * (size / 2f));
+                int cx = size / 2;
+                for (int x = 0; x < size; x++)
+                {
+                    bool inside = Mathf.Abs(x - cx) <= halfWidth;
+                    pixels[y * size + x] = inside ? new Color32(255, 255, 255, 255) : new Color32(255, 255, 255, 0);
+                }
+            }
+            tex.SetPixels32(pixels);
+            tex.Apply();
+            cachedTriangleSprite = Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f));
+            return cachedTriangleSprite;
         }
 
         void LateUpdate()
