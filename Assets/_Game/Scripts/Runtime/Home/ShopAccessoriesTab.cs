@@ -151,8 +151,15 @@ namespace Game.Runtime
             var focus = FindAccessory(previewId) ?? FindAccessory(equippedId)
                 ?? items.FirstOrDefault(i => i.price > 0) ?? items.FirstOrDefault();
 
+            Rarity? lastRarity = null;
             foreach (var candidate in items)
             {
+                if (lastRarity != candidate.rarity)
+                {
+                    AddRarityHeader(accGrid, candidate.rarity);
+                    lastRarity = candidate.rarity;
+                }
+
                 bool owned = save.ownedAccessories.Contains(candidate.id);
                 bool active = focus != null && candidate.id == focus.id;
 
@@ -251,8 +258,15 @@ namespace Game.Runtime
             if (danceCounter != null) danceCounter.text = $"Sélection : {save.selectedDances.Count}/3";
 
             var dances = db.dances.Where(d => d != null).OrderBy(d => (int)d.rarity).ToList();
+            Rarity? lastRarity = null;
             foreach (var dance in dances)
             {
+                if (lastRarity != dance.rarity)
+                {
+                    AddRarityHeader(danceGrid, dance.rarity);
+                    lastRarity = dance.rarity;
+                }
+
                 bool owned = save.ownedDances.Contains(dance.id);
                 bool selected = save.selectedDances.Contains(dance.id);
 
@@ -326,6 +340,18 @@ namespace Game.Runtime
                 tile.Add(btnRow);
                 danceGrid.Add(tile);
             }
+        }
+
+        // Playtest Phase 5.1 (2026-07-09) : les items etaient deja tries par rarete (OrderBy) mais
+        // affiches en liste plate — parite shop-accessoires.png (groupes COMMUN/RARE/EPIQUE/LEGENDAIRE
+        // avec un en-tete par groupe). "rarity-group-header" force un retour a la ligne (width 100%)
+        // dans le ScrollView en flex-wrap (SetupGridWrap).
+        static void AddRarityHeader(ScrollView grid, Rarity rarity)
+        {
+            var header = new Label(RarityName(rarity).ToUpperInvariant());
+            header.AddToClassList("rarity-group-header");
+            ApplyRarityClass(header, rarity);
+            grid.Add(header);
         }
 
         // web: RARITIES (main.js:82-87) — même convention dupliquée que ShopWeaponsTab/ShopCharacterTab.

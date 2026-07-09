@@ -418,6 +418,17 @@
     flex-grow: 1;
 }
 
+/* En-tete de groupe par rarete (Accessoires/Boost/Consommables) — width 100% force le retour a la
+   ligne dans le conteneur en flex-wrap (SetupGridWrap), la couleur vient de .rarity-* (ApplyRarityClass). */
+.rarity-group-header {
+    width: 100%;
+    font-size: 11px;
+    -unity-font-style: bold;
+    letter-spacing: 1px;
+    margin-top: 10px;
+    margin-bottom: 4px;
+}
+
 .acctile {
     width: 132px;
     height: 150px;

@@ -51,8 +51,15 @@ namespace Game.Runtime
             grid.Clear();
 
             var boosts = db.boosts.Where(b => b != null).OrderBy(b => (int)b.rarity).ToList();
+            Rarity? lastRarity = null;
             foreach (var boost in boosts)
             {
+                if (lastRarity != boost.rarity)
+                {
+                    AddRarityHeader(grid, boost.rarity);
+                    lastRarity = boost.rarity;
+                }
+
                 bool owned = save.ownedBoosts.Contains(boost.id);
                 string slotKey = boost.slot.ToString().ToLowerInvariant();
                 bool equipped = owned && save.equippedBoosts.TryGetValue(slotKey, out string equippedId) && equippedId == boost.id;
@@ -151,6 +158,16 @@ namespace Game.Runtime
             BoostSlot.Medal => "🎖️",
             _ => "❔",
         };
+
+        // Playtest Phase 5.1 (2026-07-09) : meme en-tete de groupe que ShopAccessoriesTab.AddRarityHeader
+        // (pas de classe de base partagee entre les onglets boutique, dupliquee a l'identique).
+        static void AddRarityHeader(ScrollView grid, Rarity rarity)
+        {
+            var header = new Label(RarityName(rarity).ToUpperInvariant());
+            header.AddToClassList("rarity-group-header");
+            ApplyRarityClass(header, rarity);
+            grid.Add(header);
+        }
 
         // web: RARITIES (main.js:82-87) — même convention dupliquée que les autres onglets boutique.
         static string RarityName(Rarity r) => r switch

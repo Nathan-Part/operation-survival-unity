@@ -51,7 +51,18 @@ namespace Game.Runtime
             grid.Clear();
 
             // web: pas de tri par rareté (CONSUMABLES est parcouru dans l'ordre déclaré, tous "commun").
-            foreach (var item in db.consumables.Where(c => c != null))
+            // Playtest Phase 5.1 (2026-07-09) : un seul en-tete "COMMUN" par coherence visuelle avec
+            // les autres onglets groupes par rarete (ShopAccessoriesTab/ShopBoostTab) — tous les
+            // consommables sont commun (pas de vraie variete de rarete ici, cf. commentaire ci-dessus).
+            var consumableList = db.consumables.Where(c => c != null).ToList();
+            if (consumableList.Count > 0)
+            {
+                var header = new Label("COMMUN");
+                header.AddToClassList("rarity-group-header");
+                header.AddToClassList("rarity-common");
+                grid.Add(header);
+            }
+            foreach (var item in consumableList)
             {
                 save.consumables.TryGetValue(item.key, out int stock);
 
