@@ -353,15 +353,18 @@
     color: white;
 }
 
+/* Playtest Phase 5.1 (2026-07-09) : bouton Retour violet pleine largeur en bas de la modale
+   (parite modal-map.png), au lieu d'un petit bouton gris aligne a gauche. */
 .panel-back {
     margin-top: 18px;
-    background-color: rgba(255, 255, 255, 0.08);
-    border-width: 1px;
-    border-color: var(--color-border);
+    background-color: var(--color-purple);
+    border-width: 0;
     border-radius: 8px;
-    color: var(--color-text);
-    padding: 6px 14px;
-    align-self: flex-start;
+    color: white;
+    -unity-font-style: bold;
+    padding: 10px 14px;
+    align-self: stretch;
+    -unity-text-align: middle-center;
 }
 
 /* Panneau Map (Task 9, contenu cloné depuis MapPanel.uxml dans #map-panel). */

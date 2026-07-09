@@ -1,5 +1,6 @@
 using Game.Data.Rules;
 using Game.Data.Save;
+using Game.Runtime.UI.Tactical;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -55,9 +56,13 @@ namespace Game.Runtime
             if (meta.Data == null) meta.LoadOrCreate(); // au cas où ce composant s'initialise avant HomeController
 
             var root = GetComponent<UIDocument>().rootVisualElement;
-            var container = root.Q<VisualElement>("settings-panel");
-            if (container == null) return; // #settings-panel absent de Home.uxml : rien à faire, pas de plantage
+            var panel = root.Q<VisualElement>("settings-panel");
+            if (panel == null) return; // #settings-panel absent de Home.uxml : rien à faire, pas de plantage
 
+            // Playtest Phase 5.1 (2026-07-09) : le contenu clone va desormais DANS le cadre de modale
+            // tactique (TacticalModalFrame.Content), pas directement dans le voile plein ecran.
+            var frame = panel.Q<TacticalModalFrame>("settings-frame");
+            var container = frame != null ? frame.Content : panel;
             container.Clear();
             panelAsset.CloneTree(container);
 

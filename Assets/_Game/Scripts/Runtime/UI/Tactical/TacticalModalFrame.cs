@@ -15,7 +15,7 @@ namespace Game.Runtime.UI.Tactical
 
         public TacticalModalFrame()
         {
-            style.maxWidth = 700;
+            style.maxWidth = 840; // >= le plus large des panneaux existants (howto-card, 760px) + padding
             style.paddingTop = 28;
             style.paddingBottom = 28;
             style.paddingLeft = 32;

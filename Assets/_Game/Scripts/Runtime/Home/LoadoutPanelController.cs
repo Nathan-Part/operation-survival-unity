@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Game.Data;
 using Game.Data.Rules;
 using Game.Data.Save;
+using Game.Runtime.UI.Tactical;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -78,9 +79,11 @@ namespace Game.Runtime
             if (meta.Data == null) meta.LoadOrCreate(); // au cas où ce composant s'initialise avant HomeController
 
             var root = GetComponent<UIDocument>().rootVisualElement;
-            var container = root.Q<VisualElement>("loadout-panel");
-            if (container == null) return; // #loadout-panel absent de Home.uxml : rien à faire, pas de plantage
+            var panel = root.Q<VisualElement>("loadout-panel");
+            if (panel == null) return; // #loadout-panel absent de Home.uxml : rien à faire, pas de plantage
 
+            var frame = panel.Q<TacticalModalFrame>("loadout-frame");
+            var container = frame != null ? frame.Content : panel;
             container.Clear();
             panelAsset.CloneTree(container);
 

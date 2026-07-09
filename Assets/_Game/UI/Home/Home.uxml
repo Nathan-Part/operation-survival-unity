@@ -138,10 +138,18 @@
         </ui:VisualElement>
 
         <ui:VisualElement name="shop-panel" class="panel hidden" />
-        <ui:VisualElement name="loadout-panel" class="panel hidden" />
-        <ui:VisualElement name="map-panel" class="panel hidden" />
-        <ui:VisualElement name="settings-panel" class="panel hidden" />
-        <ui:VisualElement name="howto-panel" class="panel hidden" />
+        <ui:VisualElement name="loadout-panel" class="panel hidden">
+            <Tactical.TacticalModalFrame name="loadout-frame" />
+        </ui:VisualElement>
+        <ui:VisualElement name="map-panel" class="panel hidden">
+            <Tactical.TacticalModalFrame name="map-frame" />
+        </ui:VisualElement>
+        <ui:VisualElement name="settings-panel" class="panel hidden">
+            <Tactical.TacticalModalFrame name="settings-frame" />
+        </ui:VisualElement>
+        <ui:VisualElement name="howto-panel" class="panel hidden">
+            <Tactical.TacticalModalFrame name="howto-frame" />
+        </ui:VisualElement>
 
         <ui:VisualElement name="boot-loading" class="boot-loading hidden" picking-mode="Ignore">
             <ui:Label text="Chargement du décor…" class="boot-loading-label" />

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Game.Runtime.UI.Tactical;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -49,9 +50,11 @@ namespace Game.Runtime
             wired = true;
 
             var root = GetComponent<UIDocument>().rootVisualElement;
-            var container = root.Q<VisualElement>("howto-panel");
-            if (container == null) return; // #howto-panel absent de Home.uxml : rien à faire, pas de plantage
+            var panel = root.Q<VisualElement>("howto-panel");
+            if (panel == null) return; // #howto-panel absent de Home.uxml : rien à faire, pas de plantage
 
+            var frame = panel.Q<TacticalModalFrame>("howto-frame");
+            var container = frame != null ? frame.Content : panel;
             container.Clear();
             panelAsset.CloneTree(container);
 
