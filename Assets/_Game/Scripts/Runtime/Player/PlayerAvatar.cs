@@ -23,8 +23,20 @@ namespace Game.Runtime
             if (modelPrefab == null) return;
 
             visual = Instantiate(modelPrefab, transform);
-            visual.transform.localPosition = Vector3.zero; // pivot GLB aux pieds
+            visual.transform.localPosition = Vector3.zero; // pivot GLB aux pieds (hypothèse — corrigée ci-dessous si fausse)
             visual.transform.localRotation = Quaternion.identity;
+
+            // Playtest Phase 5.1 (2026-07-09), bug D3 (avatar "flotte" en 3e personne) : diagnostiqué
+            // via execute_code sur blue-soldier.glb (le même rig que le bug d'arme géante, Phase 4
+            // Task 2) — le pivot du GLB n'est PAS exactement aux pieds : les bones LeftFoot/RightFoot
+            // sont mesurés ~0.11 m AU-DESSUS de l'origine du modèle en pose de bind. Plutôt que de
+            // corriger cette valeur en dur (spécifique à ce rig, pas garanti pour un futur modèle),
+            // on mesure la position des pieds à l'instanciation et on translate le visuel pour que
+            // les pieds touchent bien y=0 — mesuré AVANT le premier Update() (donc en pose de bind,
+            // pas au milieu d'un clip d'idle qui pourrait fausser la lecture).
+            float groundOffset = ComputeGroundOffset(visual.transform);
+            if (Mathf.Abs(groundOffset) > 0.001f)
+                visual.transform.localPosition -= new Vector3(0f, groundOffset, 0f);
 
             if (library != null)
             {
@@ -61,6 +73,28 @@ namespace Game.Runtime
             var handCompensation = new Vector3(
                 s.x > 1e-4f ? 1f / s.x : 1f, s.y > 1e-4f ? 1f / s.y : 1f, s.z > 1e-4f ? 1f / s.z : 1f);
             held.transform.localScale = Vector3.Scale(templateScale, handCompensation) * weaponModelScale;
+        }
+
+        /// Mesure de combien (en Y local, espace du GameObject `visual`) les pieds du rig
+        /// dépassent au-dessus (ou en dessous) de l'origine du modèle en pose de bind — voir le
+        /// commentaire d'appel dans Init(). Renvoie 0 si aucun bone de pied n'est trouvé (aucune
+        /// correction appliquée plutôt qu'une supposition).
+        static float ComputeGroundOffset(Transform visualRoot)
+        {
+            Transform left = null, right = null;
+            foreach (var t in visualRoot.GetComponentsInChildren<Transform>())
+            {
+                if (System.Text.RegularExpressions.Regex.IsMatch(t.name, "left.?foot|foot.?l|lfoot", System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+                    left = t;
+                else if (System.Text.RegularExpressions.Regex.IsMatch(t.name, "right.?foot|foot.?r|rfoot", System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+                    right = t;
+            }
+            if (left == null && right == null) return 0f;
+
+            float sum = 0f; int count = 0;
+            if (left != null) { sum += visualRoot.InverseTransformPoint(left.position).y; count++; }
+            if (right != null) { sum += visualRoot.InverseTransformPoint(right.position).y; count++; }
+            return sum / count;
         }
 
         public static Transform FindHandBone(Transform root)
