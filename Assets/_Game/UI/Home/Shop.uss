@@ -8,7 +8,14 @@
     background-color: rgba(6, 7, 12, 0.4);
 }
 
+/* La boutique reste sur des cartes SOMBRES translucides (vitrine 3D derriere, pas une photo claire
+   comme le lobby) : re-declare les variables de texte/fond localement plutot que d'heriter du theme
+   clair de HomeTheme.uss (playtest Phase 5.1, 2026-07-09 — la boutique garde son propre habillage). */
 .shop-card {
+    --color-text: #eef1f8;
+    --color-text-dim: #9aa3b2;
+    --color-bg-card: rgba(18, 20, 32, 0.82);
+    --color-border: rgba(255, 255, 255, 0.1);
     width: 92%;
     height: 88%;
     flex-direction: column;
@@ -49,26 +56,30 @@
     flex-direction: row;
 }
 
+/* Sidebar pleine hauteur, fond clair — parite shop-guns.png (colonne blanche a gauche, pas des
+   boutons epars). Panneau physique en plus des onglets pour que la colonne se voie meme entre
+   deux tuiles. */
 .shop-rail {
     width: 170px;
     flex-direction: column;
     margin-right: 14px;
+    padding: 10px;
+    background-color: rgba(247, 248, 251, 0.96);
+    border-radius: 10px;
 }
 
 .shop-tab {
-    background-color: var(--color-bg-card);
-    border-width: 1px;
-    border-color: var(--color-border);
+    background-color: transparent;
+    border-width: 0;
     border-radius: 8px;
-    color: var(--color-text-dim);
+    color: #3d4252;
     padding: 10px 12px;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
     -unity-text-align: middle-left;
 }
 
 .shop-tab.on {
     background-color: var(--color-purple);
-    border-color: var(--color-purple);
     color: white;
     -unity-font-style: bold;
 }
@@ -143,6 +154,10 @@
 
 .shop-stats-panel {
     width: 300px;
+    background-color: var(--color-bg-card);
+    border-width: 1px;
+    border-color: var(--color-border);
+    border-radius: 10px;
 }
 
 .sp-h {
