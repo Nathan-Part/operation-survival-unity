@@ -25,17 +25,25 @@ namespace Game.Runtime
         MetaProgress meta;
         GameDatabase db;
         WaveManager waves;
+        WeaponController weapon;
         PlayerMelee melee;
         RunStats run;
         int lastLevel;
+        float waveStartTime;
+
+        /// Snapshot en lecture seule des stats de la run en cours — consommé par GameOverScreen
+        /// (Phase 5.1, 2026-07-09). `run` reste un champ privé, ceci n'expose qu'une copie (struct).
+        public RunStats CurrentStats => run;
 
         public void Init(MetaProgress meta, GameDatabase db, WaveManager waves, WeaponController weapon, PlayerMelee melee = null)
         {
             this.meta = meta;
             this.db = db;
             this.waves = waves;
+            this.weapon = weapon;
             this.melee = melee;
             lastLevel = meta.Level;
+            waveStartTime = Time.time;
 
             var now = DateTime.Now;
             DailyContractRules.EnsureToday(meta.Data.daily,
@@ -43,15 +51,27 @@ namespace Game.Runtime
 
             waves.EnemyKilled += OnKill;
             waves.WaveCleared += OnWaveCleared;
+            waves.WaveStarted += OnWaveStarted;
             if (melee != null) melee.MeleeKill += OnMeleeKill;
+            if (weapon != null)
+            {
+                weapon.Fired += OnFired;
+                weapon.HitConfirmed += OnHitConfirmed;
+            }
         }
 
         void OnDestroy()
         {
             if (melee != null) melee.MeleeKill -= OnMeleeKill;
+            if (weapon != null)
+            {
+                weapon.Fired -= OnFired;
+                weapon.HitConfirmed -= OnHitConfirmed;
+            }
             if (waves == null) return;
             waves.EnemyKilled -= OnKill;
             waves.WaveCleared -= OnWaveCleared;
+            waves.WaveStarted -= OnWaveStarted;
         }
 
         void OnKill(EnemyHealth enemy, int money)
@@ -62,6 +82,7 @@ namespace Game.Runtime
             AdvanceContract("kills", 1);
             if (head) AdvanceContract("headshots", 1);
             run.combo = Mathf.Max(run.combo, waves.BestComboThisRun);
+            run.score = waves.Money; // simplification déjà en place (voir doc RunStats.score)
             CheckAchievements();
             CheckLevelUp();
         }
@@ -71,9 +92,28 @@ namespace Game.Runtime
         /// "melee" (melee15/melee5, unity-spec/contracts.json), sinon jamais complétable.
         void OnMeleeKill() => AdvanceContract("melee", 1);
 
+        // Écran de fin de partie riche (Phase 5.1) : précision (shotsFired/shotsHit) et meilleur
+        // coup (distance du tir confirmé le plus loin) — aucune de ces 2 valeurs n'était trackée
+        // avant cette session (RunTracker.Init prenait déjà `weapon` en paramètre mais ne l'utilisait
+        // jamais, champ mort).
+        void OnFired() => run.shotsFired++;
+
+        void OnHitConfirmed(HitZone zone, bool killed, EnemyHealth target)
+        {
+            run.shotsHit++;
+            if (weapon == null || target == null) return;
+            float distance = Vector3.Distance(weapon.transform.position, target.transform.position);
+            if (distance > run.bestHitDistance) run.bestHitDistance = distance;
+        }
+
+        void OnWaveStarted(int wave) => waveStartTime = Time.time;
+
         void OnWaveCleared(int wave)
         {
             run.wave = wave;
+            float duration = Time.time - waveStartTime;
+            if (duration > 0f && (run.fastestWaveSeconds <= 0f || duration < run.fastestWaveSeconds))
+                run.fastestWaveSeconds = duration;
             AdvanceContract("wave", 1); // +1 par vague nettoyée : jamais plus d'un seuil franchi par appel (voir doc de classe)
             CheckAchievements();
             CheckLevelUp();

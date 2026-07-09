@@ -8,6 +8,19 @@ namespace Game.Data.Rules
         public int runKills, runHeadshots, wave, combo, runDistance;
         public int speedClears, perfectWaveStreak, noReloadClears, stealthKills, clutches, barrelChains, contractsDone;
         public bool miracle, legendaryWeapon, silentClear, legendaryCosmetics;
+
+        // Écran de fin de partie riche (Phase 5.1, 2026-07-09) : champs affichés par GameOverScreen,
+        // alimentés par RunTracker. `score` reprend la même simplification déjà en place avant cette
+        // session (SliceBootstrap.OnRunEnded passe waveManager.Money comme "score" — le web a une
+        // vraie formule de score séparée de l'argent, non extraite ici, écart assumé documenté dans
+        // pending-verifications-phase5.1.md).
+        public int score;
+        public int shotsFired;
+        public int shotsHit;
+        public float bestHitDistance;
+        public float fastestWaveSeconds;
+
+        public float Accuracy => shotsFired > 0 ? (float)shotsHit / shotsFired : 0f;
     }
 
     /// Évalue une condition de succès (pilotée par les données : conditionType + target).
