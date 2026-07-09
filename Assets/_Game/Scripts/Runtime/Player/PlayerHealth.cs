@@ -7,7 +7,11 @@ namespace Game.Runtime
 {
     public class PlayerHealth : MonoBehaviour
     {
-        [SerializeField] float regenDelaySeconds = 3f; // TODO(spec-web): délai de régén non extrait du web (0 = continue)
+        // Playtest Phase 5.1 (2026-07-09) : valeur reelle web (REGEN_DELAY, main.js:3524) — remplace
+        // le TODO(spec-web) (3f par defaut, deux fois trop court, contribuait au ressenti "on meurt
+        // trop vite"). regenRate (ligne ~36, StatFormulas.RegenRate) etait deja correctement derive
+        // de character.baseRegen + upgrades, PAS une valeur en dur a corriger.
+        [SerializeField] float regenDelaySeconds = 6f;
 
         public Func<float> timeSource = () => Time.time; // seam de test (assembly de tests séparé)
 
