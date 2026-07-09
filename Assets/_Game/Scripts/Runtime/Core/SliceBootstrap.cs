@@ -84,7 +84,6 @@ namespace Game.Runtime
             waveManager.EnemyKilled += (enemy, money) =>
                 meta.OnKill(enemy != null && enemy.LastHitHead, enemy != null && enemy.IsVip, money);
             waveManager.WaveCleared += _ => meta.OnWaveCleared();
-            health.Died += () => meta.OnRunEnded(waveManager.CurrentWave, waveManager.Money, waveManager.BestComboThisRun);
 
             // Avatar 3ᵉ personne (modèle du perso + anims + arme en main)
             var avatar = motor.gameObject.AddComponent<PlayerAvatar>();
@@ -170,6 +169,15 @@ namespace Game.Runtime
             // Suivi de partie (Lot 6, T23) : succès/contrats quotidiens/level-up, toasts HUD.
             var tracker = motor.gameObject.AddComponent<RunTracker>();
             tracker.Init(meta, db, waveManager, weapon, melee);
+
+            // Deplace apres la creation de tracker (Phase 5.1) : le leaderboard/game-over riche a
+            // besoin de kills/headshots/precision de la run, qui ne sont connus que via RunTracker.
+            health.Died += () =>
+            {
+                var stats = tracker.CurrentStats;
+                meta.OnRunEnded(waveManager.CurrentWave, waveManager.Money, waveManager.BestComboThisRun,
+                    stats.runKills, stats.runHeadshots, stats.Accuracy);
+            };
 
             var hudGo = new GameObject("HUD");
             var hud = hudGo.AddComponent<HudController>();

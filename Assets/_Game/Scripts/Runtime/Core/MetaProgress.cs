@@ -42,13 +42,15 @@ namespace Game.Runtime
 
         public void OnWaveCleared() { if (Data != null) Data.xp += ProgressionRules.XpWave; }
 
-        public void OnRunEnded(int wave, int score, int bestComboThisRun)
+        // Écran de fin de partie riche (Phase 5.1) : kills/headshots/accuracy en plus (LeaderboardEntry
+        // étendu) — paramètres ajoutés avec des défauts pour ne pas casser un futur appelant minimal.
+        public void OnRunEnded(int wave, int score, int bestComboThisRun, int kills = 0, int headshots = 0, float accuracy = 0f)
         {
             if (Data == null) return;
             if (wave > Data.bestWave) Data.bestWave = wave;
             if (score > Data.bestScore) Data.bestScore = score;
             if (bestComboThisRun > Data.bestCombo) Data.bestCombo = bestComboThisRun;
-            LeaderboardRules.Push(Data.leaderboard, score, wave, System.DateTime.Now.ToString("yyyy-MM-dd"));
+            LeaderboardRules.Push(Data.leaderboard, score, wave, System.DateTime.Now.ToString("yyyy-MM-dd"), kills, headshots, accuracy);
             Persist();
         }
 

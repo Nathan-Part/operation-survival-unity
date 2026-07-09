@@ -1,6 +1,6 @@
+using Game.Data.Save;
 using UnityEngine;
 using UnityEngine.InputSystem.UI;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Game.Runtime
@@ -14,13 +14,15 @@ namespace Game.Runtime
         WaveManager waves;
         PlayerMotor motor;
         KillstreakController killstreak;
+        MetaProgress meta;
+        RunTracker tracker;
 
         RectTransform healthFill;
         RectTransform staminaFill;
         Text ammoText;
         Text waveText;
         Text streakText;
-        GameObject deathPanel;
+        GameOverScreen gameOverScreen;
         public HudPauseMenu PauseMenu { get; private set; }
         int lastWave;
         int lastAlive;
@@ -39,6 +41,8 @@ namespace Game.Runtime
             this.waves = waves;
             this.motor = motor;
             this.killstreak = killstreak;
+            this.meta = meta;
+            this.tracker = tracker;
 
             if (FindAnyObjectByType<UnityEngine.EventSystems.EventSystem>() == null)
             {
@@ -125,7 +129,8 @@ namespace Game.Runtime
 
             // Écran de mort (affiché par PlayerViewController après l'anim de mort ;
             // repli direct sur Died si le view controller n'existe pas)
-            deathPanel = BuildDeathPanel(root);
+            gameOverScreen = gameObject.AddComponent<GameOverScreen>();
+            gameOverScreen.Init(root);
             if (viewController == null) this.health.Died += ShowDeathScreen;
 
             // Menu pause (Échap, parité web) — exposé pour être branché sur PlayerInputBridge par l'appelant.
@@ -168,63 +173,17 @@ namespace Game.Runtime
         void RefreshAmmoText() => ammoText.text = reloading ? "RECHARGE…" : $"{inMag} / {magSize}";
         void RefreshWaveText() => waveText.text = $"Vague {lastWave} — {lastAlive} ennemis restants";
 
+        // Playtest Phase 5.1 (2026-07-09) : remplace l'ancien écran minimal ("Vous êtes mort" + 2
+        // boutons bruts) par GameOverScreen (12 cartes stats, rang, classement — parité game-over.png).
+        // Rejouer/Menu ont la même logique de navigation qu'avant, déplacée dans GameOverScreen.MakeButton.
         public void ShowDeathScreen()
         {
-            deathPanel.SetActive(true);
-            Time.timeScale = 0f;
-        }
-
-        GameObject BuildDeathPanel(RectTransform root)
-        {
-            var panel = MakeImage(root, new Color(0f, 0f, 0f, 0.75f)).gameObject;
-            panel.name = "DeathPanel";
-            var rect = (RectTransform)panel.transform;
-            rect.anchorMin = Vector2.zero;
-            rect.anchorMax = Vector2.one;
-            rect.sizeDelta = Vector2.zero;
-
-            var label = MakeText(rect, "Vous êtes mort", 64, TextAnchor.MiddleCenter);
-            label.rectTransform.anchorMin = label.rectTransform.anchorMax = new Vector2(0.5f, 0.6f);
-            label.rectTransform.sizeDelta = new Vector2(900f, 90f);
-
-            var buttonGo = new GameObject("RestartButton");
-            buttonGo.transform.SetParent(rect, false);
-            var buttonImage = buttonGo.AddComponent<Image>();
-            buttonImage.color = new Color(0.9f, 0.3f, 0.2f);
-            var buttonRect = (RectTransform)buttonGo.transform;
-            buttonRect.anchorMin = buttonRect.anchorMax = new Vector2(0.5f, 0.4f);
-            buttonRect.sizeDelta = new Vector2(320f, 80f);
-            var button = buttonGo.AddComponent<Button>();
-            button.onClick.AddListener(() =>
-            {
-                Time.timeScale = 1f;
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name); // Slice est dans les Build Settings (SliceSceneBuilder)
-            });
-            var buttonLabel = MakeText(buttonRect, "Rejouer", 36, TextAnchor.MiddleCenter);
-            buttonLabel.rectTransform.anchorMin = Vector2.zero;
-            buttonLabel.rectTransform.anchorMax = Vector2.one;
-            buttonLabel.rectTransform.sizeDelta = Vector2.zero;
-
-            var menuButtonGo = new GameObject("MenuButton");
-            menuButtonGo.transform.SetParent(rect, false);
-            var menuButtonImage = menuButtonGo.AddComponent<Image>();
-            menuButtonImage.color = new Color(0.25f, 0.25f, 0.3f, 0.95f);
-            var menuButtonRect = (RectTransform)menuButtonGo.transform;
-            menuButtonRect.anchorMin = menuButtonRect.anchorMax = new Vector2(0.5f, 0.3f);
-            menuButtonRect.sizeDelta = new Vector2(320f, 80f);
-            var menuButton = menuButtonGo.AddComponent<Button>();
-            menuButton.onClick.AddListener(() =>
-            {
-                Time.timeScale = 1f;
-                SceneManager.LoadScene("Home"); // scène d'accueil enregistrée en Phase 5 — référence en avance, non bloquante ici
-            });
-            var menuButtonLabel = MakeText(menuButtonRect, "Menu", 36, TextAnchor.MiddleCenter);
-            menuButtonLabel.rectTransform.anchorMin = Vector2.zero;
-            menuButtonLabel.rectTransform.anchorMax = Vector2.one;
-            menuButtonLabel.rectTransform.sizeDelta = Vector2.zero;
-
-            panel.SetActive(false);
-            return panel;
+            var stats = tracker != null ? tracker.CurrentStats : default;
+            int moneyEarned = waves != null ? waves.Money : 0;
+            int bestWave = meta?.Data != null ? meta.Data.bestWave : stats.wave;
+            int bestScore = meta?.Data != null ? meta.Data.bestScore : stats.score;
+            var leaderboard = meta?.Data != null ? meta.Data.leaderboard : new System.Collections.Generic.List<LeaderboardEntry>();
+            gameOverScreen.Show(stats, moneyEarned, bestWave, bestScore, leaderboard);
         }
 
         static RectTransform MakeBar(RectTransform parent, Vector2 position, Vector2 size, Color color)
