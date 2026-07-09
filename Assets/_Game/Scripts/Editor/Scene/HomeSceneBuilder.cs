@@ -14,7 +14,7 @@ namespace Game.Runtime.Editor
     {
         const string ScenePath = "Assets/_Game/Scenes/Home.unity";
         const string DatabasePath = "Assets/_Game/Data/GameDatabase.asset";
-        const string BackgroundPath = "Assets/_Game/Art/UI/lobby-bg.jpg";
+        const string BackgroundPath = "Assets/_Game/Art/UI/background.png"; // playtest Phase 5 (2026-07-09) : lobby-bg.jpg n'etait pas le bon fond, background.png (fourni par Nathan) est identique a l'asset deja copie pour la vignette map-utopia
         const string PanelSettingsPath = "Assets/_Game/UI/Home/HomePanelSettings.asset";
         const string UxmlPath = "Assets/_Game/UI/Home/Home.uxml";
         const string SettingsPanelUxmlPath = "Assets/_Game/UI/Home/SettingsPanel.uxml";
@@ -135,7 +135,10 @@ namespace Game.Runtime.Editor
             var collider = quad.GetComponent<Collider>();
             if (collider != null) Object.DestroyImmediate(collider); // décor pur, pas d'obstacle physique
             quad.transform.position = new Vector3(0f, 1.46f, -3f); // derrière le perso, face à la caméra lobby
-            quad.transform.rotation = Quaternion.identity;
+            // Le Quad primitif Unity a sa face avant orientée (0,0,-1) (vérifié via execute_code) : avec
+            // Quaternion.identity la caméra (z=6.8, regarde vers -Z) ne voit que la face arrière (culled,
+            // donc fond invisible — c'était la vraie cause du bug A1). Rotation 180° sur Y pour la retourner face caméra.
+            quad.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
             quad.transform.localScale = new Vector3(12f, 7f, 1f);
 
             if (bgTexture != null)

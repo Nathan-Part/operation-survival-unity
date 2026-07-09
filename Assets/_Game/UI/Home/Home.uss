@@ -400,7 +400,7 @@
 }
 
 .map-thumb-utopia {
-    background-image: url("/Assets/_Game/Art/UI/map-utopia.png");
+    background-image: url("/Assets/_Game/Art/UI/background.png");
 }
 
 .map-thumb-urban {
