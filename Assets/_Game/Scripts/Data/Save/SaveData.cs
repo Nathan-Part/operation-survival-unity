@@ -65,5 +65,12 @@ namespace Game.Data.Save
         public int score;
         public int wave;
         public string date;
+
+        // Écran de fin de partie riche (Phase 5.1, 2026-07-09) : le web soumet ces 3 champs en plus
+        // (submitScore, main.js:4025) — valeurs par défaut 0 pour les entrées d'avant cette version
+        // du schéma (migration dans SaveMigration).
+        public int kills;
+        public int headshots;
+        public float accuracy;
     }
 }
