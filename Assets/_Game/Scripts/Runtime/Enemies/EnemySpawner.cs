@@ -21,15 +21,15 @@ namespace Game.Runtime
                 return null;
             }
 
+            // Joignabilité : simple avertissement, on spawne quand même (les points de spawn
+            // sont validés au bake par les builders ; rejeter ici vidait des vagues entières
+            // quand le joueur se tenait sur un îlot NavMesh — playtest 2026-07-10).
             if (player != null)
             {
                 var reachPath = new NavMeshPath();
                 if (!NavMesh.CalculatePath(navHit.position, player.position, NavMesh.AllAreas, reachPath)
                     || reachPath.status != NavMeshPathStatus.PathComplete)
-                {
-                    Debug.LogWarning($"EnemySpawner: '{data.id}' injoignable depuis {navHit.position} — spawn ignoré.");
-                    return null;
-                }
+                    Debug.LogWarning($"EnemySpawner: '{data.id}' chemin incomplet depuis {navHit.position} — il ira au plus proche joignable.");
             }
 
             var db = context.database;
@@ -44,6 +44,13 @@ namespace Game.Runtime
             agent.radius = stats.radius;
             agent.height = ReferenceHeight * data.scale;
             agent.angularSpeed = stats.turnSpeed * 60f;
+            agent.Warp(navHit.position); // accroche explicite au NavMesh (position déjà échantillonnée)
+            if (!agent.isOnNavMesh)
+            {
+                Debug.LogWarning($"EnemySpawner: '{data.id}' hors NavMesh après Warp à {navHit.position} — spawn abandonné.");
+                Destroy(root);
+                return null;
+            }
 
             var capsule = root.AddComponent<CapsuleCollider>();
             capsule.height = ReferenceHeight * data.scale;

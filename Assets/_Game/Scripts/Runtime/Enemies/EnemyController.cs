@@ -27,6 +27,10 @@ namespace Game.Runtime
         float burstTimer;
 
         float suppressedUntil = float.NegativeInfinity;
+        float repathTimer;
+        const float RepathInterval = 0.2f; // recalcul du chemin throttlé (au lieu de chaque frame)
+        bool hasPatrolTarget;
+        EnemyState lastMoveState = EnemyState.Dead; // force le réglage de vitesse au premier Tick
 
         public EnemyState State => brain != null ? brain.State : EnemyState.Idle;
 
@@ -62,8 +66,16 @@ namespace Game.Runtime
             float baseDamage = data.melee ? stats.meleeDamage : stats.damage;
             attackDamage = baseDamage * data.damageMult * difficulty.enemyDmgMult;
 
-            brain = new EnemyBrain(stats.detectRadius, stats.loseRadius, stats.loseTime, attackRange);
-            agent.stoppingDistance = Mathf.Max(0f, attackRange - 0.5f);
+            // Parité web (main.js ~4516-4518) : un ranged détecte au moins jusqu'à sa portée
+            // de tir (sniper 28 m), abandonne à max(lose, portée*1.3) ; sortie d'attaque à
+            // hystérésis (×1.25 ranged / ×1.4 melee) pour éviter le clignotement d'état.
+            float detect = data.melee ? stats.detectRadius : Mathf.Max(stats.detectRadius, attackRange);
+            float lose = data.melee ? stats.loseRadius : Mathf.Max(stats.loseRadius, attackRange * 1.3f);
+            float exitRange = attackRange * (data.melee ? 1.4f : 1.25f);
+            brain = new EnemyBrain(detect, lose, stats.loseTime, attackRange, exitRange);
+            // Plafonné à 6 m : un ranged s'approche de sa cible au lieu de camper à 27 m
+            // (le passage en Attack est décidé par la FSM, pas par le stoppingDistance).
+            agent.stoppingDistance = Mathf.Max(0f, Mathf.Min(attackRange - 0.5f, 6f));
         }
 
         /// Mort (parité web killEnemy) : FSM figée, plus de navigation ni de cible.
@@ -85,24 +97,80 @@ namespace Game.Runtime
             if (IsSuppressed) { agent.isStopped = true; return; }
             float dt = Time.deltaTime;
             float dist = Vector3.Distance(transform.position, player.position);
-            var state = brain.Tick(dt, dist);
+            var state = brain.Tick(dt, dist, HasLineOfSight());
             attackTimer -= dt;
+
+            // Vitesse selon l'état (web : marche en patrouille, course en chasse) — posée
+            // uniquement au changement d'état pour ne pas écraser les modifs d'EnemySpecials.
+            if (state != lastMoveState)
+            {
+                agent.speed = (state == EnemyState.Idle ? stats.walkSpeed : stats.runSpeed) * data.speedMult;
+                lastMoveState = state;
+            }
 
             switch (state)
             {
                 case EnemyState.Idle:
-                    if (agent.hasPath) agent.ResetPath();
+                    TickPatrol();
                     break;
                 case EnemyState.Chase:
                     agent.isStopped = false;
-                    agent.SetDestination(player.position);
+                    hasPatrolTarget = false;
+                    TickChaseDestination(dt);
                     break;
                 case EnemyState.Attack:
                     agent.isStopped = true;
+                    hasPatrolTarget = false;
                     FaceTarget(dt);
                     TickAttack(dt);
                     break;
             }
+        }
+
+        /// Patrouille web (pickPatrol, main.js ~4607) : déambule en marchant vers des points
+        /// d'un anneau autour du joueur (detect + 0..8) — l'ennemi dérive vers le combat au
+        /// lieu de rester planté au spawn tant que personne n'approche.
+        void TickPatrol()
+        {
+            if (!agent.isOnNavMesh) return;
+            agent.isStopped = false;
+            if (hasPatrolTarget && (agent.pathPending || agent.remainingDistance > 0.6f)) return;
+            float r = stats.detectRadius + UnityEngine.Random.value * 8f;
+            float a = UnityEngine.Random.value * Mathf.PI * 2f;
+            Vector3 target = player.position + new Vector3(Mathf.Cos(a) * r, 0f, Mathf.Sin(a) * r);
+            if (UnityEngine.AI.NavMesh.SamplePosition(target, out var navHit, 4f, UnityEngine.AI.NavMesh.AllAreas))
+            {
+                agent.SetDestination(navHit.position);
+                hasPatrolTarget = true;
+            }
+        }
+
+        /// Destination projetée sur le NavMesh (le joueur peut être hors mesh : viser sa
+        /// position brute donne un PathPartial qui colle l'agent contre les murs) + throttle.
+        void TickChaseDestination(float dt)
+        {
+            repathTimer -= dt;
+            if (repathTimer > 0f) return;
+            repathTimer = RepathInterval;
+            if (!agent.isOnNavMesh) return;
+            if (UnityEngine.AI.NavMesh.SamplePosition(player.position, out var navHit, 2f, UnityEngine.AI.NavMesh.AllAreas))
+                agent.SetDestination(navHit.position);
+            else
+                agent.SetDestination(player.position); // repli : l'agent ira au plus proche joignable
+        }
+
+        /// Ligne de vue vers le joueur (yeux ~1,5 m -> torse ~1 m) : un obstacle entre les
+        /// deux force la poursuite au lieu du tir à travers/derrière les murs.
+        bool HasLineOfSight()
+        {
+            Vector3 origin = transform.position + Vector3.up * 1.5f;
+            Vector3 target = player.position + Vector3.up * 1.0f;
+            Vector3 dir = target - origin;
+            float len = dir.magnitude;
+            if (len < 0.01f) return true;
+            if (Physics.Raycast(origin, dir / len, out RaycastHit rh, len))
+                return rh.transform == player || rh.transform.IsChildOf(player);
+            return true;
         }
 
         void FaceTarget(float dt)

@@ -51,32 +51,75 @@ namespace Game.Runtime.Editor
             surface.collectObjects = CollectObjects.All;
             surface.BuildNavMesh();
 
-            // Sol au centre de la map : point de départ du joueur
-            Vector3 playerPos = new Vector3(0f, 1.5f, 0f);
+            // --- Départ joueur + spawns sur la composante NavMesh principale (Phase 5 bis, point 2) ---
+            // Le centre de la place est un îlot (disque entouré du bassin) et les coins ±15/±15
+            // tombent dans les bâtiments : l'ancien repli ajoutait des spawns non validés
+            // -> chemins partiels, ennemis figés ou collés aux murs, voire vagues vides.
+            Vector3 centerGround = new Vector3(0f, 0f, 0f);
             if (Physics.Raycast(new Vector3(0f, 200f, 0f), Vector3.down, out RaycastHit ground, 500f))
-                playerPos = ground.point + Vector3.up * 0.6f;
+                centerGround = ground.point;
 
-            // Points de spawn : positions NavMesh valides autour du joueur
-            var offsets = new[]
+            var probes = new System.Collections.Generic.List<Vector3>();
+            TryAddProbe(probes, centerGround, centerGround.y);
+            foreach (float radius in new[] { 6f, 10f, 14f, 18f, 22f, 26f })
+                for (int deg = 0; deg < 360; deg += 30)
+                {
+                    var dir = Quaternion.Euler(0f, deg, 0f) * Vector3.forward;
+                    var pos = new Vector3(centerGround.x, 0f, centerGround.z) + dir * radius;
+                    if (Physics.Raycast(pos + Vector3.up * 60f, Vector3.down, out RaycastHit h, 120f))
+                        TryAddProbe(probes, h.point, centerGround.y);
+                }
+
+            // Regroupement par composante connexe (chemin NavMesh complet vers le représentant).
+            var groups = new System.Collections.Generic.List<System.Collections.Generic.List<Vector3>>();
+            foreach (var probe in probes)
             {
-                new Vector3(15f, 0f, 15f), new Vector3(-15f, 0f, 15f),
-                new Vector3(15f, 0f, -15f), new Vector3(-15f, 0f, -15f),
-                new Vector3(25f, 0f, 0f), new Vector3(-25f, 0f, 0f),
-            };
-            var spawns = new System.Collections.Generic.List<Vector3>();
-            foreach (var offset in offsets)
-            {
-                var probe = playerPos + offset + Vector3.up * 5f;
-                if (!NavMesh.SamplePosition(probe, out NavMeshHit hit, 30f, NavMesh.AllAreas)) continue;
-                var path = new NavMeshPath();
-                if (NavMesh.CalculatePath(hit.position, playerPos, NavMesh.AllAreas, path)
-                    && path.status == NavMeshPathStatus.PathComplete)
-                    spawns.Add(hit.position); // rejette les îlots (toits déconnectés — bug n°5)
+                bool placed = false;
+                foreach (var group in groups)
+                {
+                    var path = new NavMeshPath();
+                    if (NavMesh.CalculatePath(group[0], probe, NavMesh.AllAreas, path)
+                        && path.status == NavMeshPathStatus.PathComplete)
+                    { group.Add(probe); placed = true; break; }
+                }
+                if (!placed) groups.Add(new System.Collections.Generic.List<Vector3> { probe });
             }
-            if (spawns.Count == 0)
+            groups.Sort((a, b) => b.Count - a.Count);
+            var main = groups.Count > 0 ? groups[0] : new System.Collections.Generic.List<Vector3>();
+            if (main.Count < 8)
             {
-                Debug.LogWarning("UtopiaSceneBuilder: aucun spawn joignable — repli greybox autour du joueur.");
-                foreach (var offset in offsets) spawns.Add(playerPos + offset);
+                Debug.LogError($"UtopiaSceneBuilder: composante NavMesh principale trop petite ({main.Count} sondes / {probes.Count}) — vérifier le bake. Scène NON générée.");
+                return;
+            }
+
+            // Départ joueur : le point de la composante principale le plus proche du centre.
+            main.Sort((a, b) =>
+                (a - centerGround).sqrMagnitude.CompareTo((b - centerGround).sqrMagnitude));
+            Vector3 playerPos = main[0] + Vector3.up * 0.6f;
+
+            // Spawns : 6 secteurs de 60° autour du joueur, un point par secteur à 10-30 m
+            // (le plus proche de 16 m), tous garantis joignables (même composante).
+            var spawns = new System.Collections.Generic.List<Vector3>();
+            for (int sector = 0; sector < 6; sector++)
+            {
+                Vector3 best = Vector3.zero;
+                float bestScore = float.MaxValue;
+                foreach (var candidate in main)
+                {
+                    Vector3 flat = candidate - main[0];
+                    float dist = new Vector2(flat.x, flat.z).magnitude;
+                    if (dist < 10f || dist > 30f) continue;
+                    float angle = Mathf.Repeat(Mathf.Atan2(flat.z, flat.x) * Mathf.Rad2Deg, 360f);
+                    if ((int)(angle / 60f) != sector) continue;
+                    float score = Mathf.Abs(dist - 16f);
+                    if (score < bestScore) { bestScore = score; best = candidate; }
+                }
+                if (bestScore < float.MaxValue) spawns.Add(best);
+            }
+            if (spawns.Count < 3)
+            {
+                Debug.LogError($"UtopiaSceneBuilder: seulement {spawns.Count} spawns joignables trouvés — vérifier le bake. Scène NON générée.");
+                return;
             }
 
             GameSceneKit.BuildGameplay(playerPos, spawns.ToArray());
@@ -84,7 +127,17 @@ namespace Game.Runtime.Editor
             System.IO.Directory.CreateDirectory("Assets/_Game/Scenes");
             EditorSceneManager.SaveScene(scene, ScenePath);
             GameSceneKit.RegisterInBuildSettings(ScenePath);
-            Debug.Log($"UtopiaSceneBuilder: scene sauvegardee -> {ScenePath} ({colliders} colliders, {spawns.Count} spawns, NavMesh bakee)");
+            Debug.Log($"UtopiaSceneBuilder: scene sauvegardee -> {ScenePath} ({colliders} colliders, {spawns.Count} spawns, joueur a {playerPos}, NavMesh bakee)");
+        }
+
+        /// Ajoute une sonde si un NavMesh existe à la surface visée : rejette les toits
+        /// (écart de hauteur vs le centre) et la nappe souterraine (mesh loin du sol sondé).
+        static void TryAddProbe(System.Collections.Generic.List<Vector3> probes, Vector3 groundPoint, float centerY)
+        {
+            if (Mathf.Abs(groundPoint.y - centerY) > 3f) return;                       // toit/balcon
+            if (!NavMesh.SamplePosition(groundPoint, out NavMeshHit hit, 2f, NavMesh.AllAreas)) return;
+            if (Mathf.Abs(hit.position.y - groundPoint.y) > 1f) return;                // nappe sous la dalle
+            probes.Add(hit.position);
         }
     }
 }
