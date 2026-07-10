@@ -324,6 +324,11 @@
     height: 130px;
 }
 
+/* Etat "non possede" porte par la classe de base (opacity 0.6), .owned remonte a 1 — le selecteur
+   :not() n'est PAS supporte par l'importeur USS de cette version d'editeur : il ne degradait pas
+   juste la regle, il invalidait TOUT le fichier Shop.uss a l'import (importedWithErrors=true,
+   aucun style boutique applique depuis la Phase 5 — c'etait la vraie cause racine du
+   "boutons partout" du playtest de Nathan). Diagnostic 2026-07-10. */
 .wcard {
     width: 108px;
     height: 118px;
@@ -335,6 +340,7 @@
     margin-right: 8px;
     align-items: center;
     justify-content: space-between;
+    opacity: 0.6;
 }
 
 .wcard.active {
@@ -344,10 +350,6 @@
 
 .wcard.owned {
     opacity: 1;
-}
-
-.wcard:not(.owned) {
-    opacity: 0.6;
 }
 
 .wcard-top {
@@ -441,6 +443,7 @@
     margin-bottom: 8px;
     align-items: center;
     justify-content: space-between;
+    opacity: 0.6; /* non possede par defaut, .owned remonte a 1 — :not() interdit (voir .wcard) */
 }
 
 .acctile.active {
@@ -450,10 +453,6 @@
 
 .acctile.owned {
     opacity: 1;
-}
-
-.acctile:not(.owned) {
-    opacity: 0.6;
 }
 
 .acctile-name {
