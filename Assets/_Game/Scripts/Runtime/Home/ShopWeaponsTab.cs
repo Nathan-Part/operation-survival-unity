@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Game.Data;
 using Game.Data.Rules;
+using Game.Runtime.UI.Tactical;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -191,8 +192,8 @@ namespace Game.Runtime
             bool equipped = save.selectedWeapon == w.id;
             int level = ShopRules.WeaponUpgradeLevel(save, w.id); // niveau unique partagé par les 4 stats (voir WeaponStatsView)
 
-            wname.text = w.displayName;
-            rarityBadge.text = RarityName(w.rarity);
+            wname.text = w.displayName.ToUpperInvariant(); // parité shop-guns.png : titres en capitales
+            rarityBadge.text = RarityName(w.rarity).ToUpperInvariant();
             ApplyRarityClass(rarityBadge, w.rarity);
             wdesc.text = w.desc;
 
@@ -212,13 +213,13 @@ namespace Game.Runtime
             SetBar(statRangeFill, statRangeValue, WeaponStatsView.Range(w), $"{Mathf.RoundToInt(WeaponStatsView.RangeRaw(w))}m");
 
             ameliorerButton.style.display = owned ? DisplayStyle.Flex : DisplayStyle.None;
-            ameliorerButton.text = ameliorerOpen ? "★ Améliorer ▲" : "★ Améliorer";
+            ameliorerButton.text = ameliorerOpen ? "★ AMÉLIORER ▲" : "★ AMÉLIORER";
             equippedBadge.style.display = equipped ? DisplayStyle.Flex : DisplayStyle.None;
             equipButton.style.display = (owned && !equipped) ? DisplayStyle.Flex : DisplayStyle.None;
             buyButton.style.display = owned ? DisplayStyle.None : DisplayStyle.Flex;
             if (!owned)
             {
-                buyButton.text = $"Acheter 🪙{w.price}";
+                buyButton.text = $"ACHETER · {w.price} CR"; // pas de 🪙 : emoji non rendu par Barlow
                 buyButton.SetEnabled(save.money >= w.price); // web l.1496 : disabled si save.money < price
             }
 
@@ -267,7 +268,7 @@ namespace Game.Runtime
 
             bool atMax = level >= spec.maxLevel;
             int cost = ShopRules.NextWeaponUpgradeCost(save, w.id, spec.baseCost);
-            var buy = new Button { text = atMax ? "MAX" : $"🪙{cost}" };
+            var buy = new Button { text = atMax ? "MAX" : $"{cost} CR" };
             buy.AddToClassList("upg-buy");
             buy.SetEnabled(!atMax && save.money >= cost);
             buy.clicked += () =>
@@ -307,8 +308,12 @@ namespace Game.Runtime
                 card.EnableInClassList("owned", owned);
 
                 var top = new VisualElement(); top.AddToClassList("wcard-top");
-                var name = new Label(candidate.displayName); name.AddToClassList("wcard-name");
+                var name = new Label(candidate.displayName.ToUpperInvariant()); name.AddToClassList("wcard-name");
                 top.Add(name);
+                var rarityLabel = new Label(RarityName(candidate.rarity).ToUpperInvariant());
+                rarityLabel.AddToClassList("wcard-rarity");
+                ApplyRarityClass(rarityLabel, candidate.rarity);
+                top.Add(rarityLabel);
                 card.Add(top);
 
                 var thumb = new VisualElement(); thumb.AddToClassList("wcard-thumb");
@@ -321,9 +326,9 @@ namespace Game.Runtime
                 }
                 else
                 {
-                    var glyph = new Label(candidate.melee ? "🗡" : "🔫");
-                    glyph.AddToClassList("wcard-glyph");
-                    thumb.Add(glyph);
+                    // Glyphe vectoriel teinté par rareté (parité shop-guns.png — les emojis 🔫/🗡 ne se rendent pas).
+                    thumb.Add(TacticalIcon.Create(candidate.melee ? TacticalIconType.Blade : TacticalIconType.Gun,
+                        RarityColor(candidate.rarity), 44f));
                 }
                 card.Add(thumb);
 
@@ -332,8 +337,7 @@ namespace Game.Runtime
                 foot.Add(ratingLabel);
                 if (!owned)
                 {
-                    var lock_ = new Label("🔒"); lock_.AddToClassList("wcard-lock");
-                    foot.Add(lock_);
+                    foot.Add(TacticalIcon.Create(TacticalIconType.Lock, new Color(0.6f, 0.63f, 0.7f), 14f));
                 }
                 card.Add(foot);
 

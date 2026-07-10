@@ -90,17 +90,39 @@ namespace Game.Runtime
             // ci-dessous : les elements de remplacement gardent le meme nom, donc les requetes
             // suivantes les trouvent normalement.
             TacticalUiKit.ReplaceWithPanel(root.Q<VisualElement>("hub-operator"), TacticalCorners.TopRight, showAccent: true);
+            TacticalUiKit.ReplaceWithPanel(root.Q<VisualElement>("credits-card"), TacticalCorners.TopRight);
+            TacticalUiKit.ReplaceWithPanel(root.Q<VisualElement>("wave-card"), TacticalCorners.TopRight);
             TacticalUiKit.ReplaceWithPanel(root.Q<VisualElement>("intel-card"), TacticalCorners.TopRight, showAccent: true);
             TacticalUiKit.ReplaceWithPanel(root.Q<VisualElement>("equipment-card"), TacticalCorners.TopRight, showAccent: true);
             TacticalUiKit.ReplaceWithPanel(root.Q<VisualElement>("objectif-card"), TacticalCorners.TopRight, showAccent: true);
-            TacticalUiKit.ReplaceWithButton(root.Q<Button>("deploy-button"), TacticalCorners.TopLeft | TacticalCorners.BottomRight, 18f,
+            TacticalUiKit.ReplaceWithPanel(root.Q<VisualElement>("tile-indicator"), TacticalCorners.TopRight);
+            var deployTactical = TacticalUiKit.ReplaceWithButton(root.Q<Button>("deploy-button"), TacticalCorners.TopLeft | TacticalCorners.BottomRight, 18f,
                 new Color(0.631f, 0.4f, 1f), new Color(0.318f, 0.169f, 0.788f));
+            if (deployTactical != null) deployTactical.Stripes = true; // parité homepage.png : Déployer strié
             var lightTileA = new Color(0.965f, 0.965f, 0.98f);
             var lightTileB = new Color(0.933f, 0.941f, 0.961f);
             TacticalUiKit.ReplaceWithButton(root.Q<Button>("tile-shop"), TacticalCorners.TopRight, 10f, lightTileA, lightTileB);
             TacticalUiKit.ReplaceWithButton(root.Q<Button>("tile-loadout"), TacticalCorners.TopRight, 10f, lightTileA, lightTileB);
             TacticalUiKit.ReplaceWithButton(root.Q<Button>("tile-training"), TacticalCorners.TopRight, 10f, lightTileA, lightTileB);
             TacticalUiKit.ReplaceWithButton(root.Q<Button>("tile-map"), TacticalCorners.TopRight, 10f, lightTileA, lightTileB);
+
+            // Icônes vectorielles (parité homepage.png — les emojis ne se rendent pas avec Barlow).
+            // À monter APRÈS les remplacements tactiques : les slots ont été déplacés dans les
+            // nouveaux éléments, TacticalIcon.Mount les retrouve par nom sous root.
+            var purple = new Color(0.486f, 0.302f, 1f);
+            TacticalIcon.Mount(root, "op-icon", TacticalIconType.Person);
+            TacticalIcon.Mount(root, "credits-icon", TacticalIconType.Plus);
+            TacticalIcon.Mount(root, "wave-icon", TacticalIconType.Trophy);
+            TacticalIcon.Mount(root, "settings-icon", TacticalIconType.Sun, new Color(0.09f, 0.1f, 0.15f));
+            TacticalIcon.Mount(root, "intel-icon", TacticalIconType.Doc, purple);
+            TacticalIcon.Mount(root, "equip-icon", TacticalIconType.Cube, purple);
+            TacticalIcon.Mount(root, "objectif-icon", TacticalIconType.Target, purple);
+            TacticalIcon.Mount(root, "deploy-icon", TacticalIconType.Play);
+            TacticalIcon.Mount(root, "tile-shop-icon", TacticalIconType.Gun);
+            TacticalIcon.Mount(root, "tile-loadout-icon", TacticalIconType.Ring);
+            TacticalIcon.Mount(root, "tile-training-icon", TacticalIconType.Runner);
+            TacticalIcon.Mount(root, "tile-map-icon", TacticalIconType.Map);
+            TacticalIcon.Mount(root, "diff-icon", TacticalIconType.Bars, purple);
 
             rankLabel = root.Q<Label>("rank-label");
             rankBarFill = root.Q<VisualElement>("rank-bar-fill");
@@ -242,26 +264,27 @@ namespace Game.Runtime
 
             int rank = RankRules.OperatorRank(save.bestWave); // web: updateHomeMeta (main.js:56-57)
             float fill = RankRules.OperatorRankFill(save.bestWave);
-            rankLabel.text = $"Rang {rank}";
+            // Textes en MAJUSCULES : parité homepage.png (tout l'accueil web est en capitales).
+            rankLabel.text = $"RANG {rank}";
             rankBarFill.style.width = new Length(fill * 100f, LengthUnit.Percent);
 
             int comboMultiplier = RankRules.ComboMultiplier(save.bestCombo);
             creditsChip.text = save.money.ToString();
-            waveChip.text = $"Vague {save.bestWave}";
-            comboChip.text = $"Meilleur combo x{comboMultiplier}";
+            waveChip.text = $"VAGUE {save.bestWave}";
+            comboChip.text = $"MEILLEUR COMBO X{comboMultiplier}";
 
             int bestScore = save.leaderboard.Count > 0 ? save.leaderboard[0].score : 0;
 
             intelBestWave.text = save.bestWave.ToString();
             intelBestCombo.text = save.bestCombo.ToString();
             intelBestScore.text = bestScore.ToString();
-            intelPrestige.text = save.prestige > 0 ? $"★{save.prestige}" : "—";
+            intelPrestige.text = save.prestige > 0 ? $"x{save.prestige}" : "—"; // pas de ★ : glyphe absent de Barlow (comme les emojis)
             intelAchievements.text = $"{save.unlockedAchievements.Count}/{db.achievements.Length}";
             intelCredits.text = save.money.ToString();
 
-            equipWeapon.text = FindWeaponName(save.selectedWeapon);
-            equipHelmet.text = FindAccessoryName(save.equipped.TryGetValue("helmet", out var helmet) ? helmet : null);
-            equipCostume.text = FindAccessoryName(save.equipped.TryGetValue("costume", out var costume) ? costume : null);
+            equipWeapon.text = FindWeaponName(save.selectedWeapon).ToUpperInvariant();
+            equipHelmet.text = FindAccessoryName(save.equipped.TryGetValue("helmet", out var helmet) ? helmet : null).ToUpperInvariant();
+            equipCostume.text = FindAccessoryName(save.equipped.TryGetValue("costume", out var costume) ? costume : null).ToUpperInvariant();
 
             RenderCharacterSelector(save);
         }
@@ -281,7 +304,7 @@ namespace Game.Runtime
             int index = Array.FindIndex(ownedCharacters, c => c.id == save.selectedCharacterId);
             if (index < 0) index = 0;
 
-            charName.text = ownedCharacters[index].displayName;
+            charName.text = ownedCharacters[index].displayName.ToUpperInvariant();
             stage?.ShowCharacter(ownedCharacters[index].id);
 
             charDots.Clear();

@@ -17,3 +17,4 @@ MonoBehaviour:
   run: {fileID: 6010301270145462858, guid: 67ade5d15d55acf4ab51f8090c110d60, type: 3}
   attack: {fileID: -4094883208916521158, guid: ac17548546787c448968f033fb2ad9da, type: 3}
   dead: {fileID: -8488786236923853803, guid: 75ef9bf31133ba44b9e9cf32416a03c3, type: 3}
+  lobby: {fileID: -6942838043800602937, guid: eda90e93b71d6e54caa40a61335fc5c1, type: 3}

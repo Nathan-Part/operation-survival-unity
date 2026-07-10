@@ -5,12 +5,9 @@ using UnityEngine;
 namespace Game.Runtime
 {
     /// Perso 3D du lobby (parité web `spawnModel`/`playLobbyIdle`, main.js:497-536) : instancie
-    /// le GLB du perso sélectionné devant la caméra fixe (HomeSceneBuilder) et joue une anim de
-    /// locomotion en boucle. Simplification assumée : le web choisit un clip "walk" calme
-    /// (Casual_Walk en priorité) et le boucle indéfiniment — ce n'est PAS une séquence en deux
-    /// temps "marche puis idle", juste une boucle de marche perpétuelle tant que le lobby est
-    /// affiché. On reproduit ça via AnimationDriver : AnimRole.Walk en boucle, repli Idle si le
-    /// perso n'a pas de clip de marche.
+    /// le GLB du perso sélectionné devant la caméra fixe (HomeSceneBuilder) et boucle le MÊME clip
+    /// que le web : Casual_Walk (AnimRole.Lobby, anim-lobby.glb copié du web le 2026-07-10) — voir
+    /// PlayLobbyLocomotion pour l'ordre des replis.
     public class LobbyCharacterStage : MonoBehaviour
     {
         // [SerializeField] (pas juste un champ privé) : assigné par HomeSceneBuilder à l'édition,
@@ -58,8 +55,7 @@ namespace Game.Runtime
                 driver = visual.AddComponent<AnimationDriver>();
                 driver.Bind(animator, db.animationLibrary);
 
-                if (driver.HasClip(AnimRole.Walk)) driver.Play(AnimRole.Walk, FadeSeconds);
-                else if (driver.HasClip(AnimRole.Idle)) driver.Play(AnimRole.Idle, FadeSeconds);
+                PlayLobbyLocomotion();
             }
         }
 
@@ -153,10 +149,16 @@ namespace Game.Runtime
         // web: playLobbyIdle (implicite via previewDance/ShowCharacter) — même repli walk-sinon-idle
         // que ShowCharacter ci-dessus, factorisé ici pour servir à la fois de callback de fin naturelle
         // (PlayOneShot) et d'action d'interruption explicite (StopDance).
-        void ReturnToLocomotion()
+        void ReturnToLocomotion() => PlayLobbyLocomotion();
+
+        /// Boucle du lobby, dans l'ordre du web : Casual_Walk (AnimRole.Lobby) d'abord — les replis
+        /// Walk (walking_man, marche rapide) puis Idle (Alert, posture de combat) lisaient comme un
+        /// perso "déformé" (retour Nathan 2026-07-10).
+        void PlayLobbyLocomotion()
         {
             if (driver == null) return;
-            if (driver.HasClip(AnimRole.Walk)) driver.Play(AnimRole.Walk, FadeSeconds);
+            if (driver.HasClip(AnimRole.Lobby)) driver.Play(AnimRole.Lobby, FadeSeconds);
+            else if (driver.HasClip(AnimRole.Walk)) driver.Play(AnimRole.Walk, FadeSeconds);
             else if (driver.HasClip(AnimRole.Idle)) driver.Play(AnimRole.Idle, FadeSeconds);
         }
     }

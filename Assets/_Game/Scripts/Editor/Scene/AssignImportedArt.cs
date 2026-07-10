@@ -46,6 +46,7 @@ namespace Game.Runtime.Editor
             ("run", "Assets/_Game/Art/Animations/anim-run.glb"),
             ("attack", "Assets/_Game/Art/Animations/anim-attack.glb"),
             ("dead", "Assets/_Game/Art/Animations/anim-dead.glb"),
+            ("lobby", "Assets/_Game/Art/Animations/anim-lobby.glb"), // Casual_Walk web (marche calme du lobby)
         };
 
         [MenuItem("Tools/Game/Assign Imported Art")]
@@ -101,6 +102,7 @@ namespace Game.Runtime.Editor
                     case "run": if (animLib.run == null) { animLib.run = clip; clips++; } break;
                     case "attack": if (animLib.attack == null) { animLib.attack = clip; clips++; } break;
                     case "dead": if (animLib.dead == null) { animLib.dead = clip; clips++; } break;
+                    case "lobby": if (animLib.lobby == null) { animLib.lobby = clip; clips++; } break;
                 }
             }
             if (clips > 0) EditorUtility.SetDirty(animLib);

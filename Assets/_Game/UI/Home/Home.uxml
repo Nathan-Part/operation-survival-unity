@@ -6,85 +6,94 @@
     <ui:VisualElement name="home-root" class="home-root" picking-mode="Ignore">
         <ui:VisualElement name="lobby" class="lobby">
             <ui:VisualElement name="hub-top" class="hub-top">
-                <ui:VisualElement name="hub-operator" class="hub-col tac-card">
-                    <ui:Label text="Opérateur" class="eyebrow" />
-                    <ui:Label name="rank-label" text="Rang 1" class="rank-label" />
-                    <ui:VisualElement name="rank-bar" class="rank-bar">
-                        <ui:VisualElement name="rank-bar-fill" class="rank-bar-fill" />
+                <ui:VisualElement name="hub-operator" class="tac-card op-card">
+                    <ui:VisualElement name="op-icon" class="icon-square" />
+                    <ui:VisualElement class="op-text">
+                        <ui:Label text="OPÉRATEUR" class="eyebrow" />
+                        <ui:Label name="rank-label" text="RANG 1" class="rank-label" />
+                        <ui:VisualElement name="rank-bar" class="rank-bar">
+                            <ui:VisualElement name="rank-bar-fill" class="rank-bar-fill" />
+                        </ui:VisualElement>
                     </ui:VisualElement>
                 </ui:VisualElement>
 
-                <ui:VisualElement name="hub-warzone" class="hub-col hub-center">
-                    <ui:Label text="// Zone de guerre" class="eyebrow" />
-                    <ui:VisualElement class="title-row">
-                        <ui:Label text="Opération" class="title-word" />
-                        <ui:Label text="Survie" class="title-word title-gradient" />
-                    </ui:VisualElement>
-                    <ui:Label text="Survivez aux vagues infinies" class="subtitle" />
+                <ui:VisualElement name="hub-warzone" class="hub-center">
+                    <ui:Label text="// ZONE DE GUERRE" class="eyebrow eyebrow-purple" />
+                    <ui:Label text="OPÉRATION" class="title-word" />
+                    <ui:Label text="SURVIE" class="title-word title-gradient" />
+                    <ui:Label text="SURVIVEZ AUX VAGUES &lt;color=#7c4dff&gt;INFINIES&lt;/color&gt;" class="subtitle subtitle-hero" />
                 </ui:VisualElement>
 
-                <ui:VisualElement name="hub-status" class="hub-col hub-status">
-                    <ui:VisualElement class="chip-row">
-                        <ui:VisualElement class="chip">
-                            <ui:Label text="🪙" />
-                            <ui:Label name="credits-chip" text="0" />
-                        </ui:VisualElement>
-                        <ui:VisualElement class="chip">
-                            <ui:Label name="wave-chip" text="Vague 0" />
-                        </ui:VisualElement>
-                        <ui:VisualElement class="chip">
-                            <ui:Label name="combo-chip" text="Meilleur combo x1" />
+                <ui:VisualElement name="hub-status" class="hub-status">
+                    <ui:VisualElement name="credits-card" class="tac-card stat-card">
+                        <ui:VisualElement name="credits-icon" class="icon-square icon-square-sm" />
+                        <ui:VisualElement class="stat-text">
+                            <ui:Label name="credits-chip" text="0" class="stat-value" />
+                            <ui:Label text="CRÉDITS" class="stat-sub" />
                         </ui:VisualElement>
                     </ui:VisualElement>
-                    <ui:VisualElement class="button-row">
-                        <ui:Button name="settings-button" text="⚙ Réglages" class="icon-button" />
-                        <ui:Button name="howto-button" text="? Comment jouer" class="icon-button" />
+                    <ui:VisualElement name="wave-card" class="tac-card stat-card">
+                        <ui:VisualElement name="wave-icon" class="icon-square icon-square-sm" />
+                        <ui:VisualElement class="stat-text">
+                            <ui:Label name="wave-chip" text="VAGUE 0" class="stat-value" />
+                            <ui:Label name="combo-chip" text="MEILLEUR COMBO X1" class="stat-sub" />
+                        </ui:VisualElement>
                     </ui:VisualElement>
+                    <ui:Button name="settings-button" class="icon-button">
+                        <ui:VisualElement name="settings-icon" class="icon-plain" />
+                    </ui:Button>
+                    <ui:Button name="howto-button" text="?" class="icon-button icon-button-text" />
                 </ui:VisualElement>
             </ui:VisualElement>
 
             <ui:VisualElement name="hub-main" class="hub-main">
                 <ui:VisualElement name="hub-main-left" class="hub-main-col">
                     <ui:VisualElement name="intel-card" class="tac-card hub-card-slot">
-                        <ui:Label text="// Intel" class="eyebrow" />
+                        <ui:VisualElement class="card-header">
+                            <ui:VisualElement name="intel-icon" class="card-header-icon" />
+                            <ui:Label text="// INTEL" class="card-title" />
+                        </ui:VisualElement>
                         <ui:VisualElement class="intel-row">
-                            <ui:Label text="Record vague" class="intel-key" />
+                            <ui:Label text="RECORD VAGUE" class="intel-key" />
                             <ui:Label name="intel-best-wave" text="0" class="intel-value" />
                         </ui:VisualElement>
                         <ui:VisualElement class="intel-row">
-                            <ui:Label text="Meilleur combo" class="intel-key" />
+                            <ui:Label text="MEILLEUR COMBO" class="intel-key" />
                             <ui:Label name="intel-best-combo" text="0" class="intel-value" />
                         </ui:VisualElement>
                         <ui:VisualElement class="intel-row">
-                            <ui:Label text="Meilleur score" class="intel-key" />
+                            <ui:Label text="MEILLEUR SCORE" class="intel-key" />
                             <ui:Label name="intel-best-score" text="0" class="intel-value" />
                         </ui:VisualElement>
                         <ui:VisualElement class="intel-row">
-                            <ui:Label text="Prestige" class="intel-key" />
+                            <ui:Label text="PRESTIGE" class="intel-key" />
                             <ui:Label name="intel-prestige" text="—" class="intel-value" />
                         </ui:VisualElement>
                         <ui:VisualElement class="intel-row">
-                            <ui:Label text="Succès" class="intel-key" />
+                            <ui:Label text="SUCCÈS" class="intel-key" />
                             <ui:Label name="intel-achievements" text="0/0" class="intel-value" />
                         </ui:VisualElement>
                         <ui:VisualElement class="intel-row">
-                            <ui:Label text="Crédits" class="intel-key" />
-                            <ui:Label name="intel-credits" text="0" class="intel-value gold-text" />
+                            <ui:Label text="CRÉDITS" class="intel-key" />
+                            <ui:Label name="intel-credits" text="0" class="intel-value purple-text" />
                         </ui:VisualElement>
                     </ui:VisualElement>
 
                     <ui:VisualElement name="equipment-card" class="tac-card hub-card-slot">
-                        <ui:Label text="// Équipement" class="eyebrow" />
+                        <ui:VisualElement class="card-header">
+                            <ui:VisualElement name="equip-icon" class="card-header-icon" />
+                            <ui:Label text="// ÉQUIPEMENT" class="card-title" />
+                        </ui:VisualElement>
                         <ui:VisualElement class="intel-row">
-                            <ui:Label text="Arme" class="intel-key" />
+                            <ui:Label text="ARME" class="intel-key" />
                             <ui:Label name="equip-weapon" text="—" class="intel-value" />
                         </ui:VisualElement>
                         <ui:VisualElement class="intel-row">
-                            <ui:Label text="Masque" class="intel-key" />
+                            <ui:Label text="MASQUE" class="intel-key" />
                             <ui:Label name="equip-helmet" text="—" class="intel-value" />
                         </ui:VisualElement>
                         <ui:VisualElement class="intel-row">
-                            <ui:Label text="Costume" class="intel-key" />
+                            <ui:Label text="COSTUME" class="intel-key" />
                             <ui:Label name="equip-costume" text="—" class="intel-value" />
                         </ui:VisualElement>
                     </ui:VisualElement>
@@ -93,47 +102,71 @@
                 <ui:VisualElement name="hub-main-center" class="hub-main-col hub-deploy-col">
                     <ui:VisualElement name="char-selector" class="char-selector">
                         <ui:Button name="char-prev" text="‹" class="char-arrow" />
-                        <ui:Label name="char-name" text="—" class="char-name" />
+                        <ui:VisualElement class="char-center">
+                            <ui:Label name="char-name" text="—" class="char-name" />
+                            <ui:VisualElement name="char-dots" class="char-dots" />
+                        </ui:VisualElement>
                         <ui:Button name="char-next" text="›" class="char-arrow" />
                     </ui:VisualElement>
-                    <ui:VisualElement name="char-dots" class="char-dots" />
                 </ui:VisualElement>
 
                 <!-- Parite homepage.png (playtest 2026-07-10) : le Deployer vit dans la colonne de
                      droite, au-dessus de la carte Objectif — pas au centre devant le perso. -->
-                <ui:VisualElement name="hub-main-right" class="hub-main-col">
+                <ui:VisualElement name="hub-main-right" class="hub-main-col hub-main-col-right">
                     <ui:Button name="deploy-button" class="deploy-button">
-                        <ui:Label text="// Mode survie" class="eyebrow" />
-                        <ui:Label text="Déployer" class="deploy-title" />
-                        <ui:Label text="Survie — vagues infinies" class="subtitle" />
+                        <ui:Label text="// MODE SURVIE" class="eyebrow deploy-eyebrow" />
+                        <ui:VisualElement class="deploy-row">
+                            <ui:VisualElement name="deploy-icon" class="icon-square icon-square-deploy" />
+                            <ui:Label text="DÉPLOYER" class="deploy-title" />
+                        </ui:VisualElement>
+                        <ui:Label text="SURVIE — VAGUES INFINIES" class="subtitle deploy-sub" />
                     </ui:Button>
-                    <ui:VisualElement name="objectif-card" class="tac-card hub-card-slot">
-                        <ui:Label text="// Objectif" class="eyebrow" />
+                    <ui:VisualElement name="objectif-card" class="tac-card hub-card-slot objectif-card">
+                        <ui:VisualElement class="card-header">
+                            <ui:VisualElement name="objectif-icon" class="card-header-icon" />
+                            <ui:Label text="// OBJECTIF" class="card-title" />
+                        </ui:VisualElement>
                         <ui:VisualElement name="objectif-thumb" class="objectif-thumb" />
-                        <ui:Label text="Survivez le plus longtemps possible. Affrontez des vagues d'ennemis toujours plus redoutables." class="objectif-text" />
+                        <ui:Label text="SURVIVEZ &lt;color=#7c4dff&gt;LE PLUS LONGTEMPS&lt;/color&gt; POSSIBLE. AFFRONTEZ DES &lt;color=#7c4dff&gt;VAGUES D&apos;ENNEMIS&lt;/color&gt; TOUJOURS PLUS REDOUTABLES." class="objectif-text" />
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
 
             <ui:VisualElement name="hub-deploy" class="hub-deploy">
                 <ui:Button name="tile-shop" class="hub-tile">
-                    <ui:Label text="Armurerie" class="tile-title" />
-                    <ui:Label text="Équipez vos armes" class="tile-subtitle" />
+                    <ui:VisualElement name="tile-shop-icon" class="icon-square icon-square-sm" />
+                    <ui:VisualElement class="tile-text">
+                        <ui:Label text="ARMURERIE" class="tile-title" />
+                        <ui:Label text="ÉQUIPEZ VOS ARMES" class="tile-subtitle" />
+                    </ui:VisualElement>
                 </ui:Button>
                 <ui:Button name="tile-loadout" class="hub-tile">
-                    <ui:Label text="Série de points" class="tile-title" />
-                    <ui:Label text="Choisissez vos bonus" class="tile-subtitle" />
+                    <ui:VisualElement name="tile-loadout-icon" class="icon-square icon-square-sm" />
+                    <ui:VisualElement class="tile-text">
+                        <ui:Label text="SÉRIE DE POINTS" class="tile-title" />
+                        <ui:Label text="CHOISISSEZ VOS BONUS" class="tile-subtitle" />
+                    </ui:VisualElement>
                 </ui:Button>
                 <ui:Button name="tile-training" class="hub-tile">
-                    <ui:Label text="Entraînement" class="tile-title" />
-                    <ui:Label text="Munitions illimitées" class="tile-subtitle" />
+                    <ui:VisualElement name="tile-training-icon" class="icon-square icon-square-sm" />
+                    <ui:VisualElement class="tile-text">
+                        <ui:Label text="ENTRAÎNEMENT" class="tile-title" />
+                        <ui:Label text="MUNITIONS ILLIMITÉES" class="tile-subtitle" />
+                    </ui:VisualElement>
                 </ui:Button>
                 <ui:Button name="tile-map" class="hub-tile">
-                    <ui:Label text="Map" class="tile-title" />
-                    <ui:Label text="Choisissez le terrain" class="tile-subtitle" />
+                    <ui:VisualElement name="tile-map-icon" class="icon-square icon-square-sm" />
+                    <ui:VisualElement class="tile-text">
+                        <ui:Label text="MAP" class="tile-title" />
+                        <ui:Label text="CHOISISSEZ LE TERRAIN" class="tile-subtitle" />
+                    </ui:VisualElement>
                 </ui:Button>
-                <ui:VisualElement name="tile-indicator" class="hub-tile hub-indicator hub-indicator-bg" picking-mode="Ignore">
-                    <ui:Label text="Difficulté Croissante" class="tile-title" />
+                <ui:VisualElement name="tile-indicator" class="tac-card hub-indicator" picking-mode="Ignore">
+                    <ui:VisualElement class="tile-text">
+                        <ui:Label text="DIFFICULTÉ" class="tile-subtitle" />
+                        <ui:Label text="CROISSANTE" class="tile-title purple-text" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="diff-icon" class="icon-plain icon-diff" />
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>

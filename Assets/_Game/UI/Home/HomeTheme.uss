@@ -73,6 +73,10 @@ Label, Button {
     -unity-font-definition: url("/Assets/_Game/Art/UI/Fonts/Barlow-Regular.ttf");
 }
 
-.title-word, .deploy-title, .tile-title {
+.title-word, .deploy-title, .tile-title, .rank-label, .stat-value, .card-title, .char-name {
     -unity-font-definition: url("/Assets/_Game/Art/UI/Fonts/BarlowCondensed-Bold.ttf");
+}
+
+.eyebrow, .intel-key, .intel-value, .stat-sub, .tile-subtitle, .subtitle-hero, .objectif-text {
+    -unity-font-definition: url("/Assets/_Game/Art/UI/Fonts/Barlow-SemiBold.ttf");
 }

@@ -85,9 +85,12 @@ namespace Game.Runtime
                 }
                 else
                 {
-                    var glyph = new Label(ConsumableGlyph(item.iconName));
-                    glyph.AddToClassList("acctile-glyph");
-                    thumb.Add(glyph);
+                    // Glyphe vectoriel générique (les emojis 💣/⚡/… ne se rendent pas avec Barlow) :
+                    // cible pour les grenades, croix médicale (Plus) pour le medkit.
+                    thumb.Add(Game.Runtime.UI.Tactical.TacticalIcon.Create(
+                        item.iconName == "heart" ? Game.Runtime.UI.Tactical.TacticalIconType.Plus
+                                                 : Game.Runtime.UI.Tactical.TacticalIconType.Target,
+                        new Color(0.604f, 0.639f, 0.698f), 48f));
                 }
                 tile.Add(thumb);
 
@@ -109,7 +112,7 @@ namespace Game.Runtime
 
                 var capturedKey = item.key;
                 var capturedPrice = item.price;
-                var buy = new Button { text = $"🪙{capturedPrice}" };
+                var buy = new Button { text = $"{capturedPrice} CR" }; // pas de 🪙 : emoji non rendu par Barlow
                 buy.AddToClassList("tile-action");
                 buy.AddToClassList("buy");
                 buy.SetEnabled(save.money >= capturedPrice);
@@ -123,17 +126,5 @@ namespace Game.Runtime
             }
         }
 
-        // web: CONSUMABLES icon (main.js:3659-3667) — glyphes emoji en repli faute de sprite dédié.
-        static string ConsumableGlyph(string iconName) => iconName switch
-        {
-            "grenade" => "💣",
-            "flash" => "⚡",
-            "smoke" => "💨",
-            "sticky" => "🧷",
-            "molotov" => "🔥",
-            "emp" => "🌀",
-            "heart" => "❤️",
-            _ => "❔",
-        };
     }
 }

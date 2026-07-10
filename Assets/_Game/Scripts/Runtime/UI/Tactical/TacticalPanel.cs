@@ -38,6 +38,11 @@ namespace Game.Runtime.UI.Tactical
         [UxmlAttribute("show-accent")]
         public bool ShowAccent { get; set; }
 
+        /// Équerres violettes aux coins haut-gauche/haut-droit (parité homepage.png : les cartes
+        /// blanches du web portent ces petits repères tactiques).
+        [UxmlAttribute("show-brackets")]
+        public bool ShowBrackets { get; set; } = true;
+
         public TacticalPanel()
         {
             generateVisualContent += OnGenerateVisualContent;
@@ -71,6 +76,30 @@ namespace Game.Runtime.UI.Tactical
                 painter.LineTo(new Vector2(0, rect.height - 6));
                 painter.ClosePath();
                 painter.Fill();
+            }
+
+            if (ShowBrackets)
+            {
+                var accent = new Color(0.486f, 0.302f, 1f, 0.9f);
+                painter.strokeColor = accent;
+                painter.lineWidth = 2f;
+                float arm = Mathf.Min(10f, rect.width * 0.08f);
+                float inset = 5f;
+
+                // haut-gauche : ⌐ inversé
+                painter.BeginPath();
+                painter.MoveTo(new Vector2(inset, inset + arm));
+                painter.LineTo(new Vector2(inset, inset));
+                painter.LineTo(new Vector2(inset + arm, inset));
+                painter.Stroke();
+
+                // haut-droit (décalé sous le biseau éventuel)
+                float topRightY = (Corners & TacticalCorners.TopRight) != 0 ? inset + CutSize * 0.5f : inset;
+                painter.BeginPath();
+                painter.MoveTo(new Vector2(rect.width - inset - arm, topRightY));
+                painter.LineTo(new Vector2(rect.width - inset, topRightY));
+                painter.LineTo(new Vector2(rect.width - inset, topRightY + arm));
+                painter.Stroke();
             }
         }
 

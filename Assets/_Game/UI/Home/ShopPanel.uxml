@@ -1,31 +1,53 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
     <ui:VisualElement name="shop-card" class="shop-card">
         <ui:VisualElement name="shop-topbar" class="shop-topbar">
-            <ui:VisualElement class="chip shop-credits-chip">
-                <ui:Label text="🪙" />
-                <ui:Label name="shop-credits" text="0" />
+            <ui:Label text="// ARMURERIE" class="eyebrow shop-title-eyebrow" />
+            <ui:VisualElement class="shop-topbar-right">
+                <ui:VisualElement name="shop-credits-card" class="shop-credits-card">
+                    <ui:VisualElement name="shop-credits-icon" class="shop-credits-icon" />
+                    <ui:Label name="shop-credits" text="0" class="shop-credits-value" />
+                </ui:VisualElement>
+                <ui:Button name="shop-close" text="×" class="shop-close-btn" />
             </ui:VisualElement>
-            <ui:VisualElement name="shop-nav" class="shop-nav">
-                <ui:Button name="shop-prev" text="◀ Précédent" class="shop-nav-btn" />
-                <ui:Button name="shop-next" text="Suivant ▶" class="shop-nav-btn" />
-            </ui:VisualElement>
-            <ui:Button name="shop-close" text="✕ Fermer" class="shop-close-btn" />
         </ui:VisualElement>
 
         <ui:VisualElement name="shop-body" class="shop-body">
+            <!-- Flèches Précédent/Suivant : gros carrés blancs de part et d'autre de la vitrine
+                 (parité shop-guns.png), plus des pilules dans la topbar. Le wrapper garde le nom
+                 shop-nav (ShopScreenController le masque hors onglets armes/perso). -->
+            <ui:VisualElement name="shop-nav" class="shop-nav" picking-mode="Ignore">
+                <ui:Button name="shop-prev" text="‹" class="shop-arrow" />
+                <ui:Button name="shop-next" text="›" class="shop-arrow" />
+            </ui:VisualElement>
+
             <ui:VisualElement name="shop-rail" class="shop-rail">
-                <ui:Button name="shop-tab-weapons" text="Armes" class="shop-tab on" />
-                <ui:Button name="shop-tab-player" text="Personnage" class="shop-tab" />
-                <ui:Button name="shop-tab-accessories" text="Accessoires" class="shop-tab" />
-                <ui:Button name="shop-tab-boost" text="Boost" class="shop-tab" />
-                <ui:Button name="shop-tab-consumables" text="Consommables" class="shop-tab" />
+                <ui:Button name="shop-tab-weapons" class="shop-tab on">
+                    <ui:VisualElement name="shop-tab-weapons-icon" class="shop-tab-icon" />
+                    <ui:Label text="ARMES" class="shop-tab-label" />
+                </ui:Button>
+                <ui:Button name="shop-tab-player" class="shop-tab">
+                    <ui:VisualElement name="shop-tab-player-icon" class="shop-tab-icon" />
+                    <ui:Label text="PERSONNAGE" class="shop-tab-label" />
+                </ui:Button>
+                <ui:Button name="shop-tab-accessories" class="shop-tab">
+                    <ui:VisualElement name="shop-tab-accessories-icon" class="shop-tab-icon" />
+                    <ui:Label text="ACCESSOIRES" class="shop-tab-label" />
+                </ui:Button>
+                <ui:Button name="shop-tab-boost" class="shop-tab">
+                    <ui:VisualElement name="shop-tab-boost-icon" class="shop-tab-icon" />
+                    <ui:Label text="BOOST" class="shop-tab-label" />
+                </ui:Button>
+                <ui:Button name="shop-tab-consumables" class="shop-tab">
+                    <ui:VisualElement name="shop-tab-consumables-icon" class="shop-tab-icon" />
+                    <ui:Label text="CONSOMMABLES" class="shop-tab-label" />
+                </ui:Button>
             </ui:VisualElement>
 
             <ui:VisualElement name="shop-content" class="shop-content">
                 <ui:VisualElement name="shop-tab-content-weapons" class="shop-tab-content">
                     <ui:VisualElement name="shop-hero-row" class="shop-hero-row">
                         <ui:VisualElement name="shop-hero" class="shop-hero">
-                            <ui:Label text="// Arme" class="eyebrow" />
+                            <ui:Label text="// ARME" class="eyebrow shop-hero-eyebrow" />
                             <ui:VisualElement class="shop-wname-row">
                                 <ui:Label name="shop-wname" text="—" class="shop-wname" />
                                 <ui:Label name="shop-rarity-badge" text="" class="rarity-badge" />
@@ -34,56 +56,59 @@
                             <ui:Label name="shop-wdesc" text="" class="shop-desc" />
                         </ui:VisualElement>
 
-                        <ui:VisualElement name="shop-stats-panel" class="tac-card shop-stats-panel">
-                            <ui:Label text="Statistiques" class="sp-h" />
+                        <ui:VisualElement name="shop-stats-panel" class="shop-stats-panel">
+                            <ui:VisualElement class="sp-h-row">
+                                <ui:VisualElement name="shop-stats-icon" class="sp-h-icon" />
+                                <ui:Label text="STATISTIQUES" class="sp-h" />
+                            </ui:VisualElement>
 
                             <ui:VisualElement class="stat-row">
-                                <ui:Label text="Dégâts" class="stat-label" />
+                                <ui:Label text="DÉGÂTS" class="stat-label" />
                                 <ui:VisualElement class="stat-bar"><ui:VisualElement name="stat-damage-fill" class="stat-bar-fill" /></ui:VisualElement>
-                                <ui:Label name="stat-damage-value" text="0" class="stat-value" />
+                                <ui:Label name="stat-damage-value" text="0" class="stat-value-shop" />
                             </ui:VisualElement>
                             <ui:VisualElement class="stat-row">
-                                <ui:Label text="Cadence" class="stat-label" />
+                                <ui:Label text="CADENCE" class="stat-label" />
                                 <ui:VisualElement class="stat-bar"><ui:VisualElement name="stat-firerate-fill" class="stat-bar-fill" /></ui:VisualElement>
-                                <ui:Label name="stat-firerate-value" text="0" class="stat-value" />
+                                <ui:Label name="stat-firerate-value" text="0" class="stat-value-shop" />
                             </ui:VisualElement>
                             <ui:VisualElement class="stat-row">
-                                <ui:Label text="Chargeur" class="stat-label" />
+                                <ui:Label text="CHARGEUR" class="stat-label" />
                                 <ui:VisualElement class="stat-bar"><ui:VisualElement name="stat-mag-fill" class="stat-bar-fill" /></ui:VisualElement>
-                                <ui:Label name="stat-mag-value" text="0" class="stat-value" />
+                                <ui:Label name="stat-mag-value" text="0" class="stat-value-shop" />
                             </ui:VisualElement>
                             <ui:VisualElement class="stat-row">
-                                <ui:Label text="Stabilité" class="stat-label" />
+                                <ui:Label text="STABILITÉ" class="stat-label" />
                                 <ui:VisualElement class="stat-bar"><ui:VisualElement name="stat-stability-fill" class="stat-bar-fill" /></ui:VisualElement>
-                                <ui:Label name="stat-stability-value" text="0" class="stat-value" />
+                                <ui:Label name="stat-stability-value" text="0" class="stat-value-shop" />
                             </ui:VisualElement>
                             <ui:VisualElement class="stat-row">
-                                <ui:Label text="Portée" class="stat-label" />
+                                <ui:Label text="PORTÉE" class="stat-label" />
                                 <ui:VisualElement class="stat-bar"><ui:VisualElement name="stat-range-fill" class="stat-bar-fill" /></ui:VisualElement>
-                                <ui:Label name="stat-range-value" text="0" class="stat-value" />
+                                <ui:Label name="stat-range-value" text="0" class="stat-value-shop" />
                             </ui:VisualElement>
 
                             <ui:VisualElement name="shop-upgrades" class="shop-upgrades" />
 
                             <ui:VisualElement class="sp-btns">
-                                <ui:Button name="shop-ameliorer" text="★ Améliorer" class="shop-cta ameliorer" />
-                                <ui:Button name="shop-buy" text="Acheter" class="shop-cta buy" />
-                                <ui:Button name="shop-equip" text="Équiper" class="shop-cta" />
-                                <ui:Label name="shop-equipped-badge" text="✓ Équipée" class="shop-badge" />
+                                <ui:Button name="shop-ameliorer" text="★ AMÉLIORER" class="shop-cta ameliorer" />
+                                <ui:Button name="shop-buy" text="ACHETER" class="shop-cta buy" />
+                                <ui:Button name="shop-equip" text="ÉQUIPER" class="shop-cta" />
+                                <ui:Label name="shop-equipped-badge" text="✓ ÉQUIPÉE" class="shop-badge" />
                             </ui:VisualElement>
                         </ui:VisualElement>
                     </ui:VisualElement>
 
                     <ui:VisualElement name="shop-bottombar" class="shop-bottombar">
                         <ui:VisualElement name="shop-wcats" class="shop-wcats">
-                            <ui:Button name="shop-wcat-all" text="Tout" class="subtab on" />
-                            <ui:Button name="shop-wcat-assault" text="Assaut" class="subtab" />
+                            <ui:Button name="shop-wcat-all" text="TOUT" class="subtab on" />
+                            <ui:Button name="shop-wcat-assault" text="ASSAUT" class="subtab" />
                             <ui:Button name="shop-wcat-smg" text="SMG" class="subtab" />
-                            <ui:Button name="shop-wcat-sniper" text="Sniper" class="subtab" />
-                            <ui:Button name="shop-wcat-shotgun" text="Pompe" class="subtab" />
-                            <ui:Button name="shop-wcat-pistol" text="Pistol" class="subtab" />
+                            <ui:Button name="shop-wcat-sniper" text="SNIPER" class="subtab" />
+                            <ui:Button name="shop-wcat-shotgun" text="POMPE" class="subtab" />
+                            <ui:Button name="shop-wcat-pistol" text="PISTOL" class="subtab" />
                             <ui:Button name="shop-wcat-lmg" text="LMG" class="subtab" />
-                            <ui:Button name="shop-wcat-melee" text="Mêlée" class="subtab" />
+                            <ui:Button name="shop-wcat-melee" text="MÊLÉE" class="subtab" />
                         </ui:VisualElement>
                         <ui:ScrollView name="shop-carousel" horizontal-scroller-visibility="Hidden" mode="Horizontal" class="shop-carousel" />
                     </ui:VisualElement>
@@ -92,7 +117,7 @@
                 <ui:VisualElement name="shop-tab-content-player" class="shop-tab-content hidden">
                     <ui:VisualElement name="shop-char-hero-row" class="shop-hero-row">
                         <ui:VisualElement name="shop-char-hero" class="shop-hero">
-                            <ui:Label text="// Personnage" class="eyebrow" />
+                            <ui:Label text="// PERSONNAGE" class="eyebrow shop-hero-eyebrow" />
                             <ui:VisualElement class="shop-wname-row">
                                 <ui:Label name="shop-cname" text="—" class="shop-wname" />
                                 <ui:Label name="shop-crarity-badge" text="" class="rarity-badge" />
@@ -100,32 +125,35 @@
                             <ui:Label name="shop-cdesc" text="" class="shop-desc" />
                         </ui:VisualElement>
 
-                        <ui:VisualElement name="shop-char-stats-panel" class="tac-card shop-stats-panel">
-                            <ui:Label text="Statistiques" class="sp-h" />
+                        <ui:VisualElement name="shop-char-stats-panel" class="shop-stats-panel">
+                            <ui:VisualElement class="sp-h-row">
+                                <ui:VisualElement name="shop-cstats-icon" class="sp-h-icon" />
+                                <ui:Label text="STATISTIQUES" class="sp-h" />
+                            </ui:VisualElement>
 
                             <ui:VisualElement class="stat-row">
-                                <ui:Label text="Vie" class="stat-label" />
+                                <ui:Label text="VIE" class="stat-label" />
                                 <ui:VisualElement class="stat-bar"><ui:VisualElement name="stat-chealth-fill" class="stat-bar-fill" /></ui:VisualElement>
-                                <ui:Label name="stat-chealth-value" text="0" class="stat-value" />
+                                <ui:Label name="stat-chealth-value" text="0" class="stat-value-shop" />
                             </ui:VisualElement>
                             <ui:VisualElement class="stat-row">
-                                <ui:Label text="Régén" class="stat-label" />
+                                <ui:Label text="RÉGÉN" class="stat-label" />
                                 <ui:VisualElement class="stat-bar"><ui:VisualElement name="stat-cregen-fill" class="stat-bar-fill" /></ui:VisualElement>
-                                <ui:Label name="stat-cregen-value" text="0" class="stat-value" />
+                                <ui:Label name="stat-cregen-value" text="0" class="stat-value-shop" />
                             </ui:VisualElement>
                             <ui:VisualElement class="stat-row">
-                                <ui:Label text="Vitesse" class="stat-label" />
+                                <ui:Label text="VITESSE" class="stat-label" />
                                 <ui:VisualElement class="stat-bar"><ui:VisualElement name="stat-cspeed-fill" class="stat-bar-fill" /></ui:VisualElement>
-                                <ui:Label name="stat-cspeed-value" text="0" class="stat-value" />
+                                <ui:Label name="stat-cspeed-value" text="0" class="stat-value-shop" />
                             </ui:VisualElement>
 
                             <ui:VisualElement name="shop-cupgrades" class="shop-upgrades" />
 
                             <ui:VisualElement class="sp-btns">
-                                <ui:Button name="shop-cameliorer" text="★ Améliorer" class="shop-cta ameliorer" />
-                                <ui:Button name="shop-cbuy" text="Acheter" class="shop-cta buy" />
-                                <ui:Button name="shop-cequip" text="Équiper" class="shop-cta" />
-                                <ui:Label name="shop-cequipped-badge" text="✓ Équipé" class="shop-badge" />
+                                <ui:Button name="shop-cameliorer" text="★ AMÉLIORER" class="shop-cta ameliorer" />
+                                <ui:Button name="shop-cbuy" text="ACHETER" class="shop-cta buy" />
+                                <ui:Button name="shop-cequip" text="ÉQUIPER" class="shop-cta" />
+                                <ui:Label name="shop-cequipped-badge" text="✓ ÉQUIPÉ" class="shop-badge" />
                             </ui:VisualElement>
                         </ui:VisualElement>
                     </ui:VisualElement>
@@ -134,14 +162,16 @@
                         <ui:ScrollView name="shop-char-carousel" horizontal-scroller-visibility="Hidden" mode="Horizontal" class="shop-carousel" />
                     </ui:VisualElement>
                 </ui:VisualElement>
-                <ui:VisualElement name="shop-tab-content-accessories" class="shop-tab-content hidden">
+                <ui:VisualElement name="shop-tab-content-accessories" class="shop-tab-content shop-side-panel hidden">
                     <ui:VisualElement name="shop-acc-head" class="shop-acc-head">
-                        <ui:Label text="// Accessoires" class="eyebrow" />
-                        <ui:VisualElement name="shop-acc-subtabs" class="shop-wcats">
-                            <ui:Button name="shop-acc-subtab-mask" text="Masque" class="subtab on" />
-                            <ui:Button name="shop-acc-subtab-costume" text="Costume" class="subtab" />
-                            <ui:Button name="shop-acc-subtab-dance" text="Danses" class="subtab" />
+                        <ui:Label text="ACCESSOIRES" class="side-title" />
+                        <ui:VisualElement class="modal-title-underline side-underline" />
+                        <ui:VisualElement name="shop-acc-subtabs" class="shop-wcats shop-wcats-left">
+                            <ui:Button name="shop-acc-subtab-mask" text="MASQUE" class="subtab on" />
+                            <ui:Button name="shop-acc-subtab-costume" text="COSTUME" class="subtab" />
+                            <ui:Button name="shop-acc-subtab-dance" text="DANSES" class="subtab" />
                         </ui:VisualElement>
+                        <ui:Label text="CLIQUE UN ARTICLE POUR L'ESSAYER SUR TON PERSO, PUIS ACHÈTE." class="side-hint" />
                     </ui:VisualElement>
 
                     <ui:VisualElement name="shop-acc-view" class="shop-acc-view">
@@ -162,17 +192,19 @@
                         <ui:ScrollView name="shop-dance-grid" mode="Vertical" horizontal-scroller-visibility="Hidden" class="acc-grid" />
                     </ui:VisualElement>
                 </ui:VisualElement>
-                <ui:VisualElement name="shop-tab-content-boost" class="shop-tab-content hidden">
+                <ui:VisualElement name="shop-tab-content-boost" class="shop-tab-content shop-side-panel hidden">
                     <ui:VisualElement class="shop-acc-head">
-                        <ui:Label text="// Boost" class="eyebrow" />
+                        <ui:Label text="BOOST" class="side-title" />
+                        <ui:VisualElement class="modal-title-underline side-underline" />
                     </ui:VisualElement>
                     <ui:VisualElement class="shop-acc-view">
                         <ui:ScrollView name="shop-boost-grid" mode="Vertical" horizontal-scroller-visibility="Hidden" class="acc-grid" />
                     </ui:VisualElement>
                 </ui:VisualElement>
-                <ui:VisualElement name="shop-tab-content-consumables" class="shop-tab-content hidden">
+                <ui:VisualElement name="shop-tab-content-consumables" class="shop-tab-content shop-side-panel hidden">
                     <ui:VisualElement class="shop-acc-head">
-                        <ui:Label text="// Consommables" class="eyebrow" />
+                        <ui:Label text="CONSOMMABLES" class="side-title" />
+                        <ui:VisualElement class="modal-title-underline side-underline" />
                     </ui:VisualElement>
                     <ui:VisualElement class="shop-acc-view">
                         <ui:ScrollView name="shop-consumables-grid" mode="Vertical" horizontal-scroller-visibility="Hidden" class="acc-grid" />

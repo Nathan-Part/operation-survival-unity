@@ -1,4 +1,5 @@
-/* Layout du lobby (approximation USS du CSS web — clip-path "tactique" non reproduit, spec §4.6). */
+/* Layout du lobby — parité homepage.png (passe 2026-07-10) : typographie condensée majuscules,
+   cartes ancrées aux bords, icônes TacticalIcon dans des carrés indigo. Référence 1920x1080. */
 
 .home-root {
     position: absolute;
@@ -12,7 +13,7 @@
     flex-grow: 1;
     flex-direction: column;
     justify-content: space-between;
-    padding: 28px 36px;
+    padding: 30px 40px;
 }
 
 .hub-top {
@@ -21,29 +22,28 @@
     align-items: flex-start;
 }
 
-.hub-col {
-    width: 30%;
-}
-
-.hub-center {
-    width: 38%;
+/* Carte opérateur (haut-gauche) : icône personne + RANG en violet, comme homepage.png. */
+.op-card {
+    flex-direction: row;
     align-items: center;
+    width: 330px;
 }
 
-.hub-status {
-    align-items: flex-end;
+.op-text {
+    flex-grow: 1;
+    margin-left: 14px;
 }
 
 .rank-label {
-    color: var(--color-text);
-    font-size: 18px;
+    color: var(--color-purple);
+    font-size: 30px;
     -unity-font-style: bold;
-    margin-top: 4px;
+    margin-top: 2px;
 }
 
 .rank-bar {
     height: 6px;
-    background-color: rgba(23, 26, 38, 0.1);
+    background-color: rgba(23, 26, 38, 0.12);
     border-radius: 3px;
     margin-top: 6px;
     overflow: hidden;
@@ -55,20 +55,28 @@
     background-color: var(--color-purple);
 }
 
-.title-row {
-    flex-direction: row;
-    justify-content: center;
+/* Titre central : OPÉRATION / SURVIE empilés, énormes (parité homepage.png). */
+.hub-center {
+    align-items: center;
+    flex-grow: 1;
+}
+
+.eyebrow-purple {
+    color: var(--color-purple);
+    letter-spacing: 4px;
 }
 
 .title-word {
-    font-size: 34px;
+    font-size: 62px;
     -unity-font-style: bold;
     color: var(--color-text);
-    margin-right: 8px;
+    letter-spacing: 2px;
+    margin-top: -6px;
 }
 
 .title-gradient {
     color: var(--color-purple);
+    margin-top: -18px;
 }
 
 .subtitle {
@@ -78,136 +86,252 @@
     -unity-text-align: middle-center;
 }
 
-.chip-row {
-    flex-direction: row;
-    justify-content: flex-end;
+.subtitle-hero {
+    color: var(--color-text);
+    -unity-font-style: bold;
+    letter-spacing: 3px;
+    margin-top: 0;
 }
 
-.button-row {
+/* Statuts haut-droite : cartes crédits/vague + boutons carrés réglages/aide. */
+.hub-status {
     flex-direction: row;
-    justify-content: flex-end;
-    margin-top: 10px;
+    align-items: flex-start;
+}
+
+.stat-card {
+    flex-direction: row;
+    align-items: center;
+    margin-left: 10px;
+    padding: 10px 14px;
+}
+
+.stat-text {
+    margin-left: 10px;
+}
+
+.stat-value {
+    color: var(--color-text);
+    font-size: 26px;
+    -unity-font-style: bold;
+}
+
+.stat-sub {
+    color: var(--color-text-dim);
+    font-size: 10px;
+    -unity-font-style: bold;
+    letter-spacing: 1px;
+    margin-top: 1px;
 }
 
 .icon-button {
-    margin-left: 8px;
-    background-color: rgba(255, 255, 255, 0.9);
+    margin-left: 10px;
+    width: 46px;
+    height: 46px;
+    background-color: rgba(255, 255, 255, 0.94);
     border-width: 1px;
     border-color: var(--color-border);
-    border-radius: 8px;
+    border-radius: 10px;
     color: var(--color-text);
-    padding: 6px 12px;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
 }
 
+.icon-button-text {
+    font-size: 20px;
+    -unity-font-style: bold;
+}
+
+/* Carrés d'icônes indigo (le glyphe blanc est un TacticalIcon monté en code — cf. HomeController). */
+.icon-square {
+    width: 58px;
+    height: 58px;
+    border-radius: 10px;
+    background-color: rgb(40, 32, 74);
+    flex-shrink: 0;
+}
+
+.icon-square-sm {
+    width: 46px;
+    height: 46px;
+}
+
+/* Les cartes crédits/vague du haut-droit ont des carrés VIOLETS (homepage.png), pas indigo. */
+.stat-card .icon-square {
+    background-color: rgb(103, 58, 235);
+}
+
+.icon-square-deploy {
+    width: 52px;
+    height: 52px;
+    background-color: rgba(24, 16, 54, 0.9);
+}
+
+.icon-plain {
+    width: 30px;
+    height: 30px;
+}
+
+.purple-text {
+    color: var(--color-purple);
+}
+
+/* En-tête de carte : petite icône violette + titre condensé sombre. */
+.card-header {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.card-header-icon {
+    width: 22px;
+    height: 22px;
+    margin-right: 8px;
+}
+
+.card-title {
+    color: var(--color-text);
+    font-size: 17px;
+    -unity-font-style: bold;
+    letter-spacing: 2px;
+}
+
+/* Zone principale : Intel/Équipement collés à gauche, Déployer/Objectif à droite. */
 .hub-main {
     flex-grow: 1;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    margin-top: 20px;
+    margin-top: 16px;
 }
 
 .hub-main-col {
     flex-direction: column;
-    margin-left: 18px;
-    margin-right: 18px;
 }
 
 .hub-card-slot {
-    margin-bottom: 14px;
-    width: 260px;
+    margin-bottom: 16px;
+    width: 330px;
+    padding: 18px;
 }
 
 .intel-row {
     flex-direction: row;
     justify-content: space-between;
-    margin-top: 4px;
+    margin-top: 7px;
 }
 
 .intel-key {
-    color: var(--color-text-dim);
-    font-size: 12px;
+    color: rgb(42, 48, 64);
+    font-size: 13px;
+    -unity-font-style: bold;
+    letter-spacing: 1px;
 }
 
 .intel-value {
     color: var(--color-text);
-    font-size: 12px;
+    font-size: 14px;
     -unity-font-style: bold;
 }
 
-/* Colonne centrale : le selecteur de perso se pose en bas, au pied du socle (parite homepage.png) —
-   sans etirement vertical il flottait au centre, sur la tete du perso (playtest 2026-07-10). */
+/* Colonne centrale : le selecteur de perso se pose en bas, au pied du socle (parite homepage.png). */
 .hub-deploy-col {
     align-items: center;
     justify-content: flex-end;
     align-self: stretch;
-    padding-bottom: 8px;
+    flex-grow: 1;
+    padding-bottom: 6px;
 }
 
-/* Fond/coins coupes/degrade fournis par TacticalButton (Painter2D) — cf. Tactical/TacticalButton.cs. */
+.hub-main-col-right {
+    align-items: flex-end;
+}
+
+/* Fond/coins coupes/degrade/rayures fournis par TacticalButton (Painter2D). */
 .deploy-button {
-    width: 260px;
-    height: 120px;
+    width: 400px;
+    height: 150px;
     justify-content: center;
     align-items: center;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
 }
 
-/* Textes secondaires du Deployer : blancs sur le degrade violet (les couleurs par defaut
-   .eyebrow/.subtitle sont pensees pour les cartes claires — illisibles sur violet, 2026-07-10). */
-.deploy-button .eyebrow {
-    color: rgba(255, 255, 255, 0.75);
+.deploy-row {
+    flex-direction: row;
+    align-items: center;
+    margin-top: 4px;
+    margin-bottom: 4px;
 }
 
-.deploy-button .subtitle {
-    color: rgba(255, 255, 255, 0.85);
+/* Textes secondaires du Deployer : blancs sur le degrade violet. */
+.deploy-eyebrow {
+    color: rgba(255, 255, 255, 0.8);
+    letter-spacing: 3px;
+}
+
+.deploy-sub {
+    color: rgba(255, 255, 255, 0.88);
+    -unity-font-style: bold;
+    letter-spacing: 2px;
 }
 
 .deploy-title {
-    font-size: 30px;
+    font-size: 44px;
     -unity-font-style: bold;
     color: white;
-    margin-top: 4px;
-    margin-bottom: 4px;
+    letter-spacing: 2px;
+    margin-left: 14px;
+}
+
+.objectif-card {
+    width: 400px;
 }
 
 .char-selector {
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    margin-top: 16px;
-    background-color: rgba(255, 255, 255, 0.92);
+    background-color: rgba(255, 255, 255, 0.95);
     border-radius: 999px;
-    padding: 6px 18px;
+    padding: 8px 20px;
+    min-width: 280px;
+}
+
+.char-center {
+    align-items: center;
+    flex-grow: 1;
 }
 
 .char-arrow {
-    width: 32px;
-    height: 32px;
-    border-radius: 16px;
+    width: 34px;
+    height: 34px;
+    border-radius: 17px;
     background-color: transparent;
+    border-width: 0;
     color: var(--color-text);
+    font-size: 20px;
+    -unity-font-style: bold;
 }
 
 .char-name {
     color: var(--color-text);
-    font-size: 16px;
+    font-size: 21px;
     -unity-font-style: bold;
-    margin-left: 10px;
-    margin-right: 10px;
+    letter-spacing: 2px;
 }
 
 .char-dots {
     flex-direction: row;
     justify-content: center;
-    margin-top: 8px;
+    margin-top: 4px;
 }
 
 .dot {
-    width: 8px;
-    height: 8px;
+    width: 7px;
+    height: 7px;
     border-radius: 4px;
-    background-color: rgba(23, 26, 38, 0.3);
+    background-color: rgba(23, 26, 38, 0.25);
     margin-left: 3px;
     margin-right: 3px;
 }
@@ -217,57 +341,76 @@
 }
 
 .objectif-thumb {
-    height: 90px;
+    height: 130px;
     background-image: url("/Assets/_Game/Art/UI/objectif.jpg");
     -unity-background-scale-mode: scale-and-crop;
     border-radius: 8px;
-    margin-top: 6px;
-    margin-bottom: 6px;
+    margin-top: 4px;
+    margin-bottom: 10px;
 }
 
 .objectif-text {
-    color: var(--color-text-dim);
-    font-size: 11px;
+    color: var(--color-text);
+    font-size: 12px;
+    -unity-font-style: bold;
+    letter-spacing: 1px;
     white-space: normal;
 }
 
+/* Rangée du bas : 4 tuiles compactes à gauche, carte Difficulté à droite (parité homepage.png —
+   les tuiles ne s'étirent plus sur toute la largeur). */
 .hub-deploy {
     flex-direction: row;
-    justify-content: space-between;
-    margin-top: 20px;
+    justify-content: flex-start;
+    align-items: flex-end;
+    margin-top: 16px;
 }
 
-/* Fond/coins coupes fournis par TacticalButton (Painter2D) pour les .hub-tile transformees en boutons tactiques. */
+/* Fond/coins coupes fournis par TacticalButton (Painter2D). */
 .hub-tile {
-    flex-grow: 1;
-    margin-left: 6px;
-    margin-right: 6px;
-    padding: 10px;
+    flex-direction: row;
     align-items: center;
+    margin-right: 14px;
+    padding: 12px 18px 12px 12px;
 }
 
-/* tile-indicator (Difficulté) reste une VisualElement simple (pas cliquable) : garde un fond leger. */
-.hub-indicator-bg {
-    background-color: rgba(255, 255, 255, 0.7);
-    border-radius: 10px;
-    border-width: 1px;
-    border-color: var(--color-border);
+.tile-text {
+    margin-left: 10px;
+    align-items: flex-start;
 }
 
 .tile-title {
     color: var(--color-text);
-    font-size: 14px;
+    font-size: 19px;
     -unity-font-style: bold;
+    letter-spacing: 1px;
 }
 
 .tile-subtitle {
     color: var(--color-text-dim);
     font-size: 10px;
-    margin-top: 2px;
+    -unity-font-style: bold;
+    letter-spacing: 1px;
+    margin-top: 1px;
 }
 
+/* Carte Difficulté croissante : poussée à droite, texte violet + barres montantes. */
 .hub-indicator {
-    opacity: 0.6;
+    margin-left: auto;
+    flex-direction: row;
+    align-items: center;
+    padding: 12px 16px;
+}
+
+.hub-indicator .tile-text {
+    margin-left: 0;
+    margin-right: 12px;
+    align-items: flex-start;
+}
+
+.icon-diff {
+    width: 34px;
+    height: 34px;
 }
 
 .panel {
@@ -378,14 +521,53 @@
     border-radius: 8px;
     color: white;
     -unity-font-style: bold;
+    letter-spacing: 1px;
     padding: 10px 14px;
     align-self: stretch;
     -unity-text-align: middle-center;
 }
 
-/* Panneau Map (Task 9, contenu cloné depuis MapPanel.uxml dans #map-panel). */
+/* Les pseudo-états du thème par défaut (.unity-button:hover/:active, fond gris) ont une
+   spécificité supérieure à .panel-back seul — sans ces règles le bouton vire au gris lavande
+   dès que la souris le survole (constat capture 2026-07-10). */
+.panel-back:hover {
+    background-color: var(--color-purple-dark);
+}
+
+.panel-back:active {
+    background-color: var(--color-purple-dark);
+}
+
+/* Panneau Map (Task 9, contenu cloné depuis MapPanel.uxml dans #map-panel).
+   Parité modal-map.png (2026-07-10) : tout centré, titre condensé énorme + souligné violet,
+   tuiles blanches avec carré-icône carte indigo. */
 .map-card {
-    width: 480px;
+    width: 520px;
+    align-items: center;
+}
+
+.modal-eyebrow {
+    -unity-text-align: middle-center;
+    letter-spacing: 4px;
+}
+
+.modal-title {
+    font-size: 44px;
+    letter-spacing: 2px;
+    -unity-text-align: middle-center;
+    margin-bottom: 4px;
+    -unity-font-definition: url("/Assets/_Game/Art/UI/Fonts/BarlowCondensed-Bold.ttf");
+}
+
+.modal-title-underline {
+    width: 90px;
+    height: 4px;
+    background-color: var(--color-purple);
+    margin-bottom: 12px;
+}
+
+.modal-intro {
+    -unity-text-align: middle-center;
 }
 
 .panel-intro {
@@ -402,13 +584,19 @@
 }
 
 .map-item {
-    width: 210px;
-    background-color: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
+    width: 225px;
+    background-color: rgb(238, 240, 246);
+    border-radius: 4px;
     border-width: 1px;
-    border-color: var(--color-border);
-    padding: 10px;
+    border-color: rgba(124, 77, 255, 0.15);
+    padding: 16px 10px;
     align-items: center;
+}
+
+.map-item-icon {
+    width: 52px;
+    height: 52px;
+    margin-bottom: 10px;
 }
 
 .map-item-disabled {
@@ -436,26 +624,31 @@
 
 .map-name {
     color: var(--color-text);
-    font-size: 15px;
+    font-size: 20px;
     -unity-font-style: bold;
+    letter-spacing: 1px;
+    -unity-font-definition: url("/Assets/_Game/Art/UI/Fonts/BarlowCondensed-Bold.ttf");
 }
 
 .map-sub {
     color: var(--color-text-dim);
-    font-size: 11px;
-    margin-top: 2px;
+    font-size: 10px;
+    -unity-font-style: bold;
+    letter-spacing: 2px;
+    margin-top: 3px;
 }
 
 .map-sub.map-sub-current {
-    color: var(--color-gold);
+    color: var(--color-purple);
 }
 
 .map-badge {
-    color: var(--color-text);
+    color: white;
     font-size: 10px;
     -unity-font-style: bold;
-    background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 999px;
+    letter-spacing: 1px;
+    background-color: rgba(23, 26, 38, 0.75);
+    border-radius: 4px;
     padding: 2px 10px;
     margin-top: 4px;
 }
@@ -525,7 +718,7 @@
 }
 
 .boot-loading-label {
-    color: var(--color-text);
+    color: white;
     font-size: 26px;
     -unity-font-style: bold;
 }

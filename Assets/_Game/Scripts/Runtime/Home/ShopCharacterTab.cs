@@ -144,8 +144,8 @@ namespace Game.Runtime
             bool owned = save.ownedCharacters.Contains(c.id);
             bool equipped = EquippedId(save) == c.id;
 
-            cname.text = c.displayName;
-            rarityBadge.text = RarityName(c.rarity);
+            cname.text = c.displayName.ToUpperInvariant(); // parité shop-perso.png : titres en capitales
+            rarityBadge.text = RarityName(c.rarity).ToUpperInvariant();
             ApplyRarityClass(rarityBadge, c.rarity);
             cdesc.text = c.desc;
 
@@ -166,13 +166,13 @@ namespace Game.Runtime
 
             // Pas de condition `owned` ici (voir commentaire de tête de classe) : les upgrades
             // joueur sont globales au compte, pas au perso actuellement parcouru dans le carrousel.
-            ameliorerButton.text = ameliorerOpen ? "★ Améliorer ▲" : "★ Améliorer";
+            ameliorerButton.text = ameliorerOpen ? "★ AMÉLIORER ▲" : "★ AMÉLIORER";
             equippedBadge.style.display = equipped ? DisplayStyle.Flex : DisplayStyle.None;
             equipButton.style.display = (owned && !equipped) ? DisplayStyle.Flex : DisplayStyle.None;
             buyButton.style.display = owned ? DisplayStyle.None : DisplayStyle.Flex;
             if (!owned)
             {
-                buyButton.text = $"Acheter 🪙{c.price}";
+                buyButton.text = $"ACHETER · {c.price} CR"; // pas de 🪙 : emoji non rendu par Barlow
                 buyButton.SetEnabled(save.money >= c.price); // web l.1519 : disabled si save.money < price
             }
 
@@ -219,7 +219,7 @@ namespace Game.Runtime
 
                 bool atMax = level >= spec.maxLevel;
                 int cost = ShopRules.NextPlayerUpgradeCost(save, spec.statKey, spec.baseCost);
-                var buy = new Button { text = atMax ? "MAX" : $"🪙{cost}" };
+                var buy = new Button { text = atMax ? "MAX" : $"{cost} CR" };
                 buy.AddToClassList("upg-buy");
                 buy.SetEnabled(!atMax && save.money >= cost);
                 var statKey = spec.statKey; // capture locale (évite la variable de boucle partagée)
@@ -270,7 +270,7 @@ namespace Game.Runtime
                 card.style.scale = new Scale(active ? Vector3.one : new Vector3(0.85f, 0.85f, 1f));
 
                 var top = new VisualElement(); top.AddToClassList("wcard-top");
-                var name = new Label(candidate.displayName); name.AddToClassList("wcard-name");
+                var name = new Label(candidate.displayName.ToUpperInvariant()); name.AddToClassList("wcard-name");
                 top.Add(name);
                 card.Add(top);
 
@@ -284,17 +284,17 @@ namespace Game.Runtime
                 }
                 else
                 {
-                    var glyph = new Label("🧍");
-                    glyph.AddToClassList("wcard-glyph");
-                    thumb.Add(glyph);
+                    // Glyphe vectoriel teinté par rareté (les emojis 🧍/🔒 ne se rendent pas avec Barlow).
+                    thumb.Add(Game.Runtime.UI.Tactical.TacticalIcon.Create(
+                        Game.Runtime.UI.Tactical.TacticalIconType.Person, RarityColor(candidate.rarity), 44f));
                 }
                 card.Add(thumb);
 
                 var foot = new VisualElement(); foot.AddToClassList("wcard-foot");
                 if (!owned)
                 {
-                    var lock_ = new Label("🔒"); lock_.AddToClassList("wcard-lock");
-                    foot.Add(lock_);
+                    foot.Add(Game.Runtime.UI.Tactical.TacticalIcon.Create(
+                        Game.Runtime.UI.Tactical.TacticalIconType.Lock, new Color(0.6f, 0.63f, 0.7f), 14f));
                 }
                 card.Add(foot);
 
@@ -335,5 +335,15 @@ namespace Game.Runtime
                 _ => "rarity-common",
             });
         }
+
+        // web: RARITIES[key].color (main.js:83-86) — même table que ShopWeaponsTab (classe indépendante).
+        static Color RarityColor(Rarity r) => r switch
+        {
+            Rarity.Common => new Color(0.604f, 0.639f, 0.698f),
+            Rarity.Rare => new Color(0.310f, 0.616f, 1f),
+            Rarity.Epic => new Color(0.690f, 0.400f, 1f),
+            Rarity.Legendary => new Color(1f, 0.690f, 0.180f),
+            _ => new Color(0.604f, 0.639f, 0.698f),
+        };
     }
 }

@@ -67,6 +67,10 @@ namespace Game.Runtime
             container.Clear();
             panelAsset.CloneTree(container);
 
+            // Icônes carte (parité modal-map.png : carré indigo avec pictogramme carte sur chaque tuile).
+            TacticalIcon.Mount(container, "map-icon-utopia", TacticalIconType.Map);
+            TacticalIcon.Mount(container, "map-icon-urban", TacticalIconType.Map);
+
             utopiaItem = container.Q<Button>("map-item-utopia");
             utopiaSub = container.Q<Label>("map-sub-utopia");
             urbanItem = container.Q<Button>("map-item-urban");
@@ -104,7 +108,7 @@ namespace Game.Runtime
             if (save == null || utopiaItem == null) return;
 
             bool utopiaCurrent = save.settings.mapId == "utopia";
-            utopiaSub.text = utopiaCurrent ? "Terrain actuel" : "Choisir ce terrain";
+            utopiaSub.text = utopiaCurrent ? "TERRAIN ACTUEL" : "CHOISIR CE TERRAIN"; // parité modal-map.png : capitales
             utopiaSub.EnableInClassList("map-sub-current", utopiaCurrent);
 
             // Grisé/désactivé dérivé de MapRules.IsAvailable à chaque rendu — pour les deux cartes,

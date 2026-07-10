@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Game.Runtime.UI.Tactical;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -82,6 +83,12 @@ namespace Game.Runtime
 
             creditsLabel = shopPanel.Q<Label>("shop-credits");
             navRow = shopPanel.Q<VisualElement>("shop-nav");
+
+            // Icônes vectorielles (parité shop-guns.png — les emojis ne se rendent pas avec Barlow).
+            var statsPurple = new Color(0.486f, 0.302f, 1f);
+            TacticalIcon.Mount(shopPanel, "shop-credits-icon", TacticalIconType.Plus);
+            TacticalIcon.Mount(shopPanel, "shop-stats-icon", TacticalIconType.Bars, statsPurple);
+            TacticalIcon.Mount(shopPanel, "shop-cstats-icon", TacticalIconType.Bars, statsPurple);
             var closeButton = shopPanel.Q<Button>("shop-close");
             var prevButton = shopPanel.Q<Button>("shop-prev");
             var nextButton = shopPanel.Q<Button>("shop-next");
@@ -141,10 +148,29 @@ namespace Game.Runtime
             SwitchTab("weapons");
         }
 
+        // Icône de chaque onglet du rail : blanche sur l'onglet actif (fond violet), sombre sinon
+        // (fond blanc) — remontée à chaque SwitchTab, TacticalIcon ne suit pas la couleur USS.
+        static readonly Dictionary<string, TacticalIconType> TabIcons = new Dictionary<string, TacticalIconType>
+        {
+            ["weapons"] = TacticalIconType.Gun,
+            ["player"] = TacticalIconType.Person,
+            ["accessories"] = TacticalIconType.Cube,
+            ["boost"] = TacticalIconType.Trophy,
+            ["consumables"] = TacticalIconType.Plus,
+        };
+
+        void UpdateTabIcons()
+        {
+            var dark = new Color(0.137f, 0.157f, 0.22f);
+            foreach (var kv in TabIcons)
+                TacticalIcon.Mount(shopPanel, $"shop-tab-{kv.Key}-icon", kv.Value, kv.Key == activeTab ? Color.white : dark);
+        }
+
         void SwitchTab(string tab)
         {
             activeTab = tab;
             foreach (var kv in tabButtons) kv.Value.EnableInClassList("on", kv.Key == tab);
+            UpdateTabIcons();
             foreach (var kv in tabContents) kv.Value.EnableInClassList("hidden", kv.Key != tab);
             // web: updateShopTabs (main.js:1393) — flèches Précédent/Suivant visibles sur les
             // onglets Armes ET Personnage (les seuls avec un carrousel), masquées sur les 3 stubs.

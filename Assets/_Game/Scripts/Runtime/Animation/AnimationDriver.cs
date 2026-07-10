@@ -21,11 +21,15 @@ namespace Game.Runtime
         bool built;
         System.Action oneShotCallback; // Task 13 (danses) : invoqué une seule fois, à la fin naturelle du one-shot
 
-        const int RoleSlotCount = 5; // un par AnimRole (Idle/Walk/Run/Attack/Dead)
-        // Task 13 (danses boutique) : 6e slot dédié aux clips ad-hoc hors AnimRole (DanceData.animationClip,
-        // pas dans l'AnimationLibrary) — un seul à la fois, recréé à chaque PlayOneShot (retrigger inclus).
-        const int OneShotSlot = RoleSlotCount;
-        const int SlotCount = RoleSlotCount + 1;
+        // Un slot par valeur d'AnimRole (Idle/Walk/Run/Attack/Dead/Lobby) — dérivé de l'enum plutôt
+        // qu'un 5 en dur : l'ajout du rôle Lobby (2026-07-10) faisait entrer son index en collision
+        // avec le slot one-shot et HasClip(Lobby) répondait toujours false.
+        static readonly int RoleSlotCount = System.Enum.GetValues(typeof(AnimRole)).Length;
+        // Task 13 (danses boutique) : slot supplémentaire dédié aux clips ad-hoc hors AnimRole
+        // (DanceData.animationClip, pas dans l'AnimationLibrary) — un seul à la fois, recréé à
+        // chaque PlayOneShot (retrigger inclus).
+        static readonly int OneShotSlot = RoleSlotCount;
+        static readonly int SlotCount = RoleSlotCount + 1;
 
         public void Bind(Animator animator, AnimationLibrary library)
         {

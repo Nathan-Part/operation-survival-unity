@@ -23,6 +23,11 @@ namespace Game.Runtime.UI.Tactical
         [UxmlAttribute("border-color")]
         public Color BorderColor { get; set; } = new Color(1f, 1f, 1f, 0.15f);
 
+        /// Rayures diagonales semi-transparentes par-dessus le dégradé (parité homepage.png :
+        /// le grand bouton Déployer du web est strié).
+        [UxmlAttribute("stripes")]
+        public bool Stripes { get; set; }
+
         public TacticalButton()
         {
             generateVisualContent += OnGenerateVisualContent;
@@ -85,10 +90,100 @@ namespace Game.Runtime.UI.Tactical
                 painter.Fill();
             }
 
+            if (Stripes) DrawStripes(painter, w, h, cut);
+
             painter.strokeColor = BorderColor;
             painter.lineWidth = 1f;
             TacticalPanel.DrawCutRect(painter, new Rect(0f, 0f, w, h), cut, Corners);
             painter.Stroke();
+        }
+
+        /// Rayures diagonales à 45° clippées au polygone à coins coupés (Painter2D n'a pas de
+        /// clipping natif : chaque parallélogramme de rayure est intersecté explicitement via
+        /// Sutherland–Hodgman — le polygone à coins coupés est convexe).
+        void DrawStripes(Painter2D painter, float w, float h, float cut)
+        {
+            var poly = new System.Collections.Generic.List<Vector2>();
+            bool tl = (Corners & TacticalCorners.TopLeft) != 0;
+            bool tr = (Corners & TacticalCorners.TopRight) != 0;
+            bool bl = (Corners & TacticalCorners.BottomLeft) != 0;
+            bool br = (Corners & TacticalCorners.BottomRight) != 0;
+            poly.Add(new Vector2(tl ? cut : 0f, 0f));
+            poly.Add(new Vector2(w - (tr ? cut : 0f), 0f));
+            if (tr) poly.Add(new Vector2(w, cut));
+            poly.Add(new Vector2(w, h - (br ? cut : 0f)));
+            if (br) poly.Add(new Vector2(w - cut, h));
+            poly.Add(new Vector2(bl ? cut : 0f, h));
+            if (bl) poly.Add(new Vector2(0f, h - cut));
+            poly.Add(new Vector2(0f, tl ? cut : 0f));
+
+            painter.fillColor = new Color(1f, 1f, 1f, 0.06f);
+            const float stripeWidth = 12f;
+            const float gap = 26f;
+            for (float x0 = -h; x0 < w; x0 += stripeWidth + gap)
+            {
+                var stripe = new System.Collections.Generic.List<Vector2>
+                {
+                    new Vector2(x0, h),
+                    new Vector2(x0 + stripeWidth, h),
+                    new Vector2(x0 + stripeWidth + h, 0f),
+                    new Vector2(x0 + h, 0f),
+                };
+                var clipped = ClipConvex(stripe, poly);
+                if (clipped.Count < 3) continue;
+                painter.BeginPath();
+                painter.MoveTo(clipped[0]);
+                for (int i = 1; i < clipped.Count; i++) painter.LineTo(clipped[i]);
+                painter.ClosePath();
+                painter.Fill();
+            }
+        }
+
+        /// Sutherland–Hodgman : clippe `subject` contre le polygone convexe `clip` (sommets horaires).
+        static System.Collections.Generic.List<Vector2> ClipConvex(
+            System.Collections.Generic.List<Vector2> subject,
+            System.Collections.Generic.List<Vector2> clip)
+        {
+            var output = subject;
+            for (int i = 0; i < clip.Count && output.Count > 0; i++)
+            {
+                var a = clip[i];
+                var b = clip[(i + 1) % clip.Count];
+                var input = output;
+                output = new System.Collections.Generic.List<Vector2>(input.Count + 2);
+
+                // Côté "intérieur" = à droite de l'arête (sommets déclarés en sens horaire, y vers le bas).
+                float Side(Vector2 p) => (b.x - a.x) * (p.y - a.y) - (b.y - a.y) * (p.x - a.x);
+
+                for (int j = 0; j < input.Count; j++)
+                {
+                    var current = input[j];
+                    var previous = input[(j + input.Count - 1) % input.Count];
+                    bool currentInside = Side(current) >= 0f;
+                    bool previousInside = Side(previous) >= 0f;
+
+                    if (currentInside)
+                    {
+                        if (!previousInside) output.Add(Intersect(previous, current, a, b));
+                        output.Add(current);
+                    }
+                    else if (previousInside)
+                    {
+                        output.Add(Intersect(previous, current, a, b));
+                    }
+                }
+            }
+            return output;
+        }
+
+        static Vector2 Intersect(Vector2 p1, Vector2 p2, Vector2 a, Vector2 b)
+        {
+            var r = p2 - p1;
+            var s = b - a;
+            float denom = r.x * s.y - r.y * s.x;
+            if (Mathf.Approximately(denom, 0f)) return p2;
+            float t = ((a.x - p1.x) * s.y - (a.y - p1.y) * s.x) / denom;
+            return p1 + r * t;
         }
     }
 }

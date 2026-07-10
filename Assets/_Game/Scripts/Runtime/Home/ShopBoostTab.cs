@@ -84,9 +84,9 @@ namespace Game.Runtime
                 }
                 else
                 {
-                    var glyph = new Label(BoostGlyph(boost.slot));
-                    glyph.AddToClassList("acctile-glyph");
-                    thumb.Add(glyph);
+                    // Glyphe vectoriel (les emojis 🦺/👢/🎖 ne se rendent pas avec Barlow).
+                    thumb.Add(Game.Runtime.UI.Tactical.TacticalIcon.Create(
+                        BoostIconType(boost.slot), RarityColorOf(boost.rarity), 48f));
                 }
                 tile.Add(thumb);
 
@@ -115,11 +115,11 @@ namespace Game.Runtime
                 }
                 else if (owned)
                 {
-                    action.text = "Équiper";
+                    action.text = "ÉQUIPER";
                 }
                 else
                 {
-                    action.text = $"🪙{capturedPrice}";
+                    action.text = $"{capturedPrice} CR"; // pas de 🪙 : emoji non rendu par Barlow
                     action.AddToClassList("buy");
                     action.SetEnabled(save.money >= capturedPrice);
                 }
@@ -149,14 +149,24 @@ namespace Game.Runtime
             _ => "",
         };
 
-        // web: boostIcon (main.js:1447) — glyphes emoji en repli faute de sprite dédié (idem
-        // ShopAccessoriesTab pour masque/costume/danses).
-        static string BoostGlyph(BoostSlot slot) => slot switch
+        // web: boostIcon (main.js:1447) — glyphe vectoriel en repli faute de sprite dédié (les
+        // emojis d'origine ne se rendent pas avec Barlow) : gilet=cube, bottes=coureur, médaille=trophée.
+        static Game.Runtime.UI.Tactical.TacticalIconType BoostIconType(BoostSlot slot) => slot switch
         {
-            BoostSlot.Vest => "🦺",
-            BoostSlot.Boots => "👢",
-            BoostSlot.Medal => "🎖️",
-            _ => "❔",
+            BoostSlot.Vest => Game.Runtime.UI.Tactical.TacticalIconType.Cube,
+            BoostSlot.Boots => Game.Runtime.UI.Tactical.TacticalIconType.Runner,
+            BoostSlot.Medal => Game.Runtime.UI.Tactical.TacticalIconType.Trophy,
+            _ => Game.Runtime.UI.Tactical.TacticalIconType.Ring,
+        };
+
+        // web: RARITIES[key].color (main.js:83-86) — même table que les autres onglets boutique.
+        static Color RarityColorOf(Rarity r) => r switch
+        {
+            Rarity.Common => new Color(0.604f, 0.639f, 0.698f),
+            Rarity.Rare => new Color(0.310f, 0.616f, 1f),
+            Rarity.Epic => new Color(0.690f, 0.400f, 1f),
+            Rarity.Legendary => new Color(1f, 0.690f, 0.180f),
+            _ => new Color(0.604f, 0.639f, 0.698f),
         };
 
         // Playtest Phase 5.1 (2026-07-09) : meme en-tete de groupe que ShopAccessoriesTab.AddRarityHeader

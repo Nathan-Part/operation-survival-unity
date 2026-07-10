@@ -4,8 +4,10 @@
    85%) pour laisser passer la scène 3D derrière — parité web (vitrine boutique = scène éclairée,
    pas un simple dialogue par-dessus un fond noir). */
 
+/* Aucun voile : la vitrine 3D reste à pleine luminosité derrière l'UI (parité shop-guns.png —
+   l'ancien voile sombre à 40% délavait tout l'écran, constat capture 2026-07-10). */
 #shop-panel {
-    background-color: rgba(6, 7, 12, 0.4);
+    background-color: rgba(0, 0, 0, 0);
 }
 
 /* La boutique reste sur des cartes SOMBRES translucides (vitrine 3D derriere, pas une photo claire
@@ -28,27 +30,55 @@
     margin-bottom: 12px;
 }
 
-.shop-nav {
+/* "// ARMURERIE" violet en haut-gauche (parité shop-guns.png). */
+.shop-title-eyebrow {
+    color: var(--color-purple);
+    font-size: 13px;
+    letter-spacing: 3px;
+}
+
+.shop-topbar-right {
     flex-direction: row;
+    align-items: center;
 }
 
-.shop-nav-btn {
-    background-color: rgba(255, 255, 255, 0.08);
-    border-width: 1px;
-    border-color: var(--color-border);
+/* Carte crédits blanche avec carré ⊕ violet (parité shop-guns.png — remplace la pilule emoji). */
+.shop-credits-card {
+    flex-direction: row;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 10px;
+    padding: 6px 14px 6px 6px;
+    margin-right: 10px;
+}
+
+.shop-credits-icon {
+    width: 32px;
+    height: 32px;
     border-radius: 8px;
-    color: var(--color-text);
-    padding: 6px 14px;
-    margin-left: 6px;
+    background-color: rgb(103, 58, 235);
+    margin-right: 10px;
 }
 
+.shop-credits-value {
+    color: #171a26;
+    font-size: 20px;
+    -unity-font-style: bold;
+    -unity-font-definition: url("/Assets/_Game/Art/UI/Fonts/BarlowCondensed-Bold.ttf");
+}
+
+/* Croix de fermeture : carré blanc (parité shop-guns.png). */
 .shop-close-btn {
-    background-color: rgba(255, 255, 255, 0.08);
-    border-width: 1px;
-    border-color: var(--color-border);
-    border-radius: 8px;
-    color: var(--color-text);
-    padding: 6px 14px;
+    width: 44px;
+    height: 44px;
+    background-color: rgba(255, 255, 255, 0.95);
+    border-width: 0;
+    border-radius: 10px;
+    color: #171a26;
+    font-size: 24px;
+    -unity-font-style: bold;
+    padding: 0;
+    -unity-text-align: middle-center;
 }
 
 .shop-body {
@@ -56,32 +86,69 @@
     flex-direction: row;
 }
 
-/* Sidebar pleine hauteur, fond clair — parite shop-guns.png (colonne blanche a gauche, pas des
-   boutons epars). Panneau physique en plus des onglets pour que la colonne se voie meme entre
-   deux tuiles. */
+/* Flèches Précédent/Suivant : gros carrés blancs de part et d'autre de la vitrine 3D
+   (parité shop-guns.png). Le wrapper est un overlay non cliquable, les boutons oui. */
+.shop-nav {
+    position: absolute;
+    left: 210px;
+    right: 330px;
+    top: 35%;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.shop-arrow {
+    width: 56px;
+    height: 56px;
+    background-color: rgba(255, 255, 255, 0.95);
+    border-width: 0;
+    border-radius: 12px;
+    color: #171a26;
+    font-size: 30px;
+    -unity-font-style: bold;
+    padding: 0;
+    -unity-text-align: middle-center;
+}
+
+/* Sidebar : cartes blanches séparées, icône + libellé condensé, onglet actif violet
+   (parité shop-guns.png — plus une colonne pleine avec liste plate). */
 .shop-rail {
-    width: 170px;
+    width: 190px;
     flex-direction: column;
     margin-right: 14px;
-    padding: 10px;
-    background-color: rgba(247, 248, 251, 0.96);
-    border-radius: 10px;
 }
 
 .shop-tab {
-    background-color: transparent;
+    flex-direction: row;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.94);
     border-width: 0;
-    border-radius: 8px;
-    color: #3d4252;
+    border-radius: 10px;
     padding: 10px 12px;
-    margin-bottom: 4px;
+    margin-bottom: 8px;
     -unity-text-align: middle-left;
+}
+
+.shop-tab-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+}
+
+.shop-tab-label {
+    color: #232838;
+    font-size: 16px;
+    -unity-font-style: bold;
+    letter-spacing: 1px;
+    -unity-font-definition: url("/Assets/_Game/Art/UI/Fonts/BarlowCondensed-Bold.ttf");
 }
 
 .shop-tab.on {
     background-color: var(--color-purple);
+}
+
+.shop-tab.on .shop-tab-label {
     color: white;
-    -unity-font-style: bold;
 }
 
 .shop-content {
@@ -111,9 +178,15 @@
     align-items: flex-start;
 }
 
-/* Pas de fond : le texte flotte au-dessus de la vitrine 3D (parité web, hero en haut-gauche). */
+/* Pas de fond : le texte flotte au-dessus de la vitrine 3D. Textes SOMBRES sur le décor clair
+   (parité shop-guns.png — le hero web est en navy sur la photo lumineuse). */
 .shop-hero {
-    width: 320px;
+    width: 380px;
+}
+
+.shop-hero-eyebrow {
+    color: var(--color-purple);
+    letter-spacing: 3px;
 }
 
 .shop-wname-row {
@@ -123,67 +196,117 @@
 }
 
 .shop-wname {
-    color: var(--color-text);
-    font-size: 24px;
+    color: #171a26;
+    font-size: 42px;
     -unity-font-style: bold;
+    letter-spacing: 1px;
+    margin-right: 12px;
+    -unity-font-definition: url("/Assets/_Game/Art/UI/Fonts/BarlowCondensed-Bold.ttf");
+}
+
+/* Badge de rareté : contour coloré sur fond transparent (parité shop-guns.png), la couleur du
+   texte vient de .rarity-* ; le contour est décliné par rareté ci-dessous. */
+.rarity-badge {
+    background-color: rgba(255, 255, 255, 0.55);
+    border-width: 1px;
+    border-color: rgba(23, 26, 38, 0.3);
+    border-radius: 4px;
+    padding: 2px 10px;
+    font-size: 12px;
+    -unity-font-style: bold;
+    letter-spacing: 1px;
     margin-right: 8px;
 }
 
-.rarity-badge {
-    background-color: rgba(0, 0, 0, 0.4);
-    border-radius: 999px;
-    padding: 2px 10px;
-    font-size: 11px;
-    -unity-font-style: bold;
-    margin-right: 8px;
-}
+.rarity-badge.rarity-common { border-color: var(--rarity-common); }
+.rarity-badge.rarity-rare { border-color: var(--rarity-rare); }
+.rarity-badge.rarity-epic { border-color: var(--rarity-epic); }
+.rarity-badge.rarity-legendary { border-color: var(--rarity-legendary); }
 
 .shop-rating {
-    color: var(--color-gold);
-    font-size: 12px;
+    color: var(--color-purple);
+    font-size: 15px;
     -unity-font-style: bold;
 }
 
 .shop-desc {
-    color: var(--color-text-dim);
-    font-size: 12px;
-    margin-top: 6px;
+    color: #454c5e;
+    font-size: 14px;
+    margin-top: 8px;
     white-space: normal;
-    max-width: 300px;
+    max-width: 340px;
 }
 
+/* Panneau statistiques NOIR (parité shop-guns.png — carte sombre découpée sur le décor clair). */
 .shop-stats-panel {
-    width: 300px;
-    background-color: var(--color-bg-card);
-    border-width: 1px;
-    border-color: var(--color-border);
-    border-radius: 10px;
+    width: 310px;
+    background-color: rgba(10, 11, 20, 0.94);
+    border-width: 0;
+    border-radius: 6px;
+    padding: 16px;
+}
+
+/* Onglet Personnage : panneau stats en BAS-CENTRE, boutons côte à côte (parité shop-perso.png —
+   l'onglet Armes garde son panneau à droite comme shop-guns.png). */
+#shop-char-stats-panel {
+    position: absolute;
+    bottom: 6px;
+    left: 50%;
+    translate: -50% 0;
+    width: 540px;
+}
+
+#shop-char-stats-panel .sp-btns {
+    flex-direction: row;
+    justify-content: center;
+}
+
+#shop-char-stats-panel .shop-cta,
+#shop-char-stats-panel .shop-badge {
+    margin-left: 6px;
+    margin-right: 6px;
+    min-width: 170px;
+}
+
+.sp-h-row {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.sp-h-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
 }
 
 .sp-h {
-    color: var(--color-text);
-    font-size: 14px;
+    color: white;
+    font-size: 16px;
     -unity-font-style: bold;
-    margin-bottom: 8px;
+    letter-spacing: 2px;
+    -unity-font-definition: url("/Assets/_Game/Art/UI/Fonts/BarlowCondensed-Bold.ttf");
 }
 
 .stat-row {
     flex-direction: row;
     align-items: center;
-    margin-top: 6px;
+    margin-top: 8px;
 }
 
 .stat-label {
-    width: 70px;
-    color: var(--color-text-dim);
+    width: 74px;
+    color: #9aa3b2;
     font-size: 11px;
+    -unity-font-style: bold;
+    letter-spacing: 1px;
 }
 
 .stat-bar {
     flex-grow: 1;
-    height: 8px;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
+    height: 7px;
+    background-color: rgba(255, 255, 255, 0.14);
+    border-radius: 3px;
     overflow: hidden;
     margin-left: 6px;
     margin-right: 6px;
@@ -192,13 +315,13 @@
 .stat-bar-fill {
     height: 100%;
     width: 0%;
-    background-color: var(--color-purple);
+    background-color: rgb(129, 90, 255);
 }
 
-.stat-value {
-    width: 42px;
-    color: var(--color-text);
-    font-size: 11px;
+.stat-value-shop {
+    width: 44px;
+    color: white;
+    font-size: 13px;
     -unity-font-style: bold;
     -unity-text-align: middle-right;
 }
@@ -255,12 +378,15 @@
 .shop-cta {
     background-color: rgba(255, 255, 255, 0.1);
     border-width: 1px;
-    border-color: var(--color-border);
-    border-radius: 8px;
-    color: var(--color-text);
-    padding: 8px 14px;
-    margin-top: 6px;
+    border-color: rgba(255, 255, 255, 0.16);
+    border-radius: 6px;
+    color: white;
+    padding: 10px 14px;
+    margin-top: 8px;
+    font-size: 14px;
     -unity-font-style: bold;
+    letter-spacing: 1px;
+    -unity-text-align: middle-center;
 }
 
 .shop-cta.buy {
@@ -276,42 +402,44 @@
 }
 
 .shop-badge {
-    background-color: rgba(78, 209, 128, 0.2);
+    background-color: rgba(0, 0, 0, 0.25);
     border-width: 1px;
-    border-color: rgba(78, 209, 128, 0.6);
-    border-radius: 8px;
-    color: #6ee7a0;
-    padding: 8px 14px;
-    margin-top: 6px;
+    border-color: rgba(78, 209, 128, 0.7);
+    border-radius: 6px;
+    color: #4ed180;
+    padding: 9px 14px;
+    margin-top: 8px;
     -unity-text-align: middle-center;
     -unity-font-style: bold;
+    letter-spacing: 1px;
 }
 
+/* Plus de panneau conteneur : les chips et les cartes flottent sur le décor (parité shop-guns.png). */
 .shop-bottombar {
-    background-color: var(--color-bg-card);
-    border-radius: 10px;
-    border-width: 1px;
-    border-color: var(--color-border);
-    padding: 10px;
     margin-top: 12px;
 }
 
 .shop-wcats {
     flex-direction: row;
     flex-wrap: wrap;
-    margin-bottom: 8px;
+    justify-content: center;
+    margin-bottom: 10px;
 }
 
+/* Chips de catégories : carrés blancs, texte condensé sombre, actif violet (parité shop-guns.png). */
 .subtab {
-    background-color: rgba(255, 255, 255, 0.06);
+    background-color: rgba(255, 255, 255, 0.92);
     border-width: 1px;
-    border-color: var(--color-border);
-    border-radius: 999px;
-    color: var(--color-text-dim);
-    padding: 4px 12px;
+    border-color: rgba(23, 26, 38, 0.15);
+    border-radius: 4px;
+    color: #232838;
+    padding: 6px 16px;
     margin-right: 6px;
     margin-bottom: 4px;
-    font-size: 11px;
+    font-size: 13px;
+    -unity-font-style: bold;
+    letter-spacing: 1px;
+    -unity-font-definition: url("/Assets/_Game/Art/UI/Fonts/BarlowCondensed-Bold.ttf");
 }
 
 .subtab.on {
@@ -321,7 +449,7 @@
 }
 
 .shop-carousel {
-    height: 130px;
+    height: 170px;
 }
 
 /* Etat "non possede" porte par la classe de base (opacity 0.6), .owned remonte a 1 — le selecteur
@@ -330,17 +458,17 @@
    aucun style boutique applique depuis la Phase 5 — c'etait la vraie cause racine du
    "boutons partout" du playtest de Nathan). Diagnostic 2026-07-10. */
 .wcard {
-    width: 108px;
-    height: 118px;
-    background-color: rgba(255, 255, 255, 0.05);
+    width: 148px;
+    height: 158px;
+    background-color: rgba(13, 14, 24, 0.92);
     border-width: 1px;
-    border-color: var(--color-border);
-    border-radius: 8px;
-    padding: 6px;
-    margin-right: 8px;
-    align-items: center;
+    border-color: rgba(255, 255, 255, 0.06);
+    border-radius: 6px;
+    padding: 10px;
+    margin-right: 10px;
+    align-items: flex-start;
     justify-content: space-between;
-    opacity: 0.6;
+    opacity: 0.7;
 }
 
 .wcard.active {
@@ -353,21 +481,31 @@
 }
 
 .wcard-top {
-    align-items: center;
+    align-items: flex-start;
 }
 
 .wcard-name {
-    color: var(--color-text);
-    font-size: 10px;
+    color: white;
+    font-size: 13px;
     -unity-font-style: bold;
-    -unity-text-align: middle-center;
+    -unity-text-align: middle-left;
     white-space: normal;
+    -unity-font-definition: url("/Assets/_Game/Art/UI/Fonts/BarlowCondensed-Bold.ttf");
+}
+
+/* Rareté sous le nom dans la carte (parité shop-guns.png), colorée par .rarity-*. */
+.wcard-rarity {
+    font-size: 9px;
+    -unity-font-style: bold;
+    letter-spacing: 1px;
+    margin-top: 1px;
 }
 
 .wcard-thumb {
     flex-grow: 1;
     align-items: center;
     justify-content: center;
+    align-self: stretch;
 }
 
 .wcard-glyph {
@@ -375,8 +513,8 @@
 }
 
 .thumb-img {
-    width: 48px;
-    height: 48px;
+    width: 52px;
+    height: 52px;
 }
 
 .wcard-foot {
@@ -388,7 +526,8 @@
 
 .wcard-rating {
     color: var(--color-gold);
-    font-size: 9px;
+    font-size: 11px;
+    -unity-font-style: bold;
 }
 
 .wcard-lock {
@@ -398,16 +537,57 @@
 /* Onglet Accessoires (Task 13) : entête + 3 sous-onglets (Masque/Costume/Danses), grille de tuiles
    façon .wcard mais plus grandes (image accessoire lisible) + barre d'achat unique sous la grille
    (masque/costume) ou compteur + tuiles autonomes (danses). */
-.shop-acc-head {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+/* Panneau latéral droit blanc pour les onglets à grille (parité shop-accessoires.png :
+   Accessoires/Boost/Consommables vivent dans une colonne blanche à droite, le perso 3D
+   reste visible au centre). */
+.shop-side-panel {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 340px;
+    background-color: rgba(247, 248, 252, 0.95);
+    border-radius: 6px;
+    padding: 16px;
+}
+
+.side-title {
+    color: #171a26;
+    font-size: 30px;
+    -unity-font-style: bold;
+    letter-spacing: 2px;
+    -unity-font-definition: url("/Assets/_Game/Art/UI/Fonts/BarlowCondensed-Bold.ttf");
+}
+
+.side-underline {
+    margin-top: 2px;
     margin-bottom: 10px;
 }
 
+.side-hint {
+    color: #5b6272;
+    font-size: 9px;
+    -unity-font-style: bold;
+    letter-spacing: 1px;
+    white-space: normal;
+    margin-bottom: 8px;
+}
+
+.shop-acc-head {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.shop-wcats-left {
+    justify-content: flex-start;
+    margin-bottom: 6px;
+}
+
 .shop-sub2 {
-    color: var(--color-text-dim);
+    color: #5b6272;
     font-size: 11px;
+    -unity-font-style: bold;
     margin-bottom: 8px;
 }
 
@@ -431,13 +611,14 @@
     margin-bottom: 4px;
 }
 
+/* Tuiles CLAIRES : elles vivent dans le panneau latéral blanc (parité shop-accessoires.png). */
 .acctile {
-    width: 132px;
+    width: 145px;
     height: 150px;
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: rgba(23, 26, 38, 0.05);
     border-width: 1px;
-    border-color: var(--color-border);
-    border-radius: 8px;
+    border-color: rgba(23, 26, 38, 0.1);
+    border-radius: 6px;
     padding: 6px;
     margin-right: 8px;
     margin-bottom: 8px;
@@ -456,7 +637,7 @@
 }
 
 .acctile-name {
-    color: var(--color-text);
+    color: #171a26;
     font-size: 10px;
     -unity-font-style: bold;
     -unity-text-align: middle-center;
@@ -495,16 +676,34 @@
     font-size: 10px;
 }
 
+/* Barre d'achat : pied du panneau latéral blanc (parité shop-accessoires.png — bouton ÉQUIPER
+   pleine largeur clair, nom de l'article au-dessus). */
 .acc-buybar {
-    background-color: var(--color-bg-card);
-    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 6px;
     border-width: 1px;
-    border-color: var(--color-border);
+    border-color: rgba(23, 26, 38, 0.12);
     padding: 10px 14px;
-    margin-top: 4px;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+    margin-top: 8px;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.acc-buybar .shop-wname {
+    color: #171a26;
+    font-size: 22px;
+}
+
+.acc-buybar .shop-cta {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-color: rgba(23, 26, 38, 0.25);
+    color: #171a26;
+}
+
+.acc-buybar .shop-cta.buy {
+    background-color: var(--color-gold);
+    border-color: var(--color-gold);
+    color: #201a08;
 }
 
 /* Tuile de danse (Task 13) : pas de barre d'achat partagée, chaque tuile porte ses propres boutons
@@ -555,14 +754,15 @@
 
 .tile-action {
     width: 100%;
-    background-color: rgba(255, 255, 255, 0.08);
+    background-color: rgba(255, 255, 255, 0.9);
     border-width: 1px;
-    border-color: var(--color-border);
-    border-radius: 999px;
-    color: var(--color-text);
+    border-color: rgba(23, 26, 38, 0.2);
+    border-radius: 4px;
+    color: #171a26;
     padding: 4px 10px;
     margin-top: 4px;
     font-size: 11px;
+    -unity-font-style: bold;
     -unity-text-align: middle-center;
 }
 

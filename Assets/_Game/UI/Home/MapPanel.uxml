@@ -1,23 +1,25 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
     <ui:VisualElement name="map-card" class="tac-card map-card">
-        <ui:Label text="// Terrain d'opération" class="eyebrow" />
-        <ui:Label text="Map" class="panel-title" />
-        <ui:Label text="Choisis la map. Le changement s'applique immédiatement." class="panel-intro" />
+        <ui:Label text="// TERRAIN D'OPÉRATION" class="eyebrow eyebrow-purple modal-eyebrow" />
+        <ui:Label text="MAP" class="panel-title modal-title" />
+        <ui:VisualElement class="modal-title-underline" />
+        <ui:Label text="Choisis la map. Le changement s'applique immédiatement." class="panel-intro modal-intro" />
 
         <ui:VisualElement name="map-list" class="map-list">
             <ui:Button name="map-item-utopia" class="map-item">
+                <ui:VisualElement name="map-icon-utopia" class="icon-square map-item-icon" />
                 <ui:VisualElement name="map-thumb-utopia" class="map-thumb map-thumb-utopia" />
-                <ui:Label text="Cité utopique" class="map-name" />
-                <ui:Label name="map-sub-utopia" text="Choisir ce terrain" class="map-sub" />
+                <ui:Label text="CITÉ UTOPIQUE" class="map-name" />
+                <ui:Label name="map-sub-utopia" text="CHOISIR CE TERRAIN" class="map-sub" />
             </ui:Button>
 
             <ui:Button name="map-item-urban" class="map-item">
-                <ui:VisualElement name="map-thumb-urban" class="map-thumb map-thumb-urban" />
-                <ui:Label text="Arène urbaine" class="map-name" />
-                <ui:Label text="Bientôt" class="map-badge" />
+                <ui:VisualElement name="map-icon-urban" class="icon-square map-item-icon" />
+                <ui:Label text="ARÈNE URBAINE" class="map-name" />
+                <ui:Label text="BIENTÔT" class="map-badge" />
             </ui:Button>
         </ui:VisualElement>
 
-        <ui:Button name="map-back" text="◀ Retour" class="panel-back" />
+        <ui:Button name="map-back" text="◀ RETOUR" class="panel-back" />
     </ui:VisualElement>
 </ui:UXML>

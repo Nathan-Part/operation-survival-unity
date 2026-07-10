@@ -183,24 +183,25 @@ namespace Game.Runtime
                 }
                 else
                 {
-                    var glyph = new Label(type == AccessoryType.Helmet ? "🎭" : "🥋");
-                    glyph.AddToClassList("acctile-glyph");
-                    thumb.Add(glyph);
+                    // Glyphe vectoriel (les emojis 🎭/🥋/🔒 ne se rendent pas avec Barlow).
+                    thumb.Add(Game.Runtime.UI.Tactical.TacticalIcon.Create(
+                        type == AccessoryType.Helmet ? Game.Runtime.UI.Tactical.TacticalIconType.Person
+                                                     : Game.Runtime.UI.Tactical.TacticalIconType.Cube,
+                        RarityColorOf(candidate.rarity), 48f));
                 }
                 tile.Add(thumb);
 
                 var foot = new VisualElement();
                 foot.AddToClassList("acctile-foot");
-                var rarityLabel = new Label(RarityName(candidate.rarity));
+                var rarityLabel = new Label(RarityName(candidate.rarity).ToUpperInvariant());
                 rarityLabel.AddToClassList("rarity-badge");
                 rarityLabel.AddToClassList("acctile-rarity");
                 ApplyRarityClass(rarityLabel, candidate.rarity);
                 foot.Add(rarityLabel);
                 if (!owned)
                 {
-                    var lock_ = new Label("🔒");
-                    lock_.AddToClassList("acctile-lock");
-                    foot.Add(lock_);
+                    foot.Add(Game.Runtime.UI.Tactical.TacticalIcon.Create(
+                        Game.Runtime.UI.Tactical.TacticalIconType.Lock, new Color(0.6f, 0.63f, 0.7f), 13f));
                 }
                 tile.Add(foot);
 
@@ -245,7 +246,7 @@ namespace Game.Runtime
             accBuyButton.style.display = owned ? DisplayStyle.None : DisplayStyle.Flex;
             if (!owned)
             {
-                accBuyButton.text = $"Acheter 🪙{focus.price}";
+                accBuyButton.text = $"ACHETER · {focus.price} CR"; // pas de 🪙 : emoji non rendu par Barlow
                 accBuyButton.SetEnabled(save.money >= focus.price);
             }
         }
@@ -282,23 +283,22 @@ namespace Game.Runtime
 
                 var thumb = new VisualElement();
                 thumb.AddToClassList("acctile-thumb");
-                var glyph = new Label("💃");
-                glyph.AddToClassList("acctile-glyph");
-                thumb.Add(glyph);
+                // Glyphe vectoriel (l'emoji 💃 ne se rend pas avec Barlow) : coureur = silhouette en mouvement.
+                thumb.Add(Game.Runtime.UI.Tactical.TacticalIcon.Create(
+                    Game.Runtime.UI.Tactical.TacticalIconType.Runner, RarityColorOf(dance.rarity), 48f));
                 tile.Add(thumb);
 
                 var foot = new VisualElement();
                 foot.AddToClassList("acctile-foot");
-                var rarityLabel = new Label(RarityName(dance.rarity));
+                var rarityLabel = new Label(RarityName(dance.rarity).ToUpperInvariant());
                 rarityLabel.AddToClassList("rarity-badge");
                 rarityLabel.AddToClassList("acctile-rarity");
                 ApplyRarityClass(rarityLabel, dance.rarity);
                 foot.Add(rarityLabel);
                 if (!owned)
                 {
-                    var lock_ = new Label("🔒");
-                    lock_.AddToClassList("acctile-lock");
-                    foot.Add(lock_);
+                    foot.Add(Game.Runtime.UI.Tactical.TacticalIcon.Create(
+                        Game.Runtime.UI.Tactical.TacticalIconType.Lock, new Color(0.6f, 0.63f, 0.7f), 13f));
                 }
                 tile.Add(foot);
 
@@ -316,7 +316,7 @@ namespace Game.Runtime
 
                 if (!owned)
                 {
-                    var buy = new Button { text = $"🪙{capturedPrice}" };
+                    var buy = new Button { text = $"{capturedPrice} CR" };
                     buy.AddToClassList("dcard-play");
                     buy.SetEnabled(save.money >= capturedPrice);
                     buy.clicked += () =>
@@ -379,5 +379,15 @@ namespace Game.Runtime
                 _ => "rarity-common",
             });
         }
+
+        // web: RARITIES[key].color (main.js:83-86) — même table que ShopWeaponsTab (classe indépendante).
+        static Color RarityColorOf(Rarity r) => r switch
+        {
+            Rarity.Common => new Color(0.604f, 0.639f, 0.698f),
+            Rarity.Rare => new Color(0.310f, 0.616f, 1f),
+            Rarity.Epic => new Color(0.690f, 0.400f, 1f),
+            Rarity.Legendary => new Color(1f, 0.690f, 0.180f),
+            _ => new Color(0.604f, 0.639f, 0.698f),
+        };
     }
 }
