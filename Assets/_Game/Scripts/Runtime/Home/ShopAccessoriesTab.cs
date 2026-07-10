@@ -163,47 +163,47 @@ namespace Game.Runtime
                 bool owned = save.ownedAccessories.Contains(candidate.id);
                 bool active = focus != null && candidate.id == focus.id;
 
+                // Point 10 (parité shop-accessoires.png / shop-accessoires2.png) : vignette RONDE,
+                // bordure colorée par rareté, coche verte si équipé — le nom et le badge de rareté
+                // texte sortent de la vignette (portés par la barre d'achat + l'en-tête de section).
                 var tile = new Button();
                 tile.AddToClassList("acctile");
+                tile.AddToClassList("acc-round");
+                tile.AddToClassList(RoundRarityClass(candidate.rarity));
                 tile.EnableInClassList("active", active);
                 tile.EnableInClassList("owned", owned);
 
-                var name = new Label(candidate.displayName);
-                name.AddToClassList("acctile-name");
-                tile.Add(name);
-
-                var thumb = new VisualElement();
-                thumb.AddToClassList("acctile-thumb");
                 var sprite = candidate.ResolveIcon(db.placeholders);
                 if (sprite != null)
                 {
                     var img = new Image { sprite = sprite };
                     img.AddToClassList("acctile-img");
-                    thumb.Add(img);
+                    tile.Add(img);
                 }
                 else
                 {
                     // Glyphe vectoriel (les emojis 🎭/🥋/🔒 ne se rendent pas avec Barlow).
-                    thumb.Add(Game.Runtime.UI.Tactical.TacticalIcon.Create(
+                    tile.Add(Game.Runtime.UI.Tactical.TacticalIcon.Create(
                         type == AccessoryType.Helmet ? Game.Runtime.UI.Tactical.TacticalIconType.Person
                                                      : Game.Runtime.UI.Tactical.TacticalIconType.Cube,
                         RarityColorOf(candidate.rarity), 48f));
                 }
-                tile.Add(thumb);
 
-                var foot = new VisualElement();
-                foot.AddToClassList("acctile-foot");
-                var rarityLabel = new Label(RarityName(candidate.rarity).ToUpperInvariant());
-                rarityLabel.AddToClassList("rarity-badge");
-                rarityLabel.AddToClassList("acctile-rarity");
-                ApplyRarityClass(rarityLabel, candidate.rarity);
-                foot.Add(rarityLabel);
-                if (!owned)
+                bool isEquipped = candidate.id == equippedId;
+                if (isEquipped)
                 {
-                    foot.Add(Game.Runtime.UI.Tactical.TacticalIcon.Create(
-                        Game.Runtime.UI.Tactical.TacticalIconType.Lock, new Color(0.6f, 0.63f, 0.7f), 13f));
+                    var check = new Label("✓");
+                    check.AddToClassList("acc-check");
+                    tile.Add(check);
                 }
-                tile.Add(foot);
+                else if (!owned)
+                {
+                    var lockBadge = new VisualElement();
+                    lockBadge.AddToClassList("acc-lock");
+                    lockBadge.Add(Game.Runtime.UI.Tactical.TacticalIcon.Create(
+                        Game.Runtime.UI.Tactical.TacticalIconType.Lock, Color.white, 13f));
+                    tile.Add(lockBadge);
+                }
 
                 var capturedId = candidate.id;
                 var capturedType = type;
@@ -346,13 +346,38 @@ namespace Game.Runtime
         // affiches en liste plate — parite shop-accessoires.png (groupes COMMUN/RARE/EPIQUE/LEGENDAIRE
         // avec un en-tete par groupe). "rarity-group-header" force un retour a la ligne (width 100%)
         // dans le ScrollView en flex-wrap (SetupGridWrap).
+        // Point 10 : en-tête de section façon web — label encadré + ligne horizontale, aux
+        // couleurs de la rareté (inline : la table RarityColorOf est déjà la source de vérité).
         static void AddRarityHeader(ScrollView grid, Rarity rarity)
         {
-            var header = new Label(RarityName(rarity).ToUpperInvariant());
-            header.AddToClassList("rarity-group-header");
-            ApplyRarityClass(header, rarity);
-            grid.Add(header);
+            var row = new VisualElement();
+            row.AddToClassList("rarity-header-row");
+
+            var color = RarityColorOf(rarity);
+            var label = new Label(RarityName(rarity).ToUpperInvariant());
+            label.AddToClassList("rarity-header-label");
+            label.style.color = color;
+            label.style.borderTopColor = color;
+            label.style.borderBottomColor = color;
+            label.style.borderLeftColor = color;
+            label.style.borderRightColor = color;
+            row.Add(label);
+
+            var line = new VisualElement();
+            line.AddToClassList("rarity-header-line");
+            line.style.backgroundColor = color;
+            row.Add(line);
+
+            grid.Add(row);
         }
+
+        static string RoundRarityClass(Rarity r) => r switch
+        {
+            Rarity.Rare => "rar-rare",
+            Rarity.Epic => "rar-epic",
+            Rarity.Legendary => "rar-legendary",
+            _ => "rar-common",
+        };
 
         // web: RARITIES (main.js:82-87) — même convention dupliquée que ShopWeaponsTab/ShopCharacterTab.
         static string RarityName(Rarity r) => r switch

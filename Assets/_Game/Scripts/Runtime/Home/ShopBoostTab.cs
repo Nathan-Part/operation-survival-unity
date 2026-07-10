@@ -64,44 +64,44 @@ namespace Game.Runtime
                 string slotKey = boost.slot.ToString().ToLowerInvariant();
                 bool equipped = owned && save.equippedBoosts.TryGetValue(slotKey, out string equippedId) && equippedId == boost.id;
 
+                // Point 11 : même modèle visuel que les masques/costumes (point 10) — cellule
+                // colonne transparente : cercle à bordure de rareté + nom + stat + bouton d'action.
                 var tile = new VisualElement();
-                tile.AddToClassList("acctile");
-                tile.AddToClassList("boosttile");
-                tile.EnableInClassList("active", equipped);
-                tile.EnableInClassList("owned", owned);
+                tile.AddToClassList("gridcell");
 
-                var name = new Label(boost.displayName);
-                name.AddToClassList("acctile-name");
-                tile.Add(name);
-
-                var thumb = new VisualElement();
-                thumb.AddToClassList("acctile-thumb");
+                var circle = new VisualElement();
+                circle.AddToClassList("acctile");
+                circle.AddToClassList("acc-round");
+                circle.AddToClassList(RoundRarityClass(boost.rarity));
+                circle.EnableInClassList("active", equipped);
+                circle.EnableInClassList("owned", owned);
                 if (boost.icon != null)
                 {
                     var img = new Image { sprite = boost.icon };
                     img.AddToClassList("acctile-img");
-                    thumb.Add(img);
+                    circle.Add(img);
                 }
                 else
                 {
                     // Glyphe vectoriel (les emojis 🦺/👢/🎖 ne se rendent pas avec Barlow).
-                    thumb.Add(Game.Runtime.UI.Tactical.TacticalIcon.Create(
+                    circle.Add(Game.Runtime.UI.Tactical.TacticalIcon.Create(
                         BoostIconType(boost.slot), RarityColorOf(boost.rarity), 48f));
                 }
-                tile.Add(thumb);
+                if (equipped)
+                {
+                    var check = new Label("✓");
+                    check.AddToClassList("acc-check");
+                    circle.Add(check);
+                }
+                tile.Add(circle);
+
+                var name = new Label(boost.displayName);
+                name.AddToClassList("gridcell-name");
+                tile.Add(name);
 
                 var stat = new Label(StatText(boost));
-                stat.AddToClassList("acctile-stat");
+                stat.AddToClassList("gridcell-stat");
                 tile.Add(stat);
-
-                var foot = new VisualElement();
-                foot.AddToClassList("acctile-foot");
-                var rarityLabel = new Label(RarityName(boost.rarity));
-                rarityLabel.AddToClassList("rarity-badge");
-                rarityLabel.AddToClassList("acctile-rarity");
-                ApplyRarityClass(rarityLabel, boost.rarity);
-                foot.Add(rarityLabel);
-                tile.Add(foot);
 
                 var capturedId = boost.id;
                 var capturedSlot = boost.slot;
@@ -159,6 +159,16 @@ namespace Game.Runtime
             _ => Game.Runtime.UI.Tactical.TacticalIconType.Ring,
         };
 
+        // Point 10/11 : même convention de classe rar-* que ShopAccessoriesTab (dupliquée, pas de
+        // classe de base partagée entre onglets boutique).
+        static string RoundRarityClass(Rarity r) => r switch
+        {
+            Rarity.Rare => "rar-rare",
+            Rarity.Epic => "rar-epic",
+            Rarity.Legendary => "rar-legendary",
+            _ => "rar-common",
+        };
+
         // web: RARITIES[key].color (main.js:83-86) — même table que les autres onglets boutique.
         static Color RarityColorOf(Rarity r) => r switch
         {
@@ -173,10 +183,23 @@ namespace Game.Runtime
         // (pas de classe de base partagee entre les onglets boutique, dupliquee a l'identique).
         static void AddRarityHeader(ScrollView grid, Rarity rarity)
         {
+            // Point 11 : même en-tête encadré + ligne que ShopAccessoriesTab.AddRarityHeader.
+            var row = new VisualElement();
+            row.AddToClassList("rarity-header-row");
+            var color = RarityColorOf(rarity);
             var header = new Label(RarityName(rarity).ToUpperInvariant());
-            header.AddToClassList("rarity-group-header");
-            ApplyRarityClass(header, rarity);
-            grid.Add(header);
+            header.AddToClassList("rarity-header-label");
+            header.style.color = color;
+            header.style.borderTopColor = color;
+            header.style.borderBottomColor = color;
+            header.style.borderLeftColor = color;
+            header.style.borderRightColor = color;
+            row.Add(header);
+            var line = new VisualElement();
+            line.AddToClassList("rarity-header-line");
+            line.style.backgroundColor = color;
+            row.Add(line);
+            grid.Add(row);
         }
 
         // web: RARITIES (main.js:82-87) — même convention dupliquée que les autres onglets boutique.

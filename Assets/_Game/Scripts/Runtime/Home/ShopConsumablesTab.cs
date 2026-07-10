@@ -57,58 +57,62 @@ namespace Game.Runtime
             var consumableList = db.consumables.Where(c => c != null).ToList();
             if (consumableList.Count > 0)
             {
+                // Point 11 : en-tête au même format que les autres grilles (label encadré + ligne).
+                var row = new VisualElement();
+                row.AddToClassList("rarity-header-row");
+                var gray = new Color(0.604f, 0.639f, 0.698f);
                 var header = new Label("COMMUN");
-                header.AddToClassList("rarity-group-header");
-                header.AddToClassList("rarity-common");
-                grid.Add(header);
+                header.AddToClassList("rarity-header-label");
+                header.style.color = gray;
+                header.style.borderTopColor = gray;
+                header.style.borderBottomColor = gray;
+                header.style.borderLeftColor = gray;
+                header.style.borderRightColor = gray;
+                row.Add(header);
+                var line = new VisualElement();
+                line.AddToClassList("rarity-header-line");
+                line.style.backgroundColor = gray;
+                row.Add(line);
+                grid.Add(row);
             }
             foreach (var item in consumableList)
             {
                 save.consumables.TryGetValue(item.key, out int stock);
 
+                // Point 11 : même modèle circulaire que les autres grilles (tous les consommables
+                // sont "commun" — web main.js:1543 — donc bordure grise commune, jamais de verrou).
                 var tile = new VisualElement();
-                tile.AddToClassList("acctile");
-                tile.AddToClassList("constile");
-                tile.AddToClassList("owned"); // toujours pleine opacité : jamais verrouillé (achat direct, sans possession préalable)
+                tile.AddToClassList("gridcell");
 
-                var name = new Label(item.displayName);
-                name.AddToClassList("acctile-name");
-                tile.Add(name);
-
-                var thumb = new VisualElement();
-                thumb.AddToClassList("acctile-thumb");
+                var circle = new VisualElement();
+                circle.AddToClassList("acctile");
+                circle.AddToClassList("acc-round");
+                circle.AddToClassList("rar-common");
+                circle.AddToClassList("owned"); // toujours pleine opacité (achat direct, sans possession préalable)
                 if (item.icon != null)
                 {
                     var img = new Image { sprite = item.icon };
                     img.AddToClassList("acctile-img");
-                    thumb.Add(img);
+                    circle.Add(img);
                 }
                 else
                 {
                     // Glyphe vectoriel générique (les emojis 💣/⚡/… ne se rendent pas avec Barlow) :
                     // cible pour les grenades, croix médicale (Plus) pour le medkit.
-                    thumb.Add(Game.Runtime.UI.Tactical.TacticalIcon.Create(
+                    circle.Add(Game.Runtime.UI.Tactical.TacticalIcon.Create(
                         item.iconName == "heart" ? Game.Runtime.UI.Tactical.TacticalIconType.Plus
                                                  : Game.Runtime.UI.Tactical.TacticalIconType.Target,
                         new Color(0.604f, 0.639f, 0.698f), 48f));
                 }
-                tile.Add(thumb);
+                tile.Add(circle);
+
+                var name = new Label(item.displayName);
+                name.AddToClassList("gridcell-name");
+                tile.Add(name);
 
                 var stockLabel = new Label($"Possédé : {stock}");
-                stockLabel.AddToClassList("acctile-stat");
+                stockLabel.AddToClassList("gridcell-stat");
                 tile.Add(stockLabel);
-
-                // web: itemCard force rarity:'commun' pour tous les consommables (main.js:1543) —
-                // pas de champ rarity sur ConsumableData, badge fixe (parité visuelle avec les
-                // autres grilles boutique plutôt qu'une omission).
-                var foot = new VisualElement();
-                foot.AddToClassList("acctile-foot");
-                var rarityLabel = new Label("Commun");
-                rarityLabel.AddToClassList("rarity-badge");
-                rarityLabel.AddToClassList("acctile-rarity");
-                rarityLabel.AddToClassList("rarity-common");
-                foot.Add(rarityLabel);
-                tile.Add(foot);
 
                 var capturedKey = item.key;
                 var capturedPrice = item.price;
