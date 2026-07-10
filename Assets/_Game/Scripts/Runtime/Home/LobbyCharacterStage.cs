@@ -83,8 +83,20 @@ namespace Game.Runtime
         public void ShowNeighbors(CharacterData left, CharacterData right)
         {
             ClearNeighbors();
-            leftNeighbor = SpawnNeighbor(left, new Vector3(-1.8f, 0f, -0.6f));
-            rightNeighbor = SpawnNeighbor(right, new Vector3(1.8f, 0f, -0.6f));
+            leftNeighbor = SpawnNeighbor(left, new Vector3(-1.4f, 0f, -0.3f));
+            rightNeighbor = SpawnNeighbor(right, new Vector3(1.4f, 0f, -0.3f));
+        }
+
+        /// Zoom vitrine (playtest 2026-07-10 soir : persos trop petits dans la boutique) —
+        /// avance tout le stage vers la caméra lobby fixe sur l'onglet Personnages, et le
+        /// remet à sa place partout ailleurs. La position de repos vient de HomeSceneBuilder.
+        Vector3 restPosition;
+        bool restCaptured;
+
+        public void SetShowcaseZoom(bool on)
+        {
+            if (!restCaptured) { restPosition = transform.position; restCaptured = true; }
+            transform.position = on ? restPosition + new Vector3(0f, 0f, 2.2f) : restPosition;
         }
 
         public void ClearNeighbors()

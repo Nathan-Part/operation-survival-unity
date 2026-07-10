@@ -166,12 +166,12 @@ namespace Game.Runtime.Editor
             var copy = new AnimationClip { name = $"{role} (filtered)", frameRate = source.frameRate, wrapMode = source.wrapMode };
             foreach (var binding in AnimationUtility.GetCurveBindings(source))
             {
-                // Rotations pures : les positions des hanches du rig source (hauteur/bob) déplacent
-                // un perso d'un autre gabarit (flottement) — retirées aussi, le perso reste ancré
-                // à sa bind pose. Réévaluer si un vrai retarget humanoïde arrive un jour.
-                bool isPosition = binding.propertyName.StartsWith("m_LocalPosition");
+                // Playtest 2026-07-10 soir : les variantes sans positions (rotations pures)
+                // déformaient TOUS les persos (jambes/épaules) — les positions de ce clip font
+                // partie de la pose (comportement web, three.js les applique aussi). On ne retire
+                // que les curves d'échelle ; le vrai retarget par gabarit reste un chantier asset.
                 bool isScale = binding.propertyName.StartsWith("m_LocalScale");
-                if (isScale || isPosition) continue;
+                if (isScale) continue;
                 AnimationUtility.SetEditorCurve(copy, binding, AnimationUtility.GetEditorCurve(source, binding));
             }
             AssetDatabase.CreateAsset(copy, path);

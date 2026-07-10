@@ -71,6 +71,10 @@ namespace Game.Runtime
             equipButton = content.Q<Button>("shop-cequip");
             equippedBadge = content.Q<Label>("shop-cequipped-badge");
             carousel = content.Q<ScrollView>("shop-char-carousel");
+            // Playtest 2026-07-10 soir : pas de carrousel sur l'onglet Personnages (parité
+            // shop-perso.png — le trio 3D + les flèches suffisent), le bloc stats descend en bas.
+            var bottombar = content.Q<VisualElement>("shop-char-bottombar");
+            if (bottombar != null) bottombar.style.display = DisplayStyle.None;
 
             ameliorerButton.clicked += () => { ameliorerOpen = !ameliorerOpen; Render(); };
             buyButton.clicked += () =>

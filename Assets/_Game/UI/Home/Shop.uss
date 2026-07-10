@@ -253,7 +253,7 @@
    L'élément est un enfant direct de l'onglet (pleine largeur), voir ShopPanel.uxml. */
 #shop-char-stats-panel {
     position: absolute;
-    bottom: 185px; /* au-dessus du carrousel du bas (170px + marge) */
+    bottom: 24px; /* en bas comme le web — le carrousel de persos est masqué (parité shop-perso.png) */
     left: 50%;
     margin-left: -270px;
     width: 540px;
@@ -430,16 +430,17 @@
 }
 
 /* Chips de catégories : carrés blancs, texte condensé sombre, actif violet (parité shop-guns.png). */
+/* Sous-onglets agrandis (playtest 2026-07-10 soir : trop petits). */
 .subtab {
     background-color: rgba(255, 255, 255, 0.92);
     border-width: 1px;
     border-color: rgba(23, 26, 38, 0.15);
     border-radius: 4px;
     color: #232838;
-    padding: 6px 16px;
-    margin-right: 6px;
+    padding: 9px 22px;
+    margin-right: 8px;
     margin-bottom: 4px;
-    font-size: 13px;
+    font-size: 16px;
     -unity-font-style: bold;
     letter-spacing: 1px;
     -unity-font-definition: url("/Assets/_Game/Art/UI/Fonts/BarlowCondensed-Bold.ttf");
@@ -543,12 +544,14 @@
 /* Panneau latéral droit blanc pour les onglets à grille (parité shop-accessoires.png :
    Accessoires/Boost/Consommables vivent dans une colonne blanche à droite, le perso 3D
    reste visible au centre). */
+/* Élargi 340 -> 600 (playtest 2026-07-10 soir) : plusieurs articles par ligne dans les
+   grilles, toujours groupés par rareté (les en-têtes forcent le retour à la ligne). */
 .shop-side-panel {
     position: absolute;
     right: 0;
     top: 0;
     bottom: 0;
-    width: 340px;
+    width: 600px;
     background-color: rgba(247, 248, 252, 0.95);
     border-radius: 6px;
     padding: 16px;
@@ -673,10 +676,11 @@
    shop-accessoires2.png) : grand cercle gris, bordure épaisse colorée par rareté,
    coche verte sur l'article équipé. S'applique PAR-DESSUS .acctile (les danses
    gardent la tuile rectangulaire). */
+/* Playtest 2026-07-10 soir : cercles agrandis (116 -> 145, on ne voyait pas les articles). */
 .acctile.acc-round {
-    width: 116px;
-    height: 116px;
-    border-radius: 58px;
+    width: 145px;
+    height: 145px;
+    border-radius: 73px;
     background-color: rgb(208, 211, 220);
     border-width: 3px;
     border-color: rgb(154, 163, 178);
@@ -697,8 +701,8 @@
 }
 
 .acc-round .acctile-img {
-    width: 78px;
-    height: 78px;
+    width: 108px;
+    height: 108px;
 }
 
 .acc-check {
@@ -717,13 +721,14 @@
     -unity-text-align: middle-center;
 }
 
+/* Cadenas EN HAUT-DROITE comme la coche (playtest 2026-07-10 soir — parité exemple). */
 .acc-lock {
     position: absolute;
-    bottom: -4px;
-    right: -4px;
-    width: 26px;
-    height: 26px;
-    border-radius: 13px;
+    top: -6px;
+    right: -6px;
+    width: 32px;
+    height: 32px;
+    border-radius: 16px;
     background-color: rgb(120, 126, 140);
     align-items: center;
     justify-content: center;
@@ -753,9 +758,10 @@
     margin-left: 8px;
 }
 
-/* Cellule colonne des grilles Boost/Consommables (point 11) : cercle + nom + stat + action. */
+/* Cellule colonne des grilles Boost/Consommables (point 11) : cercle + nom + stat + action.
+   Largeur calée pour 3 cellules par ligne dans le panneau de 600px. */
 .gridcell {
-    width: 144px;
+    width: 170px;
     align-items: center;
     margin-bottom: 12px;
 }

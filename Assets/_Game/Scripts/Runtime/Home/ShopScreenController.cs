@@ -184,6 +184,8 @@ namespace Game.Runtime
             if (tab == "player") characterTab?.SelectByEquipped();
             // Trio 3D du seul onglet Personnages (point 9) : nettoyé dès qu'on le quitte.
             else stage?.ClearNeighbors();
+            // Zoom vitrine : persos rapprochés de la caméra sur l'onglet Personnages uniquement.
+            stage?.SetShowcaseZoom(tab == "player");
             // web: setShopTab (main.js:1421-1423) — clearAccessoryPreview() à CHAQUE changement
             // d'onglet, quel que soit l'onglet de départ/d'arrivée (pas seulement en quittant
             // Accessoires) : un essai masque/costume ne doit jamais persister visuellement une fois
@@ -215,6 +217,7 @@ namespace Game.Runtime
             stage?.ClearAccessoryPreview();
             stage?.StopDance();
             stage?.ClearNeighbors(); // le trio de l'onglet Personnages ne survit jamais à la fermeture
+            stage?.SetShowcaseZoom(false);
             // Phase 5 bis (point 5) : le bouton "Fermer" appelle Close() en direct, sans passer
             // par HomeController — l'event permet à ce dernier de ré-afficher le lobby.
             Closed?.Invoke();

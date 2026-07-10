@@ -12,16 +12,21 @@
     margin-bottom: 10px;
 }
 
+/* Playtest 2026-07-10 soir : plus de pilule (radius 999 trop rond) — mêmes onglets
+   rectangulaires que les sous-onglets boutique (.subtab, parité shop-accessoires.png). */
 .howto-tab {
     background-color: rgba(255, 255, 255, 0.06);
     border-width: 1px;
     border-color: var(--color-border);
-    border-radius: 999px;
+    border-radius: 4px;
     color: var(--color-text-dim);
-    padding: 6px 14px;
+    padding: 6px 16px;
     margin-right: 6px;
     margin-bottom: 6px;
-    font-size: 11px;
+    font-size: 12px;
+    -unity-font-style: bold;
+    letter-spacing: 1px;
+    -unity-font-definition: url("/Assets/_Game/Art/UI/Fonts/BarlowCondensed-Bold.ttf");
 }
 
 .howto-tab.on {

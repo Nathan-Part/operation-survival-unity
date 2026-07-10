@@ -210,7 +210,9 @@ namespace Game.Runtime
                 tile.clicked += () =>
                 {
                     preview[capturedType] = capturedId;
-                    stage?.PreviewAccessory(capturedId);
+                    // Playtest 2026-07-10 soir : plus de stage.PreviewAccessory(...) — surimprimer
+                    // le PNG plat sur le perso était mensonger tant qu'il n'y a pas de modèle 3D
+                    // d'accessoire. La sélection n'alimente plus que la barre d'achat.
                     Render();
                 };
 
