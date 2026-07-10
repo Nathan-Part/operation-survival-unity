@@ -70,7 +70,8 @@ Sur mobile/tactile (Device Simulator ou build Android) : joystick virtuel à gau
   - **Perso lobby « déformé » (retour Nathan)** : la boucle jouée était `walking_man` (marche rapide) puis `Alert` (posture de combat) — le web boucle `Casual_Walk`. Clip copié (`anim-lobby.glb`), nouveau rôle `AnimRole.Lobby` + champ `AnimationLibrary.lobby` + entrée Assign Imported Art ; **bug corrigé au passage dans `AnimationDriver`** : `RoleSlotCount=5` en dur faisait entrer le 6ᵉ rôle en collision avec le slot one-shot (désormais dérivé de l'enum).
   - Re-vérifié en fin de passe : **287/287 EditMode, 7/9 PlayMode (2 skips connus Utopia), 0 régression**.
   - **Écart restant assumé (TODO)** : le HUD en jeu est aux bonnes positions (passe du matin) mais plus brut que `hud.png` — pas de cartouches sombres derrière crédits/consommables/munitions, minimap carrée au lieu de ronde, jauges grises au lieu de violettes. Chantier de style uGUI dédié à planifier.
-- ⬅️ **Prochaine session** : vérification visuelle par Nathan de la Phase 5.1 (voir TODO manuels ci-dessous), passe de style HUD (cartouches sombres/minimap ronde, cf. ci-dessus), puis Phase 6 (multijoueur, Photon Fusion — nécessite la mise en place d'un compte/projet Photon, pas fait cette nuit).
+- 📝 **Playtest Nathan sur la passe n°2 (2026-07-10, midi)** : premier feedback complet reçu — 12 points (menu Échap qui ne fige pas la caméra, ennemis qui n'avancent pas/traversent les murs, Play doit démarrer sur le menu, boutons d'accueil coupés en bas + retour d'armurerie qui les fait disparaître, perso lobby torse rétréci/décentré, pilule Cyborg trop ronde, vitrine Armes = l'arme pas le perso, onglet Personnages à refaire sur `shop-perso.png`, accessoires trop petits à refaire en vignettes rondes bordées par rareté (`shop-accessoires.png` + nouveau `shop-accessoires2.png` pour les costumes), même style sur tous les onglets à grille, HUD à recaler sur le web dont vie en bas-gauche + minimap ronde, UI responsive). **Rédigé au propre dans la nouvelle section « Phase 5 bis » ci-dessous — c'est la liste de travail de la prochaine session.**
+- ⬅️ **Prochaine session** : traiter la **Phase 5 bis** (les 12 points du feedback Nathan, voir la section dédiée), puis merge de la branche après re-validation Nathan, puis Phase 6 (multijoueur, Photon Fusion — nécessite la mise en place d'un compte/projet Photon).
 
 ---
 
@@ -153,6 +154,45 @@ Geler le design du jeu web pour que Unity ait une référence stable : refactors
 - 💤 **Reste (manuel, non bloquant)** : vérification visuelle de l'accueil par Nathan, clips de danse à importer du web (`PlayDance` no-op sans eux, ne plante pas), découpe « tactique » exacte des cartes si souhaitée — voir TODO manuels ci-dessous.
 
 **Jalon atteint :** un joueur du jeu web retrouve exactement son accueil sur mobile → **c'est la v1 publiable**, sous réserve de la vérification visuelle manuelle de Nathan.
+
+### Phase 5 bis — Feedback playtest Nathan du 2026-07-10 (sur la passe de parité n°2) ⬅️ À TRAITER
+
+*Premier retour de Nathan sur la version de la branche `feat/phase5.1-visual-parity` après la passe de parité visuelle n°2 (commit `b93bb76a`). Rédigé au propre ici à sa demande — c'est la liste de travail de la prochaine session. Les images de référence restent `docs/refactor/*.png` (+ nouvelle image `shop-accessoires2.png` ajoutée par Nathan : les costumes, même modèle visuel que les masques).*
+
+#### A. Bugs de jeu (bloquants pour le confort de jeu)
+
+1. **Menu Échap : la caméra bouge encore derrière le menu.** Quand le menu pause est ouvert, les mouvements de souris continuent de faire tourner la vue. Attendu : ouvrir Échap **gèle la caméra** (et libère le curseur), la vue ne doit plus bouger tant que le menu est ouvert.
+2. **Les ennemis buguent toujours** : certains n'avancent pas du tout, d'autres avancent tout droit **dans les murs**. À rediagnostiquer (NavMesh ? FSM ? obstacles ?) — c'est un retour récurrent depuis le playtest du 2026-07-07.
+3. **Lancer Play dans Unity doit arriver sur le MENU, pas sur la map.** Aujourd'hui la game démarre directement en jeu ; attendu : le point d'entrée est toujours la page d'accueil (`Home.unity`), comme le web.
+
+#### B. Page d'accueil
+
+4. **Boutons mal placés / coupés en bas** : une partie de la rangée de tuiles du bas est **coupée par le bord de l'écran**. Hypothèse de Nathan : peut-être simplement un écran trop petit — dans ce cas **l'UI doit s'adapter à la taille de l'écran** (responsive : rien ne doit jamais être coupé, quelle que soit la résolution/l'aspect ratio).
+5. **Retour de l'armurerie cassé** : en quittant l'armurerie on revient bien sur le perso du lobby, mais **les boutons de l'accueil ne s'affichent plus**.
+6. **Perso du lobby bugué** : son **torse est rétréci** (déformation du mesh/rig à diagnostiquer), et il n'est **pas centré sur la stèle** — il est trop à droite. Attendu : perso bien au centre du socle.
+7. **Pilule du nom (« CYBORG ») trop ronde** : le bloc-sélecteur de perso a un border-radius beaucoup trop prononcé, il ne ressemble pas à l'original de `homepage.png`. Reprendre la forme exacte du web.
+
+#### C. Armurerie (boutique)
+
+8. **Onglet Armes : retirer le personnage de la vitrine, afficher l'ARME à la place.** Actuellement on voit le perso 3D ; attendu : le modèle 3D de l'**arme sélectionnée** au centre. Une seule arme a un modèle aujourd'hui : l'afficher quand on clique dessus ; pour les autres (sans modèle), **laisser la vitrine vide** (pas de capsule de secours).
+9. **Onglet Personnages : pas conforme à `shop-perso.png`.** Attendu : les personnages **visibles en 3D sur les côtés** (le sélectionné au centre, les voisins à côté), on **pivote avec les flèches** ‹ ›, et le **bloc statistiques centré** en bas (il ne l'est pas actuellement). Se rebaser entièrement sur l'image.
+10. **Onglet Accessoires : pas conforme à `shop-accessoires.png`.** Les produits sont **beaucoup trop petits**, on ne les voit pas. Attendu, exactement comme l'image : vignettes **grandes et RONDES** (border-radius cercle), **bordure colorée selon la rareté**, **petite icône check** ✓ sur l'article équipé, etc. **Pareil pour les costumes** (référence : `shop-accessoires2.png`, même modèle que les masques).
+11. **Cohérence de ce style sur TOUS les onglets à grille** : Consommables, Boost, etc. doivent suivre exactement le même modèle visuel (même sans image de référence dédiée).
+
+#### D. HUD en jeu — pas à 100 % comme le web (screenshot de référence fourni par Nathan le 2026-07-10)
+
+12. **Rien n'est centré / des éléments sont mal placés** par rapport au HUD web. Relevé de Nathan (+ lecture de son screenshot de référence) :
+    - **Barre de vie : en BAS À GAUCHE** (barre segmentée verte au-dessus de SPRINT et du rang), **pas en haut à droite** — corrige la position posée lors de la passe du 2026-07-10 matin.
+    - **« Série de points » (jauges loadout)** mal placées/pas conformes.
+    - Consommables en **cartouches sombres à coins coupés** avec icône + compteur (colonne haut-gauche, crédits ⊕ doré en tête).
+    - **Minimap RONDE** en haut-droite (pas carrée) avec la barre violette au-dessus.
+    - Bannière de vague sombre en haut-centre (« VAGUE 1 · 2 ENNEMIS »), bouclier bas-centre, bloc munitions sombre bas-droite avec « ✕ N ENNEMIS » rouge + « 94 / 100 » + SCORE.
+    - Défis en bas-gauche (3 barres sombres sous « DÉFIS »).
+    - Comme pour l'accueil : si des éléments sortent de l'écran sur les petites résolutions, **le HUD doit s'adapter à la taille de l'écran**.
+
+*(Point hors périmètre rappelé : la petite barre avec le soleil sur le screenshot de Nathan est un widget Windows, pas le jeu.)*
+
+**Jalon Phase 5 bis :** Nathan rejoue cette checklist point par point et ne trouve plus d'écart.
 
 ### Phase 6 — Multijoueur 🔜
 
