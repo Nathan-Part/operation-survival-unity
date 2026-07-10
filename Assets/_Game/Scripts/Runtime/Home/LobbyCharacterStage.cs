@@ -30,6 +30,13 @@ namespace Game.Runtime
 
         public void Init(GameDatabase database) => db = database;
 
+        /// Masque/ré-affiche le perso courant sans le détruire (vitrine Armes de la boutique,
+        /// Phase 5 bis point 8) — l'anim et l'état de sélection survivent au passage d'onglet.
+        public void SetVisible(bool visible)
+        {
+            if (visual != null) visual.SetActive(visible);
+        }
+
         public void ShowCharacter(string characterId)
         {
             if (db == null || string.IsNullOrEmpty(characterId) || characterId == currentCharacterId) return;

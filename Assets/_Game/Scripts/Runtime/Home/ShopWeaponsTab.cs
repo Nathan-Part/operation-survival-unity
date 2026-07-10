@@ -363,21 +363,13 @@ namespace Game.Runtime
 
             if (heroVisual != null) Object.Destroy(heroVisual);
 
-            var model = w.ResolveModel(db.placeholders);
-            GameObject instance;
-            if (model != null)
-            {
-                instance = Object.Instantiate(model, weaponPivot);
-                instance.transform.localScale = Vector3.one * w.modelScale;
-            }
-            else
-            {
-                // Fallback visuel générique (CLAUDE.md : "la logique n'exige jamais un asset") —
-                // gabarit compact façon arme, pas la capsule pleine taille des ennemis/persos.
-                instance = PrimitiveFactory.CreateCapsule($"WeaponHero_{w.id}", RarityColor(w.rarity));
-                instance.transform.SetParent(weaponPivot, false);
-                instance.transform.localScale = new Vector3(0.12f, 0.28f, 0.12f);
-            }
+            // Phase 5 bis (point 8) : uniquement le VRAI modèle de l'arme (modelPrefab assigné) —
+            // pas de capsule de secours ni de placeholder : arme sans modèle = vitrine vide,
+            // comme demandé au playtest 2026-07-10 (la logique ne plante pas pour autant).
+            if (w.modelPrefab == null) { heroVisual = null; return; }
+
+            var instance = Object.Instantiate(w.modelPrefab, weaponPivot);
+            instance.transform.localScale = Vector3.one * w.modelScale;
             instance.transform.localPosition = Vector3.zero;
             instance.transform.localRotation = Quaternion.identity;
             heroVisual = instance;

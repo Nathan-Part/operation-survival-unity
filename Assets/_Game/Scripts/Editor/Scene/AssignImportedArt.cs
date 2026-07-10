@@ -166,11 +166,12 @@ namespace Game.Runtime.Editor
             var copy = new AnimationClip { name = $"{role} (filtered)", frameRate = source.frameRate, wrapMode = source.wrapMode };
             foreach (var binding in AnimationUtility.GetCurveBindings(source))
             {
-                bool isHips = binding.path.EndsWith("Hips");
+                // Rotations pures : les positions des hanches du rig source (hauteur/bob) déplacent
+                // un perso d'un autre gabarit (flottement) — retirées aussi, le perso reste ancré
+                // à sa bind pose. Réévaluer si un vrai retarget humanoïde arrive un jour.
                 bool isPosition = binding.propertyName.StartsWith("m_LocalPosition");
                 bool isScale = binding.propertyName.StartsWith("m_LocalScale");
-                if (isScale) continue;
-                if (isPosition && !isHips) continue;
+                if (isScale || isPosition) continue;
                 AnimationUtility.SetEditorCurve(copy, binding, AnimationUtility.GetEditorCurve(source, binding));
             }
             AssetDatabase.CreateAsset(copy, path);

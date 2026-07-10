@@ -122,7 +122,10 @@ namespace Game.Runtime
             // regarde (0,1.46,0)). Coordonnées approximatives (pas de caméra boutique dédiée comme
             // le web SHOP_CENTER_POS) : simplification assumée, documentée dans le rapport de tâche.
             var pivotGo = new GameObject("ShopWeaponPivot");
-            pivotGo.transform.position = new Vector3(1.3f, 1.3f, 0.3f);
+            // Phase 5 bis (point 8) : l'arme est CENTRÉE dans la vitrine (parité shop-guns.png) —
+            // le perso du lobby est masqué pendant l'onglet Armes (voir UpdateHeroVisualVisibility).
+            // z=4.5 : rapprochée de la caméra lobby (0,1.95,6.8) pour occuper l'écran comme le web.
+            pivotGo.transform.position = new Vector3(0f, 1.7f, 4.5f);
             // Finding 1 (revue Task 11) : caché par défaut à la création — sinon le modèle héros (ou
             // la capsule de secours) reste visible dans le lobby avant même la première ouverture de
             // la boutique. Parité web : main.js:1365,1406 (shopWeaponObj.visible toggle sur
@@ -238,7 +241,11 @@ namespace Game.Runtime
         {
             if (weaponPivot == null) return;
             bool shopOpen = shopPanel != null && !shopPanel.ClassListContains("hidden");
-            weaponPivot.gameObject.SetActive(shopOpen && activeTab == "weapons");
+            bool weaponsShowcase = shopOpen && activeTab == "weapons";
+            weaponPivot.gameObject.SetActive(weaponsShowcase);
+            // Phase 5 bis (point 8) : sur l'onglet Armes on retire le perso de la vitrine —
+            // l'arme seule au centre (shop-guns.png). Il revient sur les autres onglets/fermeture.
+            stage?.SetVisible(!weaponsShowcase);
         }
 
         /// Rendu idempotent (peut être rejoué à volonté) : topbar crédits + contenu de l'onglet actif.
