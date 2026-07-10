@@ -179,7 +179,7 @@ Geler le design du jeu web pour que Unity ait une référence stable : refactors
 10. **Onglet Accessoires : pas conforme à `shop-accessoires.png`.** Les produits sont **beaucoup trop petits**, on ne les voit pas. Attendu, exactement comme l'image : vignettes **grandes et RONDES** (border-radius cercle), **bordure colorée selon la rareté**, **petite icône check** ✓ sur l'article équipé, etc. **Pareil pour les costumes** (référence : `shop-accessoires2.png`, même modèle que les masques).
 11. **Cohérence de ce style sur TOUS les onglets à grille** : Consommables, Boost, etc. doivent suivre exactement le même modèle visuel (même sans image de référence dédiée).
 
-#### D. HUD en jeu — pas à 100 % comme le web (screenshot de référence fourni par Nathan le 2026-07-10)
+#### D. HUD en jeu — pas à 100 % comme le web (screenshot de référence fourni par Nathan le 2026-07-10, archivé : `docs/refactor/hud2.png` — plus récent que `hud.png`, c'est LA référence HUD à suivre)
 
 12. **Rien n'est centré / des éléments sont mal placés** par rapport au HUD web. Relevé de Nathan (+ lecture de son screenshot de référence) :
     - **Barre de vie : en BAS À GAUCHE** (barre segmentée verte au-dessus de SPRINT et du rang), **pas en haut à droite** — corrige la position posée lors de la passe du 2026-07-10 matin.
