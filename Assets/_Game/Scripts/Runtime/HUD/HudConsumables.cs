@@ -28,16 +28,21 @@ namespace Game.Runtime
             this.meta = meta;
             this.thrower = thrower;
 
-            const float rowHeight = 26f, startY = -112f; // sous credits/niveau/XP (voir HudMeta, jusqu'a y=-94)
+            // Parité hud2.png (point 12) : colonne de cartouches sombres sous le bloc crédits,
+            // un par consommable (nom + compteur).
+            const float rowHeight = 34f, gap = 6f, startY = -68f;
             rows = new Text[Slots.Length];
             for (int i = 0; i < Slots.Length; i++)
             {
-                var text = HudBuild.MakeText(root, "", 18, TextAnchor.UpperLeft, $"Consumable_{Slots[i].key}");
+                var cartouche = HudBuild.MakeCartouche(root, $"Consumable_{Slots[i].key}",
+                    new Vector2(0f, 1f), new Vector2(0f, 1f),
+                    new Vector2(24f, startY - i * (rowHeight + gap)), new Vector2(130f, rowHeight));
+                var text = HudBuild.MakeText(cartouche.rectTransform, "", 15, TextAnchor.MiddleLeft, "Label");
                 var r = text.rectTransform;
-                r.anchorMin = r.anchorMax = new Vector2(0f, 1f);
-                r.pivot = new Vector2(0f, 1f);
-                r.anchoredPosition = new Vector2(24f, startY - i * rowHeight);
-                r.sizeDelta = new Vector2(160f, rowHeight);
+                r.anchorMin = Vector2.zero;
+                r.anchorMax = Vector2.one;
+                r.sizeDelta = new Vector2(-20f, 0f);
+                r.anchoredPosition = new Vector2(10f, 0f);
                 rows[i] = text;
             }
         }

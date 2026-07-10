@@ -19,13 +19,17 @@ namespace Game.Runtime
 
         RectTransform healthFill;
         RectTransform staminaFill;
+        RectTransform waveProgressFill;
         Text ammoText;
         Text waveText;
         Text streakText;
+        Text scoreText;
+        Text enemiesText;
         GameOverScreen gameOverScreen;
         public HudPauseMenu PauseMenu { get; private set; }
         int lastWave;
         int lastAlive;
+        int waveMaxAlive = 1;
         bool reloading;
         int inMag, magSize;
 
@@ -58,34 +62,66 @@ namespace Game.Runtime
             var scaler = canvasGo.AddComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1920f, 1080f);
+            // Shrink : la référence 1080p tient toujours entière — rien n'est jamais coupé,
+            // quel que soit l'aspect ratio (Phase 5 bis, point 12).
+            scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Shrink;
             canvasGo.AddComponent<GraphicRaycaster>();
             var root = (RectTransform)canvasGo.transform;
 
-            // Barre de vie en haut-droite, a gauche de la minimap (parite hud.png — playtest 2026-07-10 :
-            // en bas-gauche elle chevauchait les barres de Defis). Le radar occupe x[-250..-30] y[-30..-250].
-            healthFill = MakeBar(root, Vector2.zero, new Vector2(300f, 22f), new Color(0.85f, 0.2f, 0.2f));
-            var healthBack = (RectTransform)healthFill.parent;
-            healthBack.anchorMin = healthBack.anchorMax = new Vector2(1f, 1f);
-            healthBack.pivot = new Vector2(0f, 1f);
-            healthBack.anchoredPosition = new Vector2(-560f, -40f);
-            // Stamina ("Sprint") reste en bas-gauche, sous les Defis (parite hud.png).
-            staminaFill = MakeBar(root, new Vector2(40f, 44f), new Vector2(400f, 14f), new Color(0.95f, 0.8f, 0.25f));
+            // Parité hud2.png (Phase 5 bis, point 12) — bas-gauche, de bas en haut :
+            // rang (HudMeta) → SPRINT → VIE segmentée verte → Défis (HudChallenges).
+            healthFill = MakeBar(root, new Vector2(40f, 96f), new Vector2(330f, 16f), new Color(0.21f, 0.82f, 0.37f));
+            HudBuild.MakeSegments((RectTransform)healthFill.parent, 24, 16f);
 
-            // Munitions (bas droite)
-            ammoText = MakeText(root, "", 40, TextAnchor.LowerRight);
+            var sprintLabel = MakeText(root, "SPRINT", 13, TextAnchor.LowerLeft);
+            var sprintLabelRect = sprintLabel.rectTransform;
+            sprintLabelRect.anchorMin = sprintLabelRect.anchorMax = sprintLabelRect.pivot = new Vector2(0f, 0f);
+            sprintLabelRect.anchoredPosition = new Vector2(40f, 74f);
+            sprintLabelRect.sizeDelta = new Vector2(200f, 16f);
+            sprintLabel.color = new Color(0.62f, 0.48f, 1f);
+            staminaFill = MakeBar(root, new Vector2(40f, 64f), new Vector2(330f, 8f), new Color(0.49f, 0.36f, 1f));
+
+            // Bloc munitions bas-droite (hud2.png) : cartouche sombre « N / M » + SCORE,
+            // surmonté du bandeau rouge « ✕ N ENNEMIS ».
+            var ammoBlock = HudBuild.MakeCartouche(root, "AmmoBlock", new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-40f, 40f), new Vector2(240f, 104f));
+            ammoText = MakeText(ammoBlock.rectTransform, "", 40, TextAnchor.MiddleCenter);
             var ammoRect = ammoText.rectTransform;
-            ammoRect.anchorMin = ammoRect.anchorMax = new Vector2(1f, 0f);
-            ammoRect.pivot = new Vector2(1f, 0f);
-            ammoRect.anchoredPosition = new Vector2(-40f, 40f);
-            ammoRect.sizeDelta = new Vector2(500f, 60f);
+            ammoRect.anchorMin = new Vector2(0f, 0.35f);
+            ammoRect.anchorMax = new Vector2(1f, 1f);
+            ammoRect.sizeDelta = Vector2.zero;
+            scoreText = MakeText(ammoBlock.rectTransform, "SCORE 0", 14, TextAnchor.MiddleCenter);
+            var scoreRect = scoreText.rectTransform;
+            scoreRect.anchorMin = Vector2.zero;
+            scoreRect.anchorMax = new Vector2(1f, 0.35f);
+            scoreRect.sizeDelta = Vector2.zero;
+            scoreText.color = new Color(0.8f, 0.82f, 0.88f);
 
-            // Vague (haut centre)
-            waveText = MakeText(root, "", 34, TextAnchor.UpperCenter);
-            var waveRect = waveText.rectTransform;
-            waveRect.anchorMin = waveRect.anchorMax = new Vector2(0.5f, 1f);
-            waveRect.pivot = new Vector2(0.5f, 1f);
-            waveRect.anchoredPosition = new Vector2(0f, -24f);
-            waveRect.sizeDelta = new Vector2(800f, 50f);
+            var enemiesBanner = HudBuild.MakeImage(root, new Color(0.82f, 0.20f, 0.24f, 0.95f), "EnemiesBanner");
+            enemiesBanner.rectTransform.anchorMin = enemiesBanner.rectTransform.anchorMax = new Vector2(1f, 0f);
+            enemiesBanner.rectTransform.pivot = new Vector2(1f, 0f);
+            enemiesBanner.rectTransform.anchoredPosition = new Vector2(-40f, 148f);
+            enemiesBanner.rectTransform.sizeDelta = new Vector2(200f, 32f);
+            enemiesText = MakeText(enemiesBanner.rectTransform, "✕ 0 ENNEMIS", 16, TextAnchor.MiddleCenter);
+            enemiesText.rectTransform.anchorMin = Vector2.zero;
+            enemiesText.rectTransform.anchorMax = Vector2.one;
+            enemiesText.rectTransform.sizeDelta = Vector2.zero;
+            enemiesText.fontStyle = FontStyle.Bold;
+
+            // Bannière de vague haut-centre : cartouche sombre « VAGUE n · m ENNEMIS » (hud2.png).
+            var waveBanner = HudBuild.MakeCartouche(root, "WaveBanner", new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -20f), new Vector2(380f, 42f));
+            waveText = MakeText(waveBanner.rectTransform, "", 22, TextAnchor.MiddleCenter);
+            waveText.rectTransform.anchorMin = Vector2.zero;
+            waveText.rectTransform.anchorMax = Vector2.one;
+            waveText.rectTransform.sizeDelta = Vector2.zero;
+            waveText.supportRichText = true;
+            waveText.fontStyle = FontStyle.Bold;
+
+            // Barre violette au-dessus de la minimap (hud2.png) : progression de la vague en cours.
+            waveProgressFill = MakeBar(root, Vector2.zero, new Vector2(190f, 8f), new Color(0.55f, 0.38f, 1f));
+            var waveProgressBack = (RectTransform)waveProgressFill.parent;
+            waveProgressBack.anchorMin = waveProgressBack.anchorMax = new Vector2(1f, 1f);
+            waveProgressBack.pivot = new Vector2(1f, 1f);
+            waveProgressBack.anchoredPosition = new Vector2(-30f, -26f);
 
             // Compteur de killstreak (web #58) : 🔥 + nombre, affiché à partir de 2 kills
             streakText = MakeText(root, "", 32, TextAnchor.UpperCenter);
@@ -146,8 +182,13 @@ namespace Game.Runtime
             this.health.HealthChanged += OnHealthChanged;
             this.weapon.AmmoChanged += OnAmmoChanged;
             this.weapon.ReloadingChanged += OnReloadingChanged;
-            this.waves.WaveStarted += w => { lastWave = w; RefreshWaveText(); };
-            this.waves.AliveCountChanged += n => { lastAlive = n; RefreshWaveText(); };
+            this.waves.WaveStarted += w => { lastWave = w; waveMaxAlive = Mathf.Max(1, lastAlive); RefreshWaveText(); };
+            this.waves.AliveCountChanged += n =>
+            {
+                lastAlive = n;
+                waveMaxAlive = Mathf.Max(waveMaxAlive, n); // le pic d'ennemis vivants de la vague sert de dénominateur
+                RefreshWaveText();
+            };
 
             OnHealthChanged(health.Health, health.MaxHealth);
             if (weapon.Weapon != null) OnAmmoChanged(weapon.Weapon.mag, weapon.Weapon.mag);
@@ -157,6 +198,8 @@ namespace Game.Runtime
         {
             if (motor != null && motor.StaminaMax > 0f)
                 staminaFill.anchorMax = new Vector2(Mathf.Clamp01(motor.StaminaCurrent / motor.StaminaMax), 1f);
+            if (scoreText != null && tracker != null)
+                scoreText.text = $"SCORE {tracker.CurrentStats.score}";
             RefreshStreakText();
         }
 
@@ -177,7 +220,16 @@ namespace Game.Runtime
         void OnReloadingChanged(bool value) { reloading = value; RefreshAmmoText(); }
 
         void RefreshAmmoText() => ammoText.text = reloading ? "RECHARGE…" : $"{inMag} / {magSize}";
-        void RefreshWaveText() => waveText.text = $"Vague {lastWave} — {lastAlive} ennemis restants";
+
+        void RefreshWaveText()
+        {
+            // Parité hud2.png : « VAGUE n » violet + « · m ENNEMIS » blanc, bandeau rouge
+            // « ✕ m ENNEMIS » au-dessus du bloc munitions, barre violette = progression de vague.
+            waveText.text = $"<color=#9d7bff>VAGUE {lastWave}</color> · {lastAlive} ENNEMIS";
+            if (enemiesText != null) enemiesText.text = $"✕ {lastAlive} ENNEMIS";
+            if (waveProgressFill != null)
+                waveProgressFill.anchorMax = new Vector2(1f - Mathf.Clamp01((float)lastAlive / waveMaxAlive), 1f);
+        }
 
         // Playtest Phase 5.1 (2026-07-09) : remplace l'ancien écran minimal ("Vous êtes mort" + 2
         // boutons bruts) par GameOverScreen (12 cartes stats, rang, classement — parité game-over.png).

@@ -12,7 +12,7 @@ namespace Game.Runtime
     public class HudRadar : MonoBehaviour
     {
         const float RangeMeters = 28f;
-        const float RadiusPixels = 110f;
+        const float RadiusPixels = 95f; // ~190px de diamètre (hud2.png)
         // TODO(spec-web) : le web double RangeMeters quand le power-up "radar_boost" est actif
         // (main.js:4225). Aucune trace de "radar_boost" dans le projet Unity (grep negatif,
         // 2026-07-09) — la portee reste fixe a 28m tant que ce power-up n'existe pas cote Unity.
@@ -27,13 +27,16 @@ namespace Game.Runtime
             this.waves = waves;
             this.player = player;
 
+            // Minimap RONDE (Phase 5 bis point 12, parité hud2.png) : disque sombre, sous la
+            // barre violette de progression de vague (HudController, y=-26..-34).
             var rect = gameObject.AddComponent<RectTransform>();
             rect.anchorMin = rect.anchorMax = new Vector2(1f, 1f);
             rect.pivot = new Vector2(1f, 1f);
-            rect.anchoredPosition = new Vector2(-30f, -30f);
+            rect.anchoredPosition = new Vector2(-30f, -44f);
             rect.sizeDelta = new Vector2(RadiusPixels * 2f, RadiusPixels * 2f);
             var background = gameObject.AddComponent<Image>();
-            background.color = new Color(0f, 0f, 0f, 0.35f);
+            background.sprite = HudBuild.CircleSprite();
+            background.color = new Color(0.04f, 0.05f, 0.08f, 0.72f);
             background.raycastTarget = false;
 
             // Marqueur joueur : triangle pointant vers le haut (= direction du regard, la scene

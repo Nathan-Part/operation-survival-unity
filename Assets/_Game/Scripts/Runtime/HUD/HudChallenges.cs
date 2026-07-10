@@ -22,32 +22,40 @@ namespace Game.Runtime
         {
             meta = metaProgress;
 
-            const float barWidth = 280f, barHeight = 20f, gap = 6f;
-            float startY = 70f; // au-dessus de la barre de stamina (bas-gauche, y=44..58)
+            // Parité hud2.png (point 12) : label « DÉFIS » + cartouches sombres empilés au-dessus
+            // de la barre de vie (bas-gauche), fine progression violette en pied de cartouche.
+            const float barWidth = 280f, barHeight = 30f, gap = 6f;
+            float startY = 132f; // au-dessus de la vie (y=96..112)
+
+            var title = HudBuild.MakeText(root, "DÉFIS", 13, TextAnchor.LowerLeft, "ChallengesTitle");
+            var titleRect = title.rectTransform;
+            titleRect.anchorMin = titleRect.anchorMax = titleRect.pivot = new Vector2(0f, 0f);
+            titleRect.anchoredPosition = new Vector2(40f, startY + MaxRows * (barHeight + gap) + 2f);
+            titleRect.sizeDelta = new Vector2(200f, 16f);
+            title.color = new Color(0.85f, 0.86f, 0.92f);
 
             fills = new RectTransform[MaxRows];
             labels = new Text[MaxRows];
             for (int i = 0; i < MaxRows; i++)
             {
-                var back = HudBuild.MakeImage(root, new Color(0f, 0f, 0f, 0.5f), $"ChallengeBack_{i}");
+                var back = HudBuild.MakeCartouche(root, $"ChallengeBack_{i}",
+                    new Vector2(0f, 0f), new Vector2(0f, 0f),
+                    new Vector2(40f, startY + i * (barHeight + gap)), new Vector2(barWidth, barHeight));
                 var br = back.rectTransform;
-                br.anchorMin = br.anchorMax = br.pivot = new Vector2(0f, 0f);
-                br.anchoredPosition = new Vector2(40f, startY + i * (barHeight + gap));
-                br.sizeDelta = new Vector2(barWidth, barHeight);
 
-                var fill = HudBuild.MakeImage(br, new Color(0.35f, 0.75f, 0.5f), $"ChallengeFill_{i}");
+                var fill = HudBuild.MakeImage(br, new Color(0.55f, 0.38f, 1f), $"ChallengeFill_{i}");
                 fill.rectTransform.anchorMin = Vector2.zero;
-                fill.rectTransform.anchorMax = Vector2.one;
+                fill.rectTransform.anchorMax = new Vector2(0f, 0.12f); // fine barre en pied, x piloté par Update
                 fill.rectTransform.sizeDelta = Vector2.zero;
-                fill.rectTransform.pivot = new Vector2(0f, 0.5f);
+                fill.rectTransform.pivot = new Vector2(0f, 0f);
                 fills[i] = fill.rectTransform;
 
                 var text = HudBuild.MakeText(br, "", 13, TextAnchor.MiddleLeft, $"ChallengeLabel_{i}");
                 var tr = text.rectTransform;
                 tr.anchorMin = Vector2.zero;
                 tr.anchorMax = Vector2.one;
-                tr.sizeDelta = new Vector2(-12f, 0f);
-                tr.anchoredPosition = new Vector2(6f, 0f);
+                tr.sizeDelta = new Vector2(-16f, 0f);
+                tr.anchoredPosition = new Vector2(8f, 0f);
                 labels[i] = text;
 
                 back.gameObject.SetActive(false);
@@ -72,7 +80,7 @@ namespace Game.Runtime
                 string desc = def != null ? def.desc : sc.id;
 
                 float frac = target > 0 ? Mathf.Clamp01((float)sc.progress / target) : (sc.done ? 1f : 0f);
-                fills[i].anchorMax = new Vector2(frac, 1f);
+                fills[i].anchorMax = new Vector2(frac, 0.12f); // fine barre en pied de cartouche (hud2.png)
                 labels[i].text = sc.done ? $"✓ {desc}" : $"{desc} ({sc.progress}/{target})";
             }
         }
