@@ -248,11 +248,14 @@
 
 /* Onglet Personnage : panneau stats en BAS-CENTRE, boutons côte à côte (parité shop-perso.png —
    l'onglet Armes garde son panneau à droite comme shop-guns.png). */
+/* Centrage garanti : left 50% + marge négative de width/2 (le translate -50% et le
+   margin:auto en absolu ne centraient pas de façon fiable — playtest 2026-07-10, point 9).
+   L'élément est un enfant direct de l'onglet (pleine largeur), voir ShopPanel.uxml. */
 #shop-char-stats-panel {
     position: absolute;
-    bottom: 6px;
+    bottom: 185px; /* au-dessus du carrousel du bas (170px + marge) */
     left: 50%;
-    translate: -50% 0;
+    margin-left: -270px;
     width: 540px;
 }
 

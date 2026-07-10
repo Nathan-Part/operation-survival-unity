@@ -18,6 +18,7 @@ namespace Game.Runtime
         GameObject visual;
         AnimationDriver driver;
         string currentCharacterId;
+        GameObject leftNeighbor, rightNeighbor; // trio 3D de l'onglet Personnages (Phase 5 bis, point 9)
 
         // Task 13 (essai boutique) : un SpriteRenderer par type d'accessoire (Masque/Costume), pas un
         // seul partagé — parité web (`shopAccPreview = {helmet:null, costume:null}`, main.js:220) où
@@ -51,19 +52,58 @@ namespace Game.Runtime
             var model = data.ResolveModel(db.placeholders);
             if (model == null) return; // pas de placeholder configuré : rien à afficher, pas de plantage
 
-            visual = Instantiate(model, transform);
-            visual.transform.localPosition = Vector3.zero; // pivot GLB aux pieds
-            visual.transform.localRotation = Quaternion.identity;
+            visual = SpawnAnimatedVisual(data, Vector3.zero, out driver);
+            if (visual != null) PlayLobbyLocomotion();
+        }
+
+        /// Instancie un perso animé (loco lobby) enfant du stage — partagé entre le perso central
+        /// (ShowCharacter) et les voisins du trio de l'onglet Personnages (point 9).
+        GameObject SpawnAnimatedVisual(CharacterData data, Vector3 localPos, out AnimationDriver spawnedDriver)
+        {
+            spawnedDriver = null;
+            var model = data.ResolveModel(db.placeholders);
+            if (model == null) return null; // pas de placeholder configuré : rien à afficher, pas de plantage
+
+            var go = Instantiate(model, transform);
+            go.transform.localPosition = localPos; // pivot GLB aux pieds
+            go.transform.localRotation = Quaternion.identity;
 
             if (db.animationLibrary != null)
             {
-                var animator = visual.GetComponent<Animator>();
-                if (animator == null) animator = visual.AddComponent<Animator>();
-                driver = visual.AddComponent<AnimationDriver>();
-                driver.Bind(animator, db.animationLibrary);
-
-                PlayLobbyLocomotion();
+                var animator = go.GetComponent<Animator>();
+                if (animator == null) animator = go.AddComponent<Animator>();
+                spawnedDriver = go.AddComponent<AnimationDriver>();
+                spawnedDriver.Bind(animator, db.animationLibrary);
             }
+            return go;
+        }
+
+        /// Trio de l'onglet Personnages (parité shop-perso.png) : le voisin précédent à gauche,
+        /// le suivant à droite, légèrement en retrait. Idempotent (re-appel = remplace).
+        public void ShowNeighbors(CharacterData left, CharacterData right)
+        {
+            ClearNeighbors();
+            leftNeighbor = SpawnNeighbor(left, new Vector3(-1.8f, 0f, -0.6f));
+            rightNeighbor = SpawnNeighbor(right, new Vector3(1.8f, 0f, -0.6f));
+        }
+
+        public void ClearNeighbors()
+        {
+            if (leftNeighbor != null) Destroy(leftNeighbor);
+            if (rightNeighbor != null) Destroy(rightNeighbor);
+            leftNeighbor = rightNeighbor = null;
+        }
+
+        GameObject SpawnNeighbor(CharacterData data, Vector3 localPos)
+        {
+            if (data == null || data.id == currentCharacterId) return null; // jamais de doublon du perso central
+            var go = SpawnAnimatedVisual(data, localPos, out var neighborDriver);
+            if (go != null && neighborDriver != null)
+            {
+                if (neighborDriver.HasClip(AnimRole.Lobby)) neighborDriver.Play(AnimRole.Lobby, FadeSeconds);
+                else if (neighborDriver.HasClip(AnimRole.Idle)) neighborDriver.Play(AnimRole.Idle, FadeSeconds);
+            }
+            return go;
         }
 
         /// Task 13 : surimpression de l'image PNG d'un accessoire sur le perso 3D (essai en direct —

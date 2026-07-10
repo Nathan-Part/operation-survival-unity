@@ -124,8 +124,11 @@
                             </ui:VisualElement>
                             <ui:Label name="shop-cdesc" text="" class="shop-desc" />
                         </ui:VisualElement>
+                    </ui:VisualElement>
 
-                        <ui:VisualElement name="shop-char-stats-panel" class="shop-stats-panel">
+                    <!-- Bas-centre (parité shop-perso.png) : enfant direct de l'onglet (pleine largeur),
+                         pas de la hero-row — l'absolute se réfère au parent direct en UI Toolkit. -->
+                    <ui:VisualElement name="shop-char-stats-panel" class="shop-stats-panel">
                             <ui:VisualElement class="sp-h-row">
                                 <ui:VisualElement name="shop-cstats-icon" class="sp-h-icon" />
                                 <ui:Label text="STATISTIQUES" class="sp-h" />
@@ -155,7 +158,6 @@
                                 <ui:Button name="shop-cequip" text="ÉQUIPER" class="shop-cta" />
                                 <ui:Label name="shop-cequipped-badge" text="✓ ÉQUIPÉ" class="shop-badge" />
                             </ui:VisualElement>
-                        </ui:VisualElement>
                     </ui:VisualElement>
 
                     <ui:VisualElement name="shop-char-bottombar" class="shop-bottombar">

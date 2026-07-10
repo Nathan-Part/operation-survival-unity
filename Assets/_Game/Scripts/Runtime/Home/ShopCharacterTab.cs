@@ -114,7 +114,12 @@ namespace Game.Runtime
             heroCharacterId = db.characters[index]?.id;
             ameliorerOpen = false;
             // Essai visuel immédiat (perso lobby, pas encore équipé tant que "Équiper" n'est pas cliqué).
-            if (stage != null && heroCharacterId != null) stage.ShowCharacter(heroCharacterId);
+            if (stage != null && heroCharacterId != null)
+            {
+                stage.ShowCharacter(heroCharacterId);
+                // Trio 3D (point 9, parité shop-perso.png) : voisin précédent à gauche, suivant à droite.
+                stage.ShowNeighbors(db.characters[((index - 1) % n + n) % n], db.characters[(index + 1) % n]);
+            }
             Render();
         }
 
