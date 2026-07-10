@@ -49,5 +49,28 @@ namespace Game.Data.Tests
             Assert.AreEqual(5, RankRules.ComboMultiplier(12));
             Assert.AreEqual(5, RankRules.ComboMultiplier(100)); // cap à 5 au-delà
         }
+
+        // Rang de fin de partie (Phase 5.1) : score = kills×3 + précision×100×2 + vague×10 (main.js:2588).
+        [Test]
+        public void RunRankScore_WebFormula()
+        {
+            Assert.AreEqual(0, RankRules.RunRankScore(0, 0f, 0));
+            Assert.AreEqual(95, RankRules.RunRankScore(5, 0.25f, 3));  // 15 + 50 + 30
+            Assert.AreEqual(230, RankRules.RunRankScore(20, 0.5f, 7)); // 60 + 100 + 70
+        }
+
+        // Seuils exacts S≥200 / A≥120 / B≥70 / C≥30 / D (main.js:2596-2603) — testés PILE à la borne
+        // (via vague×10, entier exact, pas de flou flottant).
+        [Test]
+        public void RunRank_ThresholdsExact()
+        {
+            Assert.AreEqual('D', RankRules.RunRank(0, 0f, 0));  // 0
+            Assert.AreEqual('D', RankRules.RunRank(0, 0f, 2));  // 20 < 30
+            Assert.AreEqual('C', RankRules.RunRank(0, 0f, 3));  // 30 pile
+            Assert.AreEqual('C', RankRules.RunRank(0, 0f, 6));  // 60 < 70
+            Assert.AreEqual('B', RankRules.RunRank(0, 0f, 7));  // 70 pile
+            Assert.AreEqual('A', RankRules.RunRank(0, 0f, 12)); // 120 pile
+            Assert.AreEqual('S', RankRules.RunRank(0, 0f, 20)); // 200 pile
+        }
     }
 }

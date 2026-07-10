@@ -104,5 +104,14 @@ namespace Game.Data.Tests
         {
             Assert.IsFalse(AchievementRules.IsUnlocked(A("something_unmapped", 0), new RunStats(), new SaveData()));
         }
+
+        // Précision de run (Phase 5.1, écran de fin de partie) : fraction 0-1, jamais de division par zéro.
+        [Test]
+        public void RunStats_Accuracy_FractionAndZeroSafe()
+        {
+            Assert.AreEqual(0f, new RunStats().Accuracy); // 0 tir : 0, pas NaN
+            Assert.AreEqual(0.5f, new RunStats { shotsFired = 10, shotsHit = 5 }.Accuracy);
+            Assert.AreEqual(1f, new RunStats { shotsFired = 3, shotsHit = 3 }.Accuracy);
+        }
     }
 }

@@ -73,6 +73,30 @@ namespace Game.Runtime.Tests
             Assert.AreEqual(75f, health.Health);
         }
 
+        // Valeurs réelles web (Phase 5.1) : REGEN_DELAY = 6 s, puis regenRate PV/s (main.js:3524).
+        [Test]
+        public void Regen_WaitsSixSecondsThenHealsAtRate()
+        {
+            health.TakeDamage(50f);              // 100 -> 50, lastDamageTime = fakeTime = 100
+            fakeTime = 105.9f;                   // < 6 s après le coup
+            health.TickRegen(1f);
+            Assert.AreEqual(50f, health.Health); // délai pas écoulé : aucune régén
+
+            fakeTime = 106.1f;                   // > 6 s
+            health.TickRegen(1f);                // baseRegen 10 (SetUp) -> +10 PV
+            Assert.AreEqual(60f, health.Health);
+        }
+
+        [Test]
+        public void Regen_DisabledInHardcore()
+        {
+            health.hardcore = true;              // web: aucune régén PV en hardcore
+            health.TakeDamage(50f);
+            fakeTime = 200f;                     // délai largement écoulé
+            health.TickRegen(1f);
+            Assert.AreEqual(50f, health.Health);
+        }
+
         [Test]
         public void DisableSecondWind_HardcoreDiesOnFatalBlow()
         {

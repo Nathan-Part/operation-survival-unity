@@ -101,9 +101,16 @@ namespace Game.Runtime
         void Update()
         {
             shield?.Tick(timeSource(), Time.deltaTime, hardcore);
+            TickRegen(Time.deltaTime);
+        }
+
+        /// Régén de vie (web : REGEN_DELAY 6 s puis regenRate PV/s) — extraite d'Update pour être
+        /// testable en EditMode via le seam `timeSource` (même mécanique que le second wind).
+        public void TickRegen(float deltaSeconds)
+        {
             if (hardcore || Health <= 0f || Health >= MaxHealth) return; // hardcore: pas de régén PV
             if (timeSource() - lastDamageTime < regenDelaySeconds) return;
-            Health = Mathf.Min(MaxHealth, Health + regenRate * Time.deltaTime);
+            Health = Mathf.Min(MaxHealth, Health + regenRate * deltaSeconds);
             HealthChanged?.Invoke(Health, MaxHealth);
         }
     }
