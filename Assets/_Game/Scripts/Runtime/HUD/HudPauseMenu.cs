@@ -61,6 +61,8 @@ namespace Game.Runtime
             bool open = !IsOpen;
             panel.SetActive(open);
             Time.timeScale = open ? 0f : 1f;
+            Cursor.lockState = open ? CursorLockMode.None : CursorLockMode.Locked;
+            Cursor.visible = open;
         }
     }
 }

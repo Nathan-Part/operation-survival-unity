@@ -96,8 +96,21 @@ namespace Game.Runtime
             muteKey = map.AddAction("Mute", binding: "<Keyboard>/m");
         }
 
-        void OnEnable() { map.Enable(); }
-        void OnDisable() { map.Disable(); }
+        void OnEnable()
+        {
+            map.Enable();
+            // Parité web (pointer lock) : en jeu le curseur est capturé ; il est rendu
+            // par le menu pause (HudPauseMenu.Toggle) et l'écran de mort (GameOverScreen).
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+
+        void OnDisable()
+        {
+            map.Disable();
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
 
         void Update()
         {
@@ -105,6 +118,10 @@ namespace Game.Runtime
             // et même à Time.timeScale=0 (l'Input System lit en temps non-scalé, cf. commentaire à la déclaration des actions).
             if (pauseKey.WasPressedThisFrame() && pauseMenu != null) pauseMenu.Toggle();
             if (muteKey.WasPressedThisFrame() && audioKit != null) audioKit.ToggleMute();
+
+            // Menu pause ouvert : plus aucune entrée gameplay ne passe (la souris ne doit
+            // plus tourner la vue — Time.timeScale=0 ne gèle pas Update, retour playtest 2026-07-10).
+            if (pauseMenu != null && pauseMenu.IsOpen) return;
 
             if (motor == null) return;
             Vector2 m = move.ReadValue<Vector2>();
