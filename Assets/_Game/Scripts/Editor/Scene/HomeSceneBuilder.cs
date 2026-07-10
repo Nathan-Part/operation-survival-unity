@@ -162,8 +162,9 @@ namespace Game.Runtime.Editor
             settings = ScriptableObject.CreateInstance<PanelSettings>();
             settings.scaleMode = PanelScaleMode.ScaleWithScreenSize;
             settings.referenceResolution = new Vector2Int(1920, 1080);
-            settings.screenMatchMode = PanelScreenMatchMode.MatchWidthOrHeight;
-            settings.match = 0.5f;
+            // Shrink : la référence 1920×1080 tient toujours entière (rien n'est jamais
+            // coupé, quel que soit l'aspect ratio — playtest 2026-07-10 point 4).
+            settings.screenMatchMode = PanelScreenMatchMode.Shrink;
             AssetDatabase.CreateAsset(settings, PanelSettingsPath);
             return settings;
         }
