@@ -56,6 +56,9 @@ namespace Game.Runtime.Editor
             // HomeController.WireUi() charge la save au vrai démarrage (Start()).
 
             var stageGo = new GameObject("LobbyCharacterStage");
+            // +0.3 en x : la stèle de background.png n'est pas au centre de l'image (crop cover) —
+            // décalage mesuré par capture MCP à 16:9 pour poser le perso au centre du socle (point 6).
+            stageGo.transform.position = new Vector3(0.3f, 0f, 0f);
             var stage = stageGo.AddComponent<LobbyCharacterStage>();
             stage.Init(context.database);
 

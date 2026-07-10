@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b87353e20ce2d10428b3fb8ac41f91e3, type: 3}
   m_Name: AnimationLibrary
   m_EditorClassIdentifier: Game.Data::Game.Data.AnimationLibrary
-  idle: {fileID: -5745701677785817776, guid: 065800f01875bfd45a6f278092e648ae, type: 3}
-  walk: {fileID: -8559126739998960628, guid: 65c5ba533a02ca54288115eebb24a60b, type: 3}
-  run: {fileID: 6010301270145462858, guid: 67ade5d15d55acf4ab51f8090c110d60, type: 3}
-  attack: {fileID: -4094883208916521158, guid: ac17548546787c448968f033fb2ad9da, type: 3}
-  dead: {fileID: -8488786236923853803, guid: 75ef9bf31133ba44b9e9cf32416a03c3, type: 3}
-  lobby: {fileID: -6942838043800602937, guid: eda90e93b71d6e54caa40a61335fc5c1, type: 3}
+  idle: {fileID: 7400000, guid: 5b80942495f7ccf43a1ac38a0dcf3a64, type: 2}
+  walk: {fileID: 7400000, guid: 9c82e8eaba6b4cb46bb585fd9ea03c3b, type: 2}
+  run: {fileID: 7400000, guid: 11d6037430cd22f40b705eb70dbe5207, type: 2}
+  attack: {fileID: 7400000, guid: de368e4a9e3f7e1478fb59cf5eaa64a0, type: 2}
+  dead: {fileID: 7400000, guid: 0ee0aeb4f40311747a4921ca7816f30a, type: 2}
+  lobby: {fileID: 7400000, guid: 87821b0b64ba4d948b37955f3a499644, type: 2}

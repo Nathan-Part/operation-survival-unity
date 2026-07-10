@@ -93,16 +93,21 @@ namespace Game.Runtime.Editor
             int clips = 0;
             foreach (var (role, path) in AnimationClips)
             {
-                var clip = FirstClipAt(path);
-                if (clip == null) { Debug.LogWarning($"AssignImportedArt: clip manquant {path}"); continue; }
+                var raw = FirstClipAt(path);
+                if (raw == null) { Debug.LogWarning($"AssignImportedArt: clip manquant {path}"); continue; }
+                // Phase 5 bis (point 6, torse rétréci) : les clips GLB portent des curves de POSITION
+                // locales calibrées sur le rig source — appliquées telles quelles à un perso aux
+                // proportions différentes, elles écrasent ses longueurs d'os (torse compressé).
+                // On assigne une copie filtrée : rotations + position des hanches uniquement.
+                var clip = FilteredClipFor(role, raw);
                 switch (role)
                 {
-                    case "idle": if (animLib.idle == null) { animLib.idle = clip; clips++; } break;
-                    case "walk": if (animLib.walk == null) { animLib.walk = clip; clips++; } break;
-                    case "run": if (animLib.run == null) { animLib.run = clip; clips++; } break;
-                    case "attack": if (animLib.attack == null) { animLib.attack = clip; clips++; } break;
-                    case "dead": if (animLib.dead == null) { animLib.dead = clip; clips++; } break;
-                    case "lobby": if (animLib.lobby == null) { animLib.lobby = clip; clips++; } break;
+                    case "idle": if (animLib.idle == null || animLib.idle == raw) { animLib.idle = clip; clips++; } break;
+                    case "walk": if (animLib.walk == null || animLib.walk == raw) { animLib.walk = clip; clips++; } break;
+                    case "run": if (animLib.run == null || animLib.run == raw) { animLib.run = clip; clips++; } break;
+                    case "attack": if (animLib.attack == null || animLib.attack == raw) { animLib.attack = clip; clips++; } break;
+                    case "dead": if (animLib.dead == null || animLib.dead == raw) { animLib.dead = clip; clips++; } break;
+                    case "lobby": if (animLib.lobby == null || animLib.lobby == raw) { animLib.lobby = clip; clips++; } break;
                 }
             }
             if (clips > 0) EditorUtility.SetDirty(animLib);
@@ -145,6 +150,31 @@ namespace Game.Runtime.Editor
                 if (asset is AnimationClip clip)
                     return clip;
             return null;
+        }
+
+        /// Copie du clip sans les curves de position/échelle des os (les hanches gardent leur
+        /// position : c'est le balancement de la marche). Les longueurs d'os restent donc celles
+        /// du perso qui joue le clip — même rig partagé, proportions propres (point 6).
+        static AnimationClip FilteredClipFor(string role, AnimationClip source)
+        {
+            const string dir = "Assets/_Game/Art/Animations/Filtered";
+            string path = $"{dir}/{role}.anim";
+            var existing = AssetDatabase.LoadAssetAtPath<AnimationClip>(path);
+            if (existing != null) return existing; // idempotent : régénérer = supprimer le .anim d'abord
+
+            System.IO.Directory.CreateDirectory(dir);
+            var copy = new AnimationClip { name = $"{role} (filtered)", frameRate = source.frameRate, wrapMode = source.wrapMode };
+            foreach (var binding in AnimationUtility.GetCurveBindings(source))
+            {
+                bool isHips = binding.path.EndsWith("Hips");
+                bool isPosition = binding.propertyName.StartsWith("m_LocalPosition");
+                bool isScale = binding.propertyName.StartsWith("m_LocalScale");
+                if (isScale) continue;
+                if (isPosition && !isHips) continue;
+                AnimationUtility.SetEditorCurve(copy, binding, AnimationUtility.GetEditorCurve(source, binding));
+            }
+            AssetDatabase.CreateAsset(copy, path);
+            return copy;
         }
     }
 }
