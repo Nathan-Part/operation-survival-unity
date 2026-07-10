@@ -46,7 +46,10 @@ namespace Game.Runtime.UI.Tactical
 
         void OnGenerateVisualContent(MeshGenerationContext mgc)
         {
-            var rect = contentRect;
+            // layout (et pas contentRect) : le fond doit couvrir TOUT l'element, padding compris —
+            // contentRect exclut le padding, donc avec .tac-card (padding 14px) le fond etait dessine
+            // 14px trop petit sur chaque bord (rendu delave, playtest 2026-07-10).
+            var rect = new Rect(0f, 0f, layout.width, layout.height);
             if (rect.width < 1f || rect.height < 1f) return;
 
             var painter = mgc.painter2D;
@@ -72,10 +75,12 @@ namespace Game.Runtime.UI.Tactical
         }
 
         /// Trace le contour d'un rectangle avec les coins indiques coupes en biseau de taille `cut`.
-        /// Partage entre TacticalPanel/TacticalButton/TacticalModalFrame — signature stable, ne pas changer sans mettre a jour les 3 appelants.
+        /// Partage entre TacticalPanel/TacticalButton/TacticalModalFrame — honore la position du rect
+        /// (r.x/r.y), pas seulement sa taille (bug corrige 2026-07-10 : les bandes de degrade de
+        /// TacticalButton passaient des rects decales qui etaient tous dessines a l'origine).
         internal static void DrawCutRect(Painter2D painter, Rect r, float cut, TacticalCorners corners)
         {
-            float x0 = 0, y0 = 0, x1 = r.width, y1 = r.height;
+            float x0 = r.x, y0 = r.y, x1 = r.xMax, y1 = r.yMax;
             bool tl = (corners & TacticalCorners.TopLeft) != 0;
             bool tr = (corners & TacticalCorners.TopRight) != 0;
             bool bl = (corners & TacticalCorners.BottomLeft) != 0;

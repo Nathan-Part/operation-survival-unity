@@ -43,7 +43,9 @@ namespace Game.Runtime.UI.Tactical
 
         void DrawBrackets(MeshGenerationContext mgc)
         {
-            var rect = contentRect;
+            // layout et pas contentRect : les brackets se posent aux coins de l'element entier,
+            // pas de la zone interieure au padding (28/32px ici — cf. TacticalPanel, meme fix 2026-07-10).
+            var rect = new Rect(0f, 0f, layout.width, layout.height);
             if (rect.width < 1f || rect.height < 1f) return;
             var painter = mgc.painter2D;
             painter.strokeColor = new Color(0.486f, 0.302f, 1f, 0.9f);
