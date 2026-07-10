@@ -209,7 +209,13 @@ namespace Game.Runtime
             // continuer en tâche de fond une fois la boutique refermée.
             stage?.ClearAccessoryPreview();
             stage?.StopDance();
+            // Phase 5 bis (point 5) : le bouton "Fermer" appelle Close() en direct, sans passer
+            // par HomeController — l'event permet à ce dernier de ré-afficher le lobby.
+            Closed?.Invoke();
         }
+
+        /// Levé à CHAQUE fermeture (bouton Fermer du topbar comme Échap via HomeController).
+        public event System.Action Closed;
 
         // Annule tout essai visuel laissé par le carrousel de l'onglet Personnage (Task 12) —
         // s'applique quel que soit l'onglet actif à la fermeture (pas seulement "player" : l'aperçu

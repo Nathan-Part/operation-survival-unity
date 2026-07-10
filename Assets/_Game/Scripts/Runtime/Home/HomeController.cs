@@ -167,6 +167,9 @@ namespace Game.Runtime
             settingsButton.clicked += () => { settingsPanel?.Render(meta.Data); OpenPanel("settings"); }; // web: openSettings() rend puis ouvre
             howtoButton.clicked += () => OpenPanel("howto");
             tileShop.clicked += () => OpenPanel("shop");
+            // Phase 5 bis (point 5) : le bouton "Fermer" du shop appelle ShopScreenController.Close()
+            // sans repasser par ici — l'event garantit que le lobby ré-apparaît sur TOUS les chemins.
+            if (shopScreen != null) shopScreen.Closed += OnShopClosed;
             tileLoadout.clicked += () => { loadoutPanel?.Render(meta.Data); OpenPanel("loadout"); }; // web: parité openSettings — rend puis ouvre
             tileMap.clicked += () => { mapPanel?.Render(meta.Data); OpenPanel("map"); }; // web: parité openSettings — rend puis ouvre
             tileTraining.clicked += () => launcher?.Deploy(meta, training: true);
@@ -252,8 +255,13 @@ namespace Game.Runtime
 
         void CloseShop()
         {
-            shopScreen?.Close();
+            shopScreen?.Close(); // la restauration du lobby passe par l'event Closed (OnShopClosed)
+        }
+
+        void OnShopClosed()
+        {
             root?.Q<VisualElement>("lobby")?.RemoveFromClassList("hidden");
+            if (activePanel == "shop") activePanel = null;
         }
 
         /// Re-render idempotent de tout le lobby depuis SaveData/GameDatabase — aucune mutation ici.
