@@ -71,7 +71,7 @@ Sur mobile/tactile (Device Simulator ou build Android) : joystick virtuel à gau
   - Re-vérifié en fin de passe : **287/287 EditMode, 7/9 PlayMode (2 skips connus Utopia), 0 régression**.
   - **Écart restant assumé (TODO)** : le HUD en jeu est aux bonnes positions (passe du matin) mais plus brut que `hud.png` — pas de cartouches sombres derrière crédits/consommables/munitions, minimap carrée au lieu de ronde, jauges grises au lieu de violettes. Chantier de style uGUI dédié à planifier.
 - 📝 **Playtest Nathan sur la passe n°2 (2026-07-10, midi)** : premier feedback complet reçu — 12 points (menu Échap qui ne fige pas la caméra, ennemis qui n'avancent pas/traversent les murs, Play doit démarrer sur le menu, boutons d'accueil coupés en bas + retour d'armurerie qui les fait disparaître, perso lobby torse rétréci/décentré, pilule Cyborg trop ronde, vitrine Armes = l'arme pas le perso, onglet Personnages à refaire sur `shop-perso.png`, accessoires trop petits à refaire en vignettes rondes bordées par rareté (`shop-accessoires.png` + nouveau `shop-accessoires2.png` pour les costumes), même style sur tous les onglets à grille, HUD à recaler sur le web dont vie en bas-gauche + minimap ronde, UI responsive). **Rédigé au propre dans la nouvelle section « Phase 5 bis » ci-dessous — c'est la liste de travail de la prochaine session.**
-- ⬅️ **Prochaine session** : passe de vérification complète (« lance tout » : suites EditMode/PlayMode + vérifs manuelles listées dans `.superpowers/sdd/pending-verifications-phase5bis.md`), re-validation par Nathan des 12 points de la Phase 5 bis (traitée le 2026-07-10 soir), puis merge de la branche, puis Phase 6 (multijoueur, Photon Fusion — nécessite la mise en place d'un compte/projet Photon).
+- ⬅️ **Prochaine session** : traiter la **Phase 5 bis bis** (6 points du 3e feedback playtest, voir la section dédiée — nouvelle référence `docs/refactor/amelioration.png`), puis passe de vérification complète (« lance tout » : suites EditMode/PlayMode + vérifs manuelles listées dans `.superpowers/sdd/pending-verifications-phase5bis.md`), re-validation Nathan, merge de la branche, puis Phase 6 (multijoueur, Photon Fusion — nécessite la mise en place d'un compte/projet Photon).
 
 ---
 
@@ -212,6 +212,37 @@ Geler le design du jeu web pour que Unity ait une référence stable : refactors
 *(Point hors périmètre rappelé : la petite barre avec le soleil sur le screenshot de Nathan est un widget Windows, pas le jeu.)*
 
 **Jalon Phase 5 bis :** Nathan rejoue cette checklist point par point et ne trouve plus d'écart.
+
+### Phase 5 bis bis — Feedback playtest Nathan n°3 du 2026-07-10 (soir, après les corrections à chaud) ⬅️ À TRAITER
+
+*Troisième passe de retours sur `feat/phase5.1-visual-parity` (après les corrections à chaud du 2e feedback, commit `3ba0bcaa`). Nouvelle image de référence fournie par Nathan : `docs/refactor/amelioration.png` (le panneau statistiques + améliorations des armes, version web).*
+
+#### A. Accueil / navigation
+
+1. **Les flèches clavier changent le personnage PARTOUT.** Un appui ← → affiche/fait défiler les personnages même quand on est dans les autres sections de la boutique (Armes, Accessoires, Boost, Consommables) et sur les autres panneaux. Attendu : les flèches ne pilotent le carrousel de persos **que** sur l'onglet Personnage de la boutique (et au lobby pour le sélecteur, comme le web). Piste : le `InputActionMap` de `HomeController` (leftAction/rightAction, BuildInputMap) reste actif quel que soit le panneau ouvert — il faut le conditionner à `activePanel`/onglet actif.
+
+#### B. Boutique — onglet Personnage
+
+2. **La vitrine ne met pas en valeur les modèles** (« pas du tout représentatif de ce que le modèle vaut ») et **les persos sont trop bas, en dessous de la stèle**. Cause probable : le zoom vitrine (+2,2 m vers la caméra, correctif à chaud n°2) avance les persos DEVANT le socle — le sol y est plus bas, ils paraissent enfoncés. Attendu : les persos restent SUR la stèle (comme `shop-perso.png`), agrandis autrement — rapprocher/abaisser la caméra ou remonter le stage en y pendant le zoom, à caler par capture contre l'image.
+
+#### C. Boutique — système d'amélioration (armes ET persos)
+
+3. **Refaire le panneau d'amélioration comme `amelioration.png`** (nouvelle référence) :
+   - Panneau STATISTIQUES : 5 barres violettes (Dégâts/Cadence/Chargeur/Stabilité/Portée) avec valeur chiffrée à droite — déjà proche.
+   - En dessous, **un sous-panneau encadré toujours structuré ainsi** : une ligne par stat améliorable (« Dégâts », « Cadence », « Recul », « Chargeur »), chacune avec **5 pastilles carrées** (niveau actuel rempli / vide) et un **bouton violet prix « ⊕ 300 »** à droite de la ligne pour acheter CE niveau de CETTE stat.
+   - Gros bouton dégradé « ★ AMÉLIORER » en pied de panneau (ouvre/ferme ce sous-panneau, comme aujourd'hui).
+   - ⚠️ Aujourd'hui côté armes le niveau est UNIQUE par arme (`ShopRules`, upgrade partagé) : vérifier la spec web (`unity-spec/` + `main.js` upgrades par stat) et étendre les règles/save si le web a bien 4 stats d'arme indépendantes — sinon documenter l'écart. Côté persos les 3 stats (Vie/Régén/Vitesse) sont déjà indépendantes.
+
+#### D. Boutique — accessoires
+
+4. **Pas encore 100 % fidèle au web.** Écart relevé : à re-comparer ligne à ligne contre `shop-accessoires.png`/`shop-accessoires2.png` (tailles, espacements, barre d'achat, hiérarchie des sections) et contre le comportement web (`main.js` renderShop accessoires).
+5. **Taille des sous-onglets : garder la GRANDE taille.** Quand on clique « Costume », les onglets MASQUE/COSTUME/DANSES s'agrandissent (effet apprécié) — cette taille doit être la taille PERMANENTE des sous-onglets, pas un état au clic. (Piste : c'est probablement l'état `.on`/focus qui grossit — normaliser la taille de base dessus.)
+
+#### E. Map Utopia
+
+6. **Les plantes du .blend sont de nouveau écrasées/buguées** (aplaties au sol, déformées). Régression visuelle sur la géométrie végétale d'`utopia.glb` — à rediagnostiquer : import du GLB (scale/rotation des nodes végétation), ou écrasement par le rebake NavMesh/rebuild de la scène du 2026-07-10 (le builder a été refait ce jour-là : vérifier si le réimport/re-instantiation du prefab map a perdu des transforms). Comparer avec le rendu web du même .blend.
+
+**Jalon Phase 5 bis bis :** Nathan rejoue ces 6 points et ne trouve plus d'écart ; alors seulement, re-validation globale de la 5.1 puis merge.
 
 ### Phase 6 — Multijoueur 🔜
 
