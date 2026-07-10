@@ -139,7 +139,8 @@ namespace Game.Runtime.Editor
             // Quaternion.identity la caméra (z=6.8, regarde vers -Z) ne voit que la face arrière (culled,
             // donc fond invisible — c'était la vraie cause du bug A1). Rotation 180° sur Y pour la retourner face caméra.
             quad.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
-            quad.transform.localScale = new Vector3(12f, 7f, 1f);
+            quad.transform.localScale = new Vector3(12f, 7f, 1f); // taille d'edition ; corrigee au runtime par LobbyBackgroundFitter (frustum reel mesure ~20.1x11.3, cf. commit playtest 2026-07-10)
+            quad.AddComponent<Game.Runtime.LobbyBackgroundFitter>();
 
             if (bgTexture != null)
             {
