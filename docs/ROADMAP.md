@@ -71,7 +71,7 @@ Sur mobile/tactile (Device Simulator ou build Android) : joystick virtuel à gau
   - Re-vérifié en fin de passe : **287/287 EditMode, 7/9 PlayMode (2 skips connus Utopia), 0 régression**.
   - **Écart restant assumé (TODO)** : le HUD en jeu est aux bonnes positions (passe du matin) mais plus brut que `hud.png` — pas de cartouches sombres derrière crédits/consommables/munitions, minimap carrée au lieu de ronde, jauges grises au lieu de violettes. Chantier de style uGUI dédié à planifier.
 - 📝 **Playtest Nathan sur la passe n°2 (2026-07-10, midi)** : premier feedback complet reçu — 12 points (menu Échap qui ne fige pas la caméra, ennemis qui n'avancent pas/traversent les murs, Play doit démarrer sur le menu, boutons d'accueil coupés en bas + retour d'armurerie qui les fait disparaître, perso lobby torse rétréci/décentré, pilule Cyborg trop ronde, vitrine Armes = l'arme pas le perso, onglet Personnages à refaire sur `shop-perso.png`, accessoires trop petits à refaire en vignettes rondes bordées par rareté (`shop-accessoires.png` + nouveau `shop-accessoires2.png` pour les costumes), même style sur tous les onglets à grille, HUD à recaler sur le web dont vie en bas-gauche + minimap ronde, UI responsive). **Rédigé au propre dans la nouvelle section « Phase 5 bis » ci-dessous — c'est la liste de travail de la prochaine session.**
-- ⬅️ **Prochaine session** : traiter la **Phase 5 bis** (les 12 points du feedback Nathan, voir la section dédiée), puis merge de la branche après re-validation Nathan, puis Phase 6 (multijoueur, Photon Fusion — nécessite la mise en place d'un compte/projet Photon).
+- ⬅️ **Prochaine session** : passe de vérification complète (« lance tout » : suites EditMode/PlayMode + vérifs manuelles listées dans `.superpowers/sdd/pending-verifications-phase5bis.md`), re-validation par Nathan des 12 points de la Phase 5 bis (traitée le 2026-07-10 soir), puis merge de la branche, puis Phase 6 (multijoueur, Photon Fusion — nécessite la mise en place d'un compte/projet Photon).
 
 ---
 
@@ -155,7 +155,26 @@ Geler le design du jeu web pour que Unity ait une référence stable : refactors
 
 **Jalon atteint :** un joueur du jeu web retrouve exactement son accueil sur mobile → **c'est la v1 publiable**, sous réserve de la vérification visuelle manuelle de Nathan.
 
-### Phase 5 bis — Feedback playtest Nathan du 2026-07-10 (sur la passe de parité n°2) ⬅️ À TRAITER
+### Phase 5 bis — Feedback playtest Nathan du 2026-07-10 (sur la passe de parité n°2) ✅ TRAITÉE (2026-07-10 soir, en attente de re-validation Nathan)
+
+*Les 12 points ci-dessous ont été traités en une session (plan : `docs/superpowers/plans/2026-07-10-phase5bis-playtest-fixes.md`, vérifications restantes : `.superpowers/sdd/pending-verifications-phase5bis.md`). Résumé des correctifs :*
+
+1. **Pause** ✅ — `PlayerInputBridge` coupe toutes les entrées gameplay quand le menu est ouvert ; curseur libéré en pause/mort, verrouillé en jeu (parité pointer-lock web).
+2. **Ennemis** ✅ — cause racine trouvée par diagnostic MCP : NavMesh d'Utopia fragmenté (départ joueur sur l'îlot du disque central, spawns du repli non validés → chemins partiels). Builder refait (départ + 5 spawns choisis sur la composante NavMesh principale, échec bruyant), et parité IA web complète : patrouille marchée en anneau autour du joueur, ligne de vue requise pour attaquer, hystérésis de sortie (×1,25/×1,4), détection ranged ≥ portée de tir, destination projetée sur le NavMesh, `Warp` au spawn. Vérifié en Play (patrouille → chasse → tir → mort du joueur immobile).
+3. **Play → menu** ✅ — `Tools/Game/Play From Home` (coché par défaut) force le Play Mode à démarrer sur `Home.unity`.
+4. **Boutons coupés** ✅ — PanelSettings en `Shrink` (la référence 1920×1080 tient toujours entière) + tuiles compressibles.
+5. **Retour armurerie** ✅ — event `Closed` sur `ShopScreenController` : le lobby se ré-affiche sur tous les chemins de fermeture.
+6. **Perso lobby** ✅ — torse rétréci : les clips GLB portaient des curves de position calibrées sur un autre rig ; `AssignImportedArt` génère des clips filtrés (rotations pures) dans `Art/Animations/Filtered/`. Centrage : stage décalé de +0,3 m (stèle non centrée dans `background.png`), mesuré par capture.
+7. **Pilule** ✅ — hauteur 52 px, radius 26 (vraie pilule aux proportions web).
+8. **Vitrine Armes** ✅ — perso masqué, arme seule centrée près de la caméra ; sans modèle 3D → vitrine vide (plus de capsule).
+9. **Onglet Personnages** ✅ — trio 3D animé (voisins ±1,8 m), flèches ‹ ›, bloc stats centré bas (déplacé hors de la hero-row dans l'UXML).
+10. **Accessoires** ✅ — vignettes rondes 116 px à bordure de rareté, coche verte sur l'équipé, cadenas sur le non-possédé, en-têtes de section encadrés + ligne colorée (masques ET costumes).
+11. **Autres grilles** ✅ — Boost/Consommables déclinés sur le même modèle circulaire (cellule : cercle + nom + stat + bouton).
+12. **HUD** ✅ — refonte complète parité `hud2.png` : crédits + consommables en cartouches sombres (haut-gauche), DÉFIS + vie segmentée verte + SPRINT + rang (bas-gauche), bannière sombre « VAGUE n · m ENNEMIS » (haut-centre), BOUCLIER (bas-centre), barre de progression de vague + minimap RONDE (haut-droite), jauges loadout + bandeau rouge « ✕ N ENNEMIS » + bloc munitions/SCORE (bas-droite). CanvasScaler en `Shrink` (rien ne sort jamais de l'écran).
+
+**Jalon Phase 5 bis (inchangé) :** Nathan rejoue cette checklist point par point et ne trouve plus d'écart. Liste d'origine conservée ci-dessous pour cette re-validation.
+
+#### Détail d'origine du feedback (pour la re-validation)
 
 *Premier retour de Nathan sur la version de la branche `feat/phase5.1-visual-parity` après la passe de parité visuelle n°2 (commit `b93bb76a`). Rédigé au propre ici à sa demande — c'est la liste de travail de la prochaine session. Les images de référence restent `docs/refactor/*.png` (+ nouvelle image `shop-accessoires2.png` ajoutée par Nathan : les costumes, même modèle visuel que les masques).*
 
