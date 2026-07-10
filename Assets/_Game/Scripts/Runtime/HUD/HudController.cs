@@ -61,8 +61,14 @@ namespace Game.Runtime
             canvasGo.AddComponent<GraphicRaycaster>();
             var root = (RectTransform)canvasGo.transform;
 
-            // Barres de vie et de stamina (bas gauche)
-            healthFill = MakeBar(root, new Vector2(40f, 80f), new Vector2(400f, 26f), new Color(0.85f, 0.2f, 0.2f));
+            // Barre de vie en haut-droite, a gauche de la minimap (parite hud.png — playtest 2026-07-10 :
+            // en bas-gauche elle chevauchait les barres de Defis). Le radar occupe x[-250..-30] y[-30..-250].
+            healthFill = MakeBar(root, Vector2.zero, new Vector2(300f, 22f), new Color(0.85f, 0.2f, 0.2f));
+            var healthBack = (RectTransform)healthFill.parent;
+            healthBack.anchorMin = healthBack.anchorMax = new Vector2(1f, 1f);
+            healthBack.pivot = new Vector2(0f, 1f);
+            healthBack.anchoredPosition = new Vector2(-560f, -40f);
+            // Stamina ("Sprint") reste en bas-gauche, sous les Defis (parite hud.png).
             staminaFill = MakeBar(root, new Vector2(40f, 44f), new Vector2(400f, 14f), new Color(0.95f, 0.8f, 0.25f));
 
             // Munitions (bas droite)
@@ -159,7 +165,7 @@ namespace Game.Runtime
             int count = killstreak != null ? killstreak.StreakCount : 0;
             bool show = count >= 2;
             if (streakText.gameObject.activeSelf != show) streakText.gameObject.SetActive(show);
-            if (show) streakText.text = $"🔥 {count}";
+            if (show) streakText.text = $"SÉRIE ×{count}"; // pas d'emoji : LegacyRuntime.ttf ne les rend pas (case vide)
         }
 
         void OnHealthChanged(float current, float max)

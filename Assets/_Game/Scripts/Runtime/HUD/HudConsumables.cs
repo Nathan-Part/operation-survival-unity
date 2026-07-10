@@ -10,10 +10,13 @@ namespace Game.Runtime
     /// par Nathan comme un libelle de debug, cf. bug-entity.png) par des lignes lisibles empilees.
     public class HudConsumables : MonoBehaviour
     {
+        // Noms courts et pas des glyphes emoji : LegacyRuntime.ttf (police uGUI du HUD) ne contient
+        // pas les emojis — ils rendaient en cases vides, ne laissant que des nombres nus a l'ecran
+        // (constate sur capture, playtest 2026-07-10). Les vraies icones viendront avec les sprites.
         static readonly (string key, string glyph, string label)[] Slots =
         {
-            ("frag", "💣", "B"), ("flashbang", "⚡", "N"), ("smoke", "💨", "H"), ("sticky", "🧷", "J"),
-            ("molotov", "🔥", "K"), ("emp", "🌀", "O"), ("medkit", "❤", "Z")
+            ("frag", "Grenade", "B"), ("flashbang", "Flash", "N"), ("smoke", "Fumigène", "H"), ("sticky", "Collante", "J"),
+            ("molotov", "Molotov", "K"), ("emp", "EMP", "O"), ("medkit", "Medkit", "Z")
         };
 
         MetaProgress meta;
