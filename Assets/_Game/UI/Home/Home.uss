@@ -135,16 +135,32 @@
     -unity-font-style: bold;
 }
 
+/* Colonne centrale : le selecteur de perso se pose en bas, au pied du socle (parite homepage.png) —
+   sans etirement vertical il flottait au centre, sur la tete du perso (playtest 2026-07-10). */
 .hub-deploy-col {
     align-items: center;
+    justify-content: flex-end;
+    align-self: stretch;
+    padding-bottom: 8px;
 }
 
 /* Fond/coins coupes/degrade fournis par TacticalButton (Painter2D) — cf. Tactical/TacticalButton.cs. */
 .deploy-button {
     width: 260px;
-    height: 140px;
+    height: 120px;
     justify-content: center;
     align-items: center;
+    margin-bottom: 14px;
+}
+
+/* Textes secondaires du Deployer : blancs sur le degrade violet (les couleurs par defaut
+   .eyebrow/.subtitle sont pensees pour les cartes claires — illisibles sur violet, 2026-07-10). */
+.deploy-button .eyebrow {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.deploy-button .subtitle {
+    color: rgba(255, 255, 255, 0.85);
 }
 
 .deploy-title {

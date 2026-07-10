@@ -91,12 +91,6 @@
                 </ui:VisualElement>
 
                 <ui:VisualElement name="hub-main-center" class="hub-main-col hub-deploy-col">
-                    <ui:Button name="deploy-button" class="deploy-button">
-                        <ui:Label text="// Mode survie" class="eyebrow" />
-                        <ui:Label text="Déployer" class="deploy-title" />
-                        <ui:Label text="Survie — vagues infinies" class="subtitle" />
-                    </ui:Button>
-
                     <ui:VisualElement name="char-selector" class="char-selector">
                         <ui:Button name="char-prev" text="‹" class="char-arrow" />
                         <ui:Label name="char-name" text="—" class="char-name" />
@@ -105,7 +99,14 @@
                     <ui:VisualElement name="char-dots" class="char-dots" />
                 </ui:VisualElement>
 
+                <!-- Parite homepage.png (playtest 2026-07-10) : le Deployer vit dans la colonne de
+                     droite, au-dessus de la carte Objectif — pas au centre devant le perso. -->
                 <ui:VisualElement name="hub-main-right" class="hub-main-col">
+                    <ui:Button name="deploy-button" class="deploy-button">
+                        <ui:Label text="// Mode survie" class="eyebrow" />
+                        <ui:Label text="Déployer" class="deploy-title" />
+                        <ui:Label text="Survie — vagues infinies" class="subtitle" />
+                    </ui:Button>
                     <ui:VisualElement name="objectif-card" class="tac-card hub-card-slot">
                         <ui:Label text="// Objectif" class="eyebrow" />
                         <ui:VisualElement name="objectif-thumb" class="objectif-thumb" />

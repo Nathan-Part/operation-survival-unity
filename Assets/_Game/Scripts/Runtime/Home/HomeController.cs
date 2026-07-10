@@ -201,6 +201,10 @@ namespace Game.Runtime
             {
                 if (activePanel != null && activePanel != "shop") CloseActivePanel();
                 shopScreen?.Open();
+                // Parite shop-guns.png (playtest 2026-07-10) : l'armurerie REMPLACE le lobby (le web
+                // masque le hub), elle ne se superpose pas a lui — sinon les cartes Intel/Deployer
+                // transparaissent derriere le voile a 40%.
+                root?.Q<VisualElement>("lobby")?.AddToClassList("hidden");
                 activePanel = "shop";
                 return;
             }
@@ -208,7 +212,7 @@ namespace Game.Runtime
             if (!panels.TryGetValue(name, out var panel) || panel == null) return;
             if (activePanel != null && activePanel != name)
             {
-                if (activePanel == "shop") shopScreen?.Close();
+                if (activePanel == "shop") CloseShop();
                 else if (panels.TryGetValue(activePanel, out var previous)) previous.AddToClassList("hidden");
             }
             panel.RemoveFromClassList("hidden");
@@ -219,9 +223,15 @@ namespace Game.Runtime
         public void CloseActivePanel()
         {
             if (activePanel == null) return;
-            if (activePanel == "shop") shopScreen?.Close();
+            if (activePanel == "shop") CloseShop();
             else if (panels.TryGetValue(activePanel, out var panel)) panel.AddToClassList("hidden");
             activePanel = null;
+        }
+
+        void CloseShop()
+        {
+            shopScreen?.Close();
+            root?.Q<VisualElement>("lobby")?.RemoveFromClassList("hidden");
         }
 
         /// Re-render idempotent de tout le lobby depuis SaveData/GameDatabase — aucune mutation ici.
