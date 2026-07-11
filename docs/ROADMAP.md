@@ -213,37 +213,37 @@ Geler le design du jeu web pour que Unity ait une référence stable : refactors
 
 **Jalon Phase 5 bis :** Nathan rejoue cette checklist point par point et ne trouve plus d'écart.
 
-### Phase 5 bis bis — Feedback playtest Nathan n°3 du 2026-07-10 (soir, après les corrections à chaud) ⬅️ À TRAITER
+### Phase 5 bis bis — Feedback playtest Nathan n°3 du 2026-07-10 (soir, après les corrections à chaud) ✅ TRAITÉE le 2026-07-11 (re-validation Nathan + vérifs de nuit en attente)
+
+*Plan : `docs/superpowers/plans/2026-07-11-phase5bisbis-playtest-fixes.md` — vérifs différées : `.superpowers/sdd/pending-verifications-phase5bisbis.md`. Captures MCP en session : `Assets/Screenshots/p5bb-*.png` (armes+améliorer conformes `amelioration.png`, vitrine persos sur stèle, accessoires).*
 
 *Troisième passe de retours sur `feat/phase5.1-visual-parity` (après les corrections à chaud du 2e feedback, commit `3ba0bcaa`). Nouvelle image de référence fournie par Nathan : `docs/refactor/amelioration.png` (le panneau statistiques + améliorations des armes, version web).*
 
 #### A. Accueil / navigation
 
-1. **Les flèches clavier changent le personnage PARTOUT.** Un appui ← → affiche/fait défiler les personnages même quand on est dans les autres sections de la boutique (Armes, Accessoires, Boost, Consommables) et sur les autres panneaux. Attendu : les flèches ne pilotent le carrousel de persos **que** sur l'onglet Personnage de la boutique (et au lobby pour le sélecteur, comme le web). Piste : le `InputActionMap` de `HomeController` (leftAction/rightAction, BuildInputMap) reste actif quel que soit le panneau ouvert — il faut le conditionner à `activePanel`/onglet actif.
+1. ✅ **Corrigé (commit `0f6ed45a`)** — `HomeController.Update` route désormais ← → selon `activePanel` : lobby → carrousel lobby ; boutique + onglet Personnage → `ShopScreenController.CharacterPrev/Next()` (nouvelles méthodes publiques + `IsCharacterTabActive`) ; partout ailleurs → inertes. À re-valider par Nathan (Input System non simulable par sonde MCP).
 
 #### B. Boutique — onglet Personnage
 
-2. **La vitrine ne met pas en valeur les modèles** (« pas du tout représentatif de ce que le modèle vaut ») et **les persos sont trop bas, en dessous de la stèle**. Cause probable : le zoom vitrine (+2,2 m vers la caméra, correctif à chaud n°2) avance les persos DEVANT le socle — le sol y est plus bas, ils paraissent enfoncés. Attendu : les persos restent SUR la stèle (comme `shop-perso.png`), agrandis autrement — rapprocher/abaisser la caméra ou remonter le stage en y pendant le zoom, à caler par capture contre l'image.
+2. ✅ **Corrigé (commit `23e01409`)** — cause confirmée : la translation +2,2 m passait les persos devant la stèle (peinte sur le quad de fond à z=−3) et la caméra plongeante les projetait plus bas. Remplacée par un **scale ×1,45 sur place** (pivot GLB aux pieds, y=0) : les pieds restent posés sur la stèle (capture `p5bb-perso-vitrine.png` ✓), retour à l'échelle 1 en quittant l'onglet. Constante `ShowcaseScale` à ajuster si Nathan veut plus gros.
 
 #### C. Boutique — système d'amélioration (armes ET persos)
 
-3. **Refaire le panneau d'amélioration comme `amelioration.png`** (nouvelle référence) :
-   - Panneau STATISTIQUES : 5 barres violettes (Dégâts/Cadence/Chargeur/Stabilité/Portée) avec valeur chiffrée à droite — déjà proche.
-   - En dessous, **un sous-panneau encadré toujours structuré ainsi** : une ligne par stat améliorable (« Dégâts », « Cadence », « Recul », « Chargeur »), chacune avec **5 pastilles carrées** (niveau actuel rempli / vide) et un **bouton violet prix « ⊕ 300 »** à droite de la ligne pour acheter CE niveau de CETTE stat.
-   - Gros bouton dégradé « ★ AMÉLIORER » en pied de panneau (ouvre/ferme ce sous-panneau, comme aujourd'hui).
-   - ⚠️ Aujourd'hui côté armes le niveau est UNIQUE par arme (`ShopRules`, upgrade partagé) : vérifier la spec web (`unity-spec/` + `main.js` upgrades par stat) et étendre les règles/save si le web a bien 4 stats d'arme indépendantes — sinon documenter l'écart. Côté persos les 3 stats (Vie/Régén/Vitesse) sont déjà indépendantes.
+3. ✅ **Corrigé (commits `c9a20e04` + `fc964b04`)** — spec web vérifiée : le web a bien **4 upgrades d'arme PAR STAT** (`UPGRADE_SPECS` main.js:1139-1144 — Dégâts/Cadence/Recul/Chargeur, 5 niveaux, coût `baseCost×(niveau+1)` avec bases 300/300/200/250, save `weaponUpgrades[arme][stat]`), déjà extraites dans `unity-spec/items.json` (bloc `upgrades`).
+   - **Schéma/règles étendus** : `SaveData.weaponUpgrades` devient `Dictionary<arme, Dictionary<stat, niveau>>` (miroir web), migration automatique de l'ancien niveau unique Unity (reporté sur les 4 stats — vérifiée sur la save réelle : VIPER-AR niveau 3 → « ★ 12/20 »), `ShopRules` par stat (+ `WeaponUpgradeTotal` pour le rating x/20), `WeaponController.Init` reçoit les 4 niveaux (`WeaponUpgradeLevels`), tests EditMode écrits (exécution à la vérif de nuit).
+   - **UI refaite** (partagée armes/persos, `UpgradeRowUi`) : sous-panneau encadré, une ligne par stat avec 5 pastilles carrées + bouton violet ⊕ prix, MAX grisé — capture `p5bb-armes-ameliorer-hd.png` conforme `amelioration.png` ; côté persos idem avec effet dans le libellé (« Vie (+20) »).
 
 #### D. Boutique — accessoires
 
-4. **Pas encore 100 % fidèle au web.** Écart relevé : à re-comparer ligne à ligne contre `shop-accessoires.png`/`shop-accessoires2.png` (tailles, espacements, barre d'achat, hiérarchie des sections) et contre le comportement web (`main.js` renderShop accessoires).
-5. **Taille des sous-onglets : garder la GRANDE taille.** Quand on clique « Costume », les onglets MASQUE/COSTUME/DANSES s'agrandissent (effet apprécié) — cette taille doit être la taille PERMANENTE des sous-onglets, pas un état au clic. (Piste : c'est probablement l'état `.on`/focus qui grossit — normaliser la taille de base dessus.)
+4. ✅ **Corrigé (commit `589706ff`)** — écarts relevés à la re-comparaison : la barre d'achat web est un **bouton/badge SEUL pleine largeur** (`acc-buy-bar`, main.js:1592-1601 — la ligne nom+rareté en trop a été retirée de l'UXML), vignettes rondes agrandies 145→165 px (≈ 27 % de la largeur du panneau comme la référence) avec marges aérées, étiquettes de rareté en pastille à fond teinté (alpha 0,14). Capture `p5bb-accessoires-masque.png` conforme. Nathan re-compare ligne à ligne pour valider.
+5. ✅ **Corrigé (commit `7be372b5`)** — la base `.subtab` passe à la grande taille (padding 12/28, 19 px) et les pseudo-états du thème Unity par défaut (hover/active/focus, cause du « saut » au clic) sont épinglés, comme le précédent `.panel-back`. S'applique aussi au rail de catégories d'armes (vérifié sans débordement en capture).
 
 #### E. Map Utopia
 
 6. ✅ **Diagnostic clos — correctif côté Blender (action manuelle Nathan).** Ce n'est PAS une régression du rebuild du 2026-07-10 : le GLB et son `.meta` n'ont jamais changé depuis l'import initial (`9fe9a8f2`, un seul commit chacun) et le rework NavMesh (`c1d3c866`) ne touche aucun transform de la map (diff vérifié ligne à ligne). Sonde MCP du 2026-07-11 sur `utopia.glb` : **29 862 instances de végétation sur 36 920 ont des échelles non uniformes aberrantes** (ex. `Proto_Fleur` scale (14.89, 2.58, 0.23) — `Proto_Fleur` : 23 137/27 779 distordues, `Proto_Touffe` : 6 725/9 141, ratio max/min > 3) alors que leurs meshes sont sains (bounds normaux). Cause : les **matrices des instances de particules/geometry nodes sont cisaillées à l'export** Blender→GLB et se décomposent en TRS dégénéré — d'où des plantes aléatoirement écrasées/étirées (même racine que le bug n°6/H1 du 2026-07-07).
    **À faire côté Blender avant re-export :** sélectionner la végétation → réaliser les instances (geometry nodes : modificateur « Realize Instances » ; systèmes de particules : Make Instances Real), puis **Ctrl+A → All Transforms** sur les objets générés, ré-exporter `utopia.glb` (même chaîne CLI) et relancer **Tools → Game → Build Utopia Scene**. ⚠️ Ça va probablement augmenter le nombre de meshes (dette 39k MeshColliders à resurveiller).
 
-**Jalon Phase 5 bis bis :** Nathan rejoue ces 6 points et ne trouve plus d'écart ; alors seulement, re-validation globale de la 5.1 puis merge.
+**Jalon Phase 5 bis bis :** Nathan rejoue ces 6 points et ne trouve plus d'écart ; alors seulement, re-validation globale de la 5.1 puis merge. *(État 2026-07-11 : points 1-5 corrigés, point 6 = re-export Blender chez Nathan ; vérifs de nuit listées dans `.superpowers/sdd/pending-verifications-phase5bisbis.md`.)*
 
 ### Phase 6 — Multijoueur 🔜
 
