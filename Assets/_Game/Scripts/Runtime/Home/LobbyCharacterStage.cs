@@ -87,16 +87,21 @@ namespace Game.Runtime
             rightNeighbor = SpawnNeighbor(right, new Vector3(1.4f, 0f, -0.3f));
         }
 
-        /// Zoom vitrine (playtest 2026-07-10 soir : persos trop petits dans la boutique) —
-        /// avance tout le stage vers la caméra lobby fixe sur l'onglet Personnages, et le
-        /// remet à sa place partout ailleurs. La position de repos vient de HomeSceneBuilder.
+        /// Zoom vitrine (point 2 feedback n°3) : l'ancienne translation +2,2 m en Z faisait
+        /// passer les persos DEVANT la stèle (peinte sur le quad de fond à z=−3) et, la caméra
+        /// plongeant (y=1.95 → lookAt y=1.46), les projetait plus bas — effet « enfoncés sous
+        /// le socle ». Un scale sur place garde les pieds (pivot GLB, y=0) posés sur la stèle.
+        /// 1.45 ≈ le grossissement apparent de l'ancien rapprochement (6,8 m → 4,6 m).
+        const float ShowcaseScale = 1.45f;
+
         Vector3 restPosition;
         bool restCaptured;
 
         public void SetShowcaseZoom(bool on)
         {
             if (!restCaptured) { restPosition = transform.position; restCaptured = true; }
-            transform.position = on ? restPosition + new Vector3(0f, 0f, 2.2f) : restPosition;
+            transform.position = restPosition;
+            transform.localScale = on ? Vector3.one * ShowcaseScale : Vector3.one;
         }
 
         public void ClearNeighbors()
