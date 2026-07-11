@@ -34,7 +34,6 @@ namespace Game.Runtime
         ScrollView accGrid, danceGrid;
         Label danceCounter;
 
-        Label accName, accRarityBadge;
         Button accBuyButton, accEquipButton;
         Label accEquippedBadge;
 
@@ -66,8 +65,6 @@ namespace Game.Runtime
             danceGrid = content.Q<ScrollView>("shop-dance-grid");
             danceCounter = content.Q<Label>("shop-dance-counter");
 
-            accName = content.Q<Label>("shop-acc-name");
-            accRarityBadge = content.Q<Label>("shop-acc-rarity-badge");
             accBuyButton = content.Q<Button>("shop-acc-buy");
             accEquipButton = content.Q<Button>("shop-acc-equip");
             accEquippedBadge = content.Q<Label>("shop-acc-equipped-badge");
@@ -222,12 +219,13 @@ namespace Game.Runtime
             RenderAccessoryBuyBar(save, focus, equippedId);
         }
 
+        // web acc-buy-bar (main.js:1592-1601) : bouton/badge SEUL pleine largeur — le nom et la
+        // rareté ne sont pas rappelés dans la barre (point 4 feedback n°3).
         void RenderAccessoryBuyBar(SaveData save, AccessoryData focus, string equippedId)
         {
             if (focus == null)
             {
                 focusAccessoryId = null;
-                accName.text = "—"; accRarityBadge.text = "";
                 accBuyButton.style.display = DisplayStyle.None;
                 accEquipButton.style.display = DisplayStyle.None;
                 accEquippedBadge.style.display = DisplayStyle.None;
@@ -235,10 +233,6 @@ namespace Game.Runtime
             }
 
             focusAccessoryId = focus.id;
-
-            accName.text = focus.displayName;
-            accRarityBadge.text = RarityName(focus.rarity);
-            ApplyRarityClass(accRarityBadge, focus.rarity);
 
             bool owned = save.ownedAccessories.Contains(focus.id);
             bool equipped = equippedId == focus.id;
@@ -363,6 +357,10 @@ namespace Game.Runtime
             label.style.borderBottomColor = color;
             label.style.borderLeftColor = color;
             label.style.borderRightColor = color;
+            // Pastille teintée (point 4 feedback n°3, captures shop-accessoires*.png : le label
+            // a un léger fond de la couleur de rareté, pas seulement une bordure fine).
+            var bg = color; bg.a = 0.14f;
+            label.style.backgroundColor = bg;
             row.Add(label);
 
             var line = new VisualElement();

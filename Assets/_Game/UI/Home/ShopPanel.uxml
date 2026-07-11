@@ -178,11 +178,9 @@
 
                     <ui:VisualElement name="shop-acc-view" class="shop-acc-view">
                         <ui:ScrollView name="shop-acc-grid" mode="Vertical" horizontal-scroller-visibility="Hidden" class="acc-grid" />
+                        <!-- web acc-buy-bar (main.js:1592-1601) : bouton/badge SEUL pleine largeur,
+                             pas de ligne nom+rareté (point 4 feedback n°3). -->
                         <ui:VisualElement name="shop-acc-buybar" class="acc-buybar">
-                            <ui:VisualElement class="shop-wname-row">
-                                <ui:Label name="shop-acc-name" text="—" class="shop-wname" />
-                                <ui:Label name="shop-acc-rarity-badge" text="" class="rarity-badge" />
-                            </ui:VisualElement>
                             <ui:Button name="shop-acc-buy" text="Acheter" class="shop-cta buy" />
                             <ui:Button name="shop-acc-equip" text="Équiper" class="shop-cta" />
                             <ui:Label name="shop-acc-equipped-badge" text="✓ Équipé" class="shop-badge" />

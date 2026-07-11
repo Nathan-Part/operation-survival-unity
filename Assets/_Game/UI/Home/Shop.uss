@@ -698,16 +698,18 @@
    shop-accessoires2.png) : grand cercle gris, bordure épaisse colorée par rareté,
    coche verte sur l'article équipé. S'applique PAR-DESSUS .acctile (les danses
    gardent la tuile rectangulaire). */
-/* Playtest 2026-07-10 soir : cercles agrandis (116 -> 145, on ne voyait pas les articles). */
+/* Playtest 2026-07-10 soir : cercles agrandis (116 -> 145, on ne voyait pas les articles).
+   Feedback n°3 point 4 : 145 -> 165 + marges aérées (référence : cercle ≈ 27 % de la
+   largeur du panneau sur shop-accessoires2.png). */
 .acctile.acc-round {
-    width: 145px;
-    height: 145px;
-    border-radius: 73px;
+    width: 165px;
+    height: 165px;
+    border-radius: 83px;
     background-color: rgb(208, 211, 220);
     border-width: 3px;
     border-color: rgb(154, 163, 178);
     padding: 0;
-    margin: 12px 14px;
+    margin: 14px 16px;
     align-items: center;
     justify-content: center;
     overflow: visible;
@@ -723,8 +725,8 @@
 }
 
 .acc-round .acctile-img {
-    width: 108px;
-    height: 108px;
+    width: 124px;
+    height: 124px;
 }
 
 .acc-check {
@@ -830,15 +832,26 @@
     align-items: stretch;
 }
 
-.acc-buybar .shop-wname {
-    color: #171a26;
-    font-size: 22px;
+/* web acc-buy-bar (main.js:1592-1601) : bouton/badge SEUL, pleine largeur, texte centré
+   (point 4 feedback n°3 — la ligne nom+rareté a été retirée de l'UXML). */
+.acc-buybar .shop-cta,
+.acc-buybar .shop-badge {
+    width: 100%;
+    -unity-text-align: middle-center;
+    justify-content: center;
 }
 
 .acc-buybar .shop-cta {
     background-color: rgba(255, 255, 255, 0.9);
     border-color: rgba(23, 26, 38, 0.25);
     color: #171a26;
+}
+
+.acc-buybar .shop-badge {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-width: 1px;
+    border-color: rgba(23, 26, 38, 0.12);
+    color: rgb(46, 204, 113); /* « ✓ Équipé » vert centré, comme la capture */
 }
 
 .acc-buybar .shop-cta.buy {
