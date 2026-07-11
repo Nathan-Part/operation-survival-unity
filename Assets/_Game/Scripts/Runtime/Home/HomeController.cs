@@ -207,8 +207,8 @@ namespace Game.Runtime
         void Update()
         {
             if (map == null) return;
-            if (leftAction.WasPressedThisFrame()) ChangeCharacter(-1);
-            if (rightAction.WasPressedThisFrame()) ChangeCharacter(1);
+            if (leftAction.WasPressedThisFrame()) OnArrowPressed(-1);
+            if (rightAction.WasPressedThisFrame()) OnArrowPressed(1);
             if (deployAction.WasPressedThisFrame()) TryDeploy();
             if (closeAction.WasPressedThisFrame()) CloseActivePanel();
         }
@@ -323,6 +323,19 @@ namespace Game.Runtime
                 if (i == index) dot.AddToClassList("dot-active");
                 charDots.Add(dot);
             }
+        }
+
+        // web : les flèches ne pilotent le sélecteur de perso qu'au lobby et sur l'onglet
+        // Personnage de la boutique — jamais depuis les autres panneaux/onglets (point 1
+        // feedback n°3 : un appui ← → depuis Armes/Boost/Réglages changeait le perso).
+        void OnArrowPressed(int direction)
+        {
+            if (activePanel == null) { ChangeCharacter(direction); return; }
+            if (activePanel == "shop" && shopScreen != null && shopScreen.IsCharacterTabActive)
+            {
+                if (direction < 0) shopScreen.CharacterPrev(); else shopScreen.CharacterNext();
+            }
+            // Tout autre panneau/onglet : les flèches sont inertes.
         }
 
         void ChangeCharacter(int direction)

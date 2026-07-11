@@ -41,6 +41,13 @@ namespace Game.Runtime
         readonly Dictionary<string, VisualElement> tabContents = new Dictionary<string, VisualElement>();
         string activeTab = "weapons";
 
+        /// Flèches clavier du Home (point 1 feedback n°3) : le carrousel perso ne doit défiler
+        /// que sur l'onglet Personnage — HomeController interroge cet état avant de router ← →.
+        public bool IsCharacterTabActive => activeTab == "player";
+
+        public void CharacterPrev() => characterTab?.Prev();
+        public void CharacterNext() => characterTab?.Next();
+
         Transform weaponPivot;
         ShopWeaponsTab weaponsTab;
         ShopCharacterTab characterTab;
