@@ -238,8 +238,8 @@ namespace Game.Runtime
 
         // web renderShop (main.js:1490-1494) : une ligne par stat de UPGRADE_SPECS, chacune avec
         // son propre niveau et son propre coût — 4 progressions GENUINEMENT indépendantes depuis
-        // le point 3 du feedback n°3 (ShopRules/SaveData par stat). Le visuel pastilles+prix
-        // (parité amelioration.png) arrive en Task 4 du plan — ici, rangées sobres par stat.
+        // le point 3 du feedback n°3 (ShopRules/SaveData par stat). Visuel pastilles+prix
+        // partagé avec l'onglet Personnage (UpgradeRowUi, parité amelioration.png).
         void RenderUpgradeRows(Game.Data.Save.SaveData save, WeaponData w)
         {
             upgradesContainer.Clear();
@@ -252,34 +252,17 @@ namespace Game.Runtime
                 var baseCost = spec.baseCost;
                 var maxLevel = spec.maxLevel;
                 int level = ShopRules.WeaponUpgradeLevel(save, w.id, statKey);
-
-                var row = new VisualElement();
-                row.AddToClassList("upg-row");
-
-                var name = new Label(spec.displayName);
-                name.AddToClassList("upg-name");
-                row.Add(name);
-
-                var levelLabel = new Label($"{level}/{maxLevel}");
-                levelLabel.AddToClassList("upg-level");
-                row.Add(levelLabel);
-
-                bool atMax = level >= maxLevel;
                 int cost = ShopRules.NextWeaponUpgradeCost(save, w.id, statKey, baseCost);
-                var buy = new Button { text = atMax ? "MAX" : $"{cost} CR" };
-                buy.AddToClassList("upg-buy");
-                buy.SetEnabled(!atMax && save.money >= cost);
-                buy.clicked += () =>
-                {
-                    if (ShopRules.BuyWeaponUpgrade(save, w.id, statKey, baseCost, maxLevel))
-                    {
-                        meta.Persist();
-                        Render();
-                    }
-                };
-                row.Add(buy);
 
-                upgradesContainer.Add(row);
+                upgradesContainer.Add(UpgradeRowUi.BuildRow(spec.displayName, level, maxLevel, cost,
+                    save.money >= cost, () =>
+                    {
+                        if (ShopRules.BuyWeaponUpgrade(save, w.id, statKey, baseCost, maxLevel))
+                        {
+                            meta.Persist();
+                            Render();
+                        }
+                    }));
             }
         }
 

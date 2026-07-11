@@ -329,49 +329,71 @@
     -unity-text-align: middle-right;
 }
 
+/* Sous-panneau d'amélioration (parité amelioration.png) : encadré sous les barres de stats,
+   une ligne par stat — nom, pastilles carrées (remplie = niveau acquis), bouton violet ⊕ prix. */
 .shop-upgrades {
     margin-top: 10px;
-    border-top-width: 1px;
-    border-top-color: var(--color-border);
-    padding-top: 8px;
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.16); /* cadre subtil sur panneau noir (amelioration.png) */
+    border-radius: 6px;
+    padding: 10px 12px;
 }
 
 .upg-row {
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
-    margin-top: 6px;
+    margin-top: 4px;
+    margin-bottom: 4px;
 }
 
 .upg-name {
-    color: var(--color-text);
-    font-size: 11px;
-    width: 90px;
+    color: white; /* panneau stats noir — pas var(--color-text), illisible ici */
+    font-size: 14px;
+    min-width: 108px;
 }
 
-.upg-level {
-    color: var(--color-text-dim);
-    font-size: 11px;
-    width: 46px;
+.upg-pips {
+    flex-direction: row;
+    flex-grow: 1;
+    align-items: center;
 }
 
-/* Effet par niveau des upgrades joueur (Task 12 : "+20", "+6%"...) — même gabarit que .upg-level,
-   pas de bouton dédié dans l'onglet Armes (une seule ligne "Niveau" y suffit, voir ShopWeaponsTab). */
-.upg-effect {
-    color: var(--color-gold);
-    font-size: 11px;
-    width: 46px;
+.upg-pip {
+    width: 13px;
+    height: 13px;
+    margin-right: 6px;
+    border-radius: 2px;
+    background-color: rgba(255, 255, 255, 0.18);
+}
+
+.upg-pip.filled {
+    background-color: var(--color-purple);
 }
 
 .upg-buy {
-    background-color: rgba(255, 255, 255, 0.08);
-    border-width: 1px;
-    border-color: var(--color-border);
-    border-radius: 8px;
-    color: var(--color-text);
-    padding: 4px 10px;
-    font-size: 11px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-purple);
+    border-width: 0;
+    border-radius: 5px;
+    color: white;
+    padding: 6px 14px;
+    font-size: 13px;
+    -unity-font-style: bold;
+    min-width: 74px;
 }
+
+.upg-buy-amount {
+    color: white;
+    margin-left: 5px;
+    -unity-font-style: bold;
+}
+
+/* Pseudo-états du thème par défaut (cf. .panel-back, Home.uss) : figer le violet. */
+.upg-buy:hover { background-color: var(--color-purple-dark); }
+.upg-buy:active { background-color: var(--color-purple-dark); }
+.upg-buy:disabled { opacity: 0.45; }
 
 .sp-btns {
     flex-direction: column;

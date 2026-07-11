@@ -198,9 +198,9 @@ namespace Game.Runtime
         }
 
         // web: upgRow2 (main.js:1441-1446) + PLAYER_UPGRADE_SPECS (main.js:3548-3551) — 3 lignes
-        // GENUINEMENT indépendantes (ShopRules.PlayerUpgradeLevel/BuyPlayerUpgrade prennent bien un
-        // paramètre `stat`, contrairement au niveau unique partagé des upgrades d'arme — voir
-        // ShopWeaponsTab.RenderUpgradeRows et le Finding 2 de la revue Task 11).
+        // GENUINEMENT indépendantes par stat. Visuel pastilles+prix partagé avec l'onglet Armes
+        // (UpgradeRowUi, parité amelioration.png) ; l'effet par niveau (« +20 », « +6% ») est
+        // intégré au libellé, comme l'upgRow2 web.
         void RenderUpgradeRows(SaveData save)
         {
             upgradesContainer.Clear();
@@ -209,42 +209,21 @@ namespace Game.Runtime
             foreach (var spec in db.upgradeConfig.playerUpgrades)
             {
                 if (spec == null) continue;
-
-                var row = new VisualElement();
-                row.AddToClassList("upg-row");
-
-                var name = new Label(spec.displayName);
-                name.AddToClassList("upg-name");
-                row.Add(name);
-
-                var effect = new Label(EffectText(spec));
-                effect.AddToClassList("upg-effect");
-                row.Add(effect);
-
-                int level = ShopRules.PlayerUpgradeLevel(save, spec.statKey);
-                var levelLabel = new Label($"{level}/{spec.maxLevel}");
-                levelLabel.AddToClassList("upg-level");
-                row.Add(levelLabel);
-
-                bool atMax = level >= spec.maxLevel;
-                int cost = ShopRules.NextPlayerUpgradeCost(save, spec.statKey, spec.baseCost);
-                var buy = new Button { text = atMax ? "MAX" : $"{cost} CR" };
-                buy.AddToClassList("upg-buy");
-                buy.SetEnabled(!atMax && save.money >= cost);
-                var statKey = spec.statKey; // capture locale (évite la variable de boucle partagée)
+                var statKey = spec.statKey; // captures locales (évite la variable de boucle partagée)
                 var baseCost = spec.baseCost;
                 var maxLevel = spec.maxLevel;
-                buy.clicked += () =>
-                {
-                    if (ShopRules.BuyPlayerUpgrade(save, statKey, baseCost, maxLevel))
-                    {
-                        meta.Persist();
-                        Render();
-                    }
-                };
-                row.Add(buy);
+                int level = ShopRules.PlayerUpgradeLevel(save, statKey);
+                int cost = ShopRules.NextPlayerUpgradeCost(save, statKey, baseCost);
 
-                upgradesContainer.Add(row);
+                upgradesContainer.Add(UpgradeRowUi.BuildRow($"{spec.displayName} ({EffectText(spec)})",
+                    level, maxLevel, cost, save.money >= cost, () =>
+                    {
+                        if (ShopRules.BuyPlayerUpgrade(save, statKey, baseCost, maxLevel))
+                        {
+                            meta.Persist();
+                            Render();
+                        }
+                    }));
             }
         }
 
