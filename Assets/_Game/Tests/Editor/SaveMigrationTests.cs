@@ -53,12 +53,34 @@ namespace Game.Data.Tests
         public void RoundTrip_PreservesData()
         {
             var save = new SaveData { money = 777, bestWave = 9, prestige = 2 };
-            save.weaponUpgrades["raptor"] = 3;
+            save.weaponUpgrades["raptor"] = new System.Collections.Generic.Dictionary<string, int>
+            {
+                { WeaponStatKeys.Damage, 3 }
+            };
             var back = SaveMigration.FromJson(SaveMigration.ToJson(save));
             Assert.AreEqual(777, back.money);
             Assert.AreEqual(9, back.bestWave);
             Assert.AreEqual(2, back.prestige);
-            Assert.AreEqual(3, back.weaponUpgrades["raptor"]);
+            Assert.AreEqual(3, ShopRules.WeaponUpgradeLevel(back, "raptor", WeaponStatKeys.Damage));
+        }
+
+        [Test]
+        public void FromJson_MigratesLegacySingleLevelWeaponUpgradesToPerStat()
+        {
+            // Ancien schéma Unity (niveau unique par arme, appliqué aux 4 stats en jeu) :
+            // fidélité = reporter ce niveau sur chacune des 4 stats.
+            var save = SaveMigration.FromJson("{\"weaponUpgrades\":{\"ak\":3}}");
+            foreach (var key in WeaponStatKeys.All)
+                Assert.AreEqual(3, ShopRules.WeaponUpgradeLevel(save, "ak", key), key);
+        }
+
+        [Test]
+        public void FromJson_KeepsWebPerStatWeaponUpgradesAsIs()
+        {
+            var save = SaveMigration.FromJson("{\"weaponUpgrades\":{\"ak\":{\"damage\":2,\"mag\":1}}}");
+            Assert.AreEqual(2, ShopRules.WeaponUpgradeLevel(save, "ak", WeaponStatKeys.Damage));
+            Assert.AreEqual(1, ShopRules.WeaponUpgradeLevel(save, "ak", WeaponStatKeys.Mag));
+            Assert.AreEqual(0, ShopRules.WeaponUpgradeLevel(save, "ak", WeaponStatKeys.FireRate));
         }
 
         // ---- ProgressionRules ----
@@ -99,23 +121,26 @@ namespace Game.Data.Tests
         {
             var save = new SaveData { money = 1000 };
             save.ownedWeapons.Add("raptor");
-            Assert.AreEqual(100, ShopRules.NextWeaponUpgradeCost(save, "raptor", 100)); // niveau 0 : base×1
-            Assert.IsTrue(ShopRules.BuyWeaponUpgrade(save, "raptor", 100, 5));
+            Assert.AreEqual(100, ShopRules.NextWeaponUpgradeCost(save, "raptor", WeaponStatKeys.Damage, 100)); // niveau 0 : base×1
+            Assert.IsTrue(ShopRules.BuyWeaponUpgrade(save, "raptor", WeaponStatKeys.Damage, 100, 5));
             Assert.AreEqual(900, save.money);
-            Assert.AreEqual(200, ShopRules.NextWeaponUpgradeCost(save, "raptor", 100)); // niveau 1 : base×2
-            Assert.IsTrue(ShopRules.BuyWeaponUpgrade(save, "raptor", 100, 5));
+            Assert.AreEqual(200, ShopRules.NextWeaponUpgradeCost(save, "raptor", WeaponStatKeys.Damage, 100)); // niveau 1 : base×2
+            Assert.IsTrue(ShopRules.BuyWeaponUpgrade(save, "raptor", WeaponStatKeys.Damage, 100, 5));
             Assert.AreEqual(700, save.money);
-            Assert.AreEqual(2, ShopRules.WeaponUpgradeLevel(save, "raptor"));
+            Assert.AreEqual(2, ShopRules.WeaponUpgradeLevel(save, "raptor", WeaponStatKeys.Damage));
         }
 
         [Test]
         public void Shop_WeaponUpgrade_RespectsMaxLevelAndOwnership()
         {
             var save = new SaveData { money = 10000 };
-            Assert.IsFalse(ShopRules.BuyWeaponUpgrade(save, "raptor", 100, 5)); // non possédée
+            Assert.IsFalse(ShopRules.BuyWeaponUpgrade(save, "raptor", WeaponStatKeys.Damage, 100, 5)); // non possédée
             save.ownedWeapons.Add("raptor");
-            save.weaponUpgrades["raptor"] = 5;
-            Assert.IsFalse(ShopRules.BuyWeaponUpgrade(save, "raptor", 100, 5)); // niveau max
+            save.weaponUpgrades["raptor"] = new System.Collections.Generic.Dictionary<string, int>
+            {
+                { WeaponStatKeys.Damage, 5 }
+            };
+            Assert.IsFalse(ShopRules.BuyWeaponUpgrade(save, "raptor", WeaponStatKeys.Damage, 100, 5)); // niveau max
         }
     }
 }

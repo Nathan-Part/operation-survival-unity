@@ -53,7 +53,7 @@ namespace Game.Runtime
         public event Action<int, int> LongShot;                          // argent, xp — tir confirmé à ≥ 30 m (web #)
         public event Action<FireMode> ModeChanged;                       // T (burst) / P (semi) : indicateur HUD
 
-        public void Init(WeaponData weapon, int upgradeLevel = 0)
+        public void Init(WeaponData weapon, WeaponUpgradeLevels levels = default)
         {
             if (burstRoutine != null)
             {
@@ -61,10 +61,10 @@ namespace Game.Runtime
                 burstRoutine = null;
             }
             Weapon = weapon;
-            EffectiveCooldown = UpgradeFormulas.WeaponCooldown(weapon.cooldown, upgradeLevel);
-            EffectiveDmgMult = UpgradeFormulas.WeaponDamageMult(weapon.dmgMult, upgradeLevel);
-            EffectiveRecoil = UpgradeFormulas.WeaponRecoil(weapon.recoil, upgradeLevel);
-            ammo = new AmmoModel(UpgradeFormulas.WeaponMag(weapon.mag, upgradeLevel), weapon.reload);
+            EffectiveCooldown = UpgradeFormulas.WeaponCooldown(weapon.cooldown, levels.fireRate);
+            EffectiveDmgMult = UpgradeFormulas.WeaponDamageMult(weapon.dmgMult, levels.damage);
+            EffectiveRecoil = UpgradeFormulas.WeaponRecoil(weapon.recoil, levels.recoil);
+            ammo = new AmmoModel(UpgradeFormulas.WeaponMag(weapon.mag, levels.mag), weapon.reload);
             Mode = FireModeModel.Default(weapon.id, weapon.semiAuto);
             AmmoChanged?.Invoke(ammo.InMag, ammo.MagSize);
         }

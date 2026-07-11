@@ -17,6 +17,22 @@ namespace Game.Data.Save
             {
                 var parsed = JToken.Parse(json);
                 if (parsed.Type != JTokenType.Object) return new SaveData();
+                // Migration : l'ancien schéma Unity stockait un niveau unique par arme
+                // (weaponUpgrades:{"ak":3}) appliqué aux 4 stats en jeu — on le reporte sur
+                // chaque stat du schéma web (weaponUpgrades:{"ak":{damage:3,...}}).
+                var weaponUpgrades = parsed["weaponUpgrades"] as JObject;
+                if (weaponUpgrades != null)
+                {
+                    foreach (var prop in weaponUpgrades.Properties())
+                    {
+                        if (prop.Value.Type != JTokenType.Integer) continue;
+                        int legacyLevel = (int)prop.Value;
+                        var perStat = new JObject();
+                        foreach (var key in Rules.WeaponStatKeys.All) perStat[key] = legacyLevel;
+                        prop.Value = perStat;
+                    }
+                    json = parsed.ToString();
+                }
                 // merge champ à champ : les clés présentes écrasent les défauts,
                 // les collections fournies REMPLACENT (comme Object.assign du web)
                 JsonConvert.PopulateObject(json, save, new JsonSerializerSettings

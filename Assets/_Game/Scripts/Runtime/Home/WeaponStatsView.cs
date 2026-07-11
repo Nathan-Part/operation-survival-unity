@@ -23,13 +23,9 @@ namespace Game.Runtime
     /// tâche (branche armes à feu) et les applique uniformément aux 15 armes, mêlée comprise — un
     /// couteau affichera donc une barre "Cadence"/"Chargeur" au lieu des 3 barres mêlée du web.
     ///
-    /// Autre limite héritée (pas introduite ici) : le reste du projet (ShopRules.WeaponUpgradeLevel,
-    /// WeaponController.cs:64-67) ne suit qu'UN SEUL niveau d'amélioration par arme (partagé par les
-    /// 4 stats), alors que le web suit 4 niveaux indépendants (dmgLevel/fireRateLevel/magLevel/
-    /// recoilLevel séparés). Chaque méthode ci-dessous accepte bien son propre niveau en paramètre
-    /// (donc reste correcte et testable indépendamment pour le cas général) ; c'est l'appelant
-    /// (ShopWeaponsTab) qui, en pratique, passe la même valeur partagée aux quatre — cohérent avec
-    /// le reste du jeu, pas une régression de cette tâche.
+    /// Depuis le point 3 du feedback n°3 (Phase 5 bis bis), le projet suit bien 4 niveaux
+    /// indépendants par arme (ShopRules.WeaponUpgradeLevelsOf, save.weaponUpgrades[arme][stat],
+    /// parité web) — chaque méthode ci-dessous reçoit le niveau de SA stat.
     public static class WeaponStatsView
     {
         // web: dmg = round(60 * dmgMult) (l.1483) ; barre = dmg/200 (l.1485)

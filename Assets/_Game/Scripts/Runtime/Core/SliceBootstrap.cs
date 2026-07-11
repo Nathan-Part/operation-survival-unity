@@ -58,7 +58,7 @@ namespace Game.Runtime
             health.shield = new ShieldModel();
             health.hardcore = hardcore; // web: aucune régén PV/bouclier en hardcore
             if (hardcore) health.DisableSecondWind(); // web: pas de dernier souffle en hardcore
-            weapon.Init(weaponData, ShopRules.WeaponUpgradeLevel(save, weaponData.id));
+            weapon.Init(weaponData, ShopRules.WeaponUpgradeLevelsOf(save, weaponData.id));
             weapon.health = health;
             weapon.motor = motor;
             weapon.isLmg = weaponData.id == "lmg";

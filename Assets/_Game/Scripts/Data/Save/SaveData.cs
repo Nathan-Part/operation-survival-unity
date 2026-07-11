@@ -16,7 +16,10 @@ namespace Game.Data.Save
         public string selectedCharacterId;
         public List<string> ownedWeapons = new List<string> { "default", "knife" }; // knife gratuit (#50)
         public string selectedWeapon = "default";
-        public Dictionary<string, int> weaponUpgrades = new Dictionary<string, int>();
+        // web save.js : weaponUpgrades = { [armeId]: { damage:n, fireRate:n, recoil:n, mag:n } }
+        // (4 niveaux indépendants par arme — point 3 feedback n°3 ; l'ancien schéma Unity à niveau
+        // unique par arme est migré dans SaveMigration.FromJson).
+        public Dictionary<string, Dictionary<string, int>> weaponUpgrades = new Dictionary<string, Dictionary<string, int>>();
         public Dictionary<string, int> playerUpgrades = new Dictionary<string, int>();
         public List<string> ownedCharacters = new List<string> { "perso:blue-soldier" };
         public List<string> ownedAccessories = new List<string> { "helm:none", "cost:none" };

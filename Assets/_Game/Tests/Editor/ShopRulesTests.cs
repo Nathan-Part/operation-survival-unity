@@ -43,6 +43,51 @@ namespace Game.Data.Tests
             Assert.IsFalse(ShopRules.SelectCharacter(save, "perso:unowned"));
         }
 
+        // ---------- Upgrades d'arme par stat (point 3 feedback n°3, parité web) ----------
+
+        [Test]
+        public void BuyWeaponUpgrade_TracksEachStatIndependently()
+        {
+            var save = new SaveData { money = 10000 };
+            save.ownedWeapons.Add("ak");
+            Assert.IsTrue(ShopRules.BuyWeaponUpgrade(save, "ak", WeaponStatKeys.Damage, 300, 5));
+            Assert.IsTrue(ShopRules.BuyWeaponUpgrade(save, "ak", WeaponStatKeys.Damage, 300, 5));
+            Assert.IsTrue(ShopRules.BuyWeaponUpgrade(save, "ak", WeaponStatKeys.Recoil, 200, 5));
+            Assert.AreEqual(2, ShopRules.WeaponUpgradeLevel(save, "ak", WeaponStatKeys.Damage));
+            Assert.AreEqual(1, ShopRules.WeaponUpgradeLevel(save, "ak", WeaponStatKeys.Recoil));
+            Assert.AreEqual(0, ShopRules.WeaponUpgradeLevel(save, "ak", WeaponStatKeys.FireRate));
+            Assert.AreEqual(3, ShopRules.WeaponUpgradeTotal(save, "ak"));
+            // Débits : 300 (dmg N1) + 600 (dmg N2) + 200 (recul N1) = 1100
+            Assert.AreEqual(10000 - 1100, save.money);
+        }
+
+        [Test]
+        public void BuyWeaponUpgrade_RefusesBeyondMaxAndWithoutMoneyOrOwnership()
+        {
+            var save = new SaveData { money = 100000 };
+            save.ownedWeapons.Add("ak");
+            for (int i = 0; i < 5; i++) ShopRules.BuyWeaponUpgrade(save, "ak", WeaponStatKeys.Mag, 250, 5);
+            Assert.IsFalse(ShopRules.BuyWeaponUpgrade(save, "ak", WeaponStatKeys.Mag, 250, 5)); // max atteint
+            var poor = new SaveData { money = 100 };
+            poor.ownedWeapons.Add("ak");
+            Assert.IsFalse(ShopRules.BuyWeaponUpgrade(poor, "ak", WeaponStatKeys.Damage, 300, 5)); // pas assez
+            var rich = new SaveData { money = 100000 };
+            Assert.IsFalse(ShopRules.BuyWeaponUpgrade(rich, "smg", WeaponStatKeys.Damage, 300, 5)); // non possédée
+        }
+
+        [Test]
+        public void WeaponUpgradeLevelsOf_MapsAllFourStats()
+        {
+            var save = new SaveData { money = 100000 };
+            save.ownedWeapons.Add("ak");
+            ShopRules.BuyWeaponUpgrade(save, "ak", WeaponStatKeys.FireRate, 300, 5);
+            var levels = ShopRules.WeaponUpgradeLevelsOf(save, "ak");
+            Assert.AreEqual(0, levels.damage);
+            Assert.AreEqual(1, levels.fireRate);
+            Assert.AreEqual(0, levels.recoil);
+            Assert.AreEqual(0, levels.mag);
+        }
+
         // ---------- BuyAccessory ----------
 
         [Test]

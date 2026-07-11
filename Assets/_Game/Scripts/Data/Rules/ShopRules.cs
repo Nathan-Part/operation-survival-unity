@@ -41,23 +41,44 @@ namespace Game.Data.Rules
             return true;
         }
 
-        public static int WeaponUpgradeLevel(SaveData save, string weaponId) =>
-            save.weaponUpgrades.TryGetValue(weaponId, out int level) ? level : 0;
+        /// Niveau d'amélioration de CETTE stat de CETTE arme (web upgradeLevel, main.js:1145 —
+        /// 4 progressions indépendantes par arme, point 3 feedback n°3).
+        public static int WeaponUpgradeLevel(SaveData save, string weaponId, string statKey) =>
+            save.weaponUpgrades.TryGetValue(weaponId, out var stats) && stats != null &&
+            stats.TryGetValue(statKey, out int level) ? level : 0;
 
-        /// Coût du prochain niveau (formule importée : baseCost × (niveau+1)).
-        public static int NextWeaponUpgradeCost(SaveData save, string weaponId, int baseCost) =>
-            UpgradeFormulas.Cost(baseCost, WeaponUpgradeLevel(save, weaponId));
-
-        public static bool BuyWeaponUpgrade(SaveData save, string weaponId, int baseCost, int maxLevel)
+        /// Somme des 4 stats — le rating « ★ x/20 » du web (main.js:1452 : reduce sur UPGRADE_SPECS).
+        public static int WeaponUpgradeTotal(SaveData save, string weaponId)
         {
-            int level = WeaponUpgradeLevel(save, weaponId);
+            int total = 0;
+            foreach (var key in WeaponStatKeys.All) total += WeaponUpgradeLevel(save, weaponId, key);
+            return total;
+        }
+
+        /// Coût du prochain niveau de CETTE stat (formule web : baseCost × (niveau+1)).
+        public static int NextWeaponUpgradeCost(SaveData save, string weaponId, string statKey, int baseCost) =>
+            UpgradeFormulas.Cost(baseCost, WeaponUpgradeLevel(save, weaponId, statKey));
+
+        public static bool BuyWeaponUpgrade(SaveData save, string weaponId, string statKey, int baseCost, int maxLevel)
+        {
+            int level = WeaponUpgradeLevel(save, weaponId, statKey);
             if (level >= maxLevel) return false;
             int cost = UpgradeFormulas.Cost(baseCost, level);
             if (save.money < cost || !save.ownedWeapons.Contains(weaponId)) return false;
             save.money -= cost;
-            save.weaponUpgrades[weaponId] = level + 1;
+            if (!save.weaponUpgrades.TryGetValue(weaponId, out var stats) || stats == null)
+                save.weaponUpgrades[weaponId] = stats = new Dictionary<string, int>();
+            stats[statKey] = level + 1;
             return true;
         }
+
+        public static WeaponUpgradeLevels WeaponUpgradeLevelsOf(SaveData save, string weaponId) => new WeaponUpgradeLevels
+        {
+            damage = WeaponUpgradeLevel(save, weaponId, WeaponStatKeys.Damage),
+            fireRate = WeaponUpgradeLevel(save, weaponId, WeaponStatKeys.FireRate),
+            recoil = WeaponUpgradeLevel(save, weaponId, WeaponStatKeys.Recoil),
+            mag = WeaponUpgradeLevel(save, weaponId, WeaponStatKeys.Mag),
+        };
 
         public static bool BuyAccessory(SaveData save, string id, int price)
         {
