@@ -452,27 +452,37 @@
 }
 
 /* Chips de catégories : carrés blancs, texte condensé sombre, actif violet (parité shop-guns.png). */
-/* Sous-onglets agrandis (playtest 2026-07-10 soir : trop petits). */
+/* Sous-onglets : GRANDE taille permanente (point 5 feedback n°3 — la taille perçue au clic
+   doit être l'état de base). Pseudo-états épinglés comme .panel-back (Home.uss:535-544) :
+   le thème Unity par défaut modifie l'apparence au survol/clic/focus sinon. */
 .subtab {
     background-color: rgba(255, 255, 255, 0.92);
     border-width: 1px;
     border-color: rgba(23, 26, 38, 0.15);
     border-radius: 4px;
     color: #232838;
-    padding: 9px 22px;
+    padding: 12px 28px;
     margin-right: 8px;
     margin-bottom: 4px;
-    font-size: 16px;
+    font-size: 19px;
     -unity-font-style: bold;
     letter-spacing: 1px;
     -unity-font-definition: url("/Assets/_Game/Art/UI/Fonts/BarlowCondensed-Bold.ttf");
 }
+
+.subtab:hover { background-color: rgb(255, 255, 255); border-color: rgba(23, 26, 38, 0.15); color: #232838; }
+.subtab:active { background-color: rgb(255, 255, 255); border-color: rgba(23, 26, 38, 0.15); color: #232838; }
+.subtab:focus { background-color: rgba(255, 255, 255, 0.92); border-color: rgba(23, 26, 38, 0.15); color: #232838; }
 
 .subtab.on {
     background-color: var(--color-purple);
     border-color: var(--color-purple);
     color: white;
 }
+
+.subtab.on:hover { background-color: var(--color-purple); border-color: var(--color-purple); color: white; }
+.subtab.on:active { background-color: var(--color-purple); border-color: var(--color-purple); color: white; }
+.subtab.on:focus { background-color: var(--color-purple); border-color: var(--color-purple); color: white; }
 
 .shop-carousel {
     height: 170px;
