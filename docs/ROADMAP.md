@@ -100,9 +100,9 @@ Geler le design du jeu web pour que Unity ait une référence stable : refactors
 
 **Jalon :** un joueur du jeu web retrouve exactement son accueil sur mobile → **c'est la v1 publiable**.
 
-### Phase 6 — Multijoueur 🔜
+### Phase 6 — Multijoueur 🚧 (cœur coop démarré)
 
-Netcode : **Photon Fusion** (décidé, rien à coder avant cette phase). Dans l'ordre :
+Netcode : **Photon Fusion** (décidé). Dans l'ordre :
 
 1. **Coop contre vagues** (2–4 joueurs) : l'hôte fait autorité sur les ennemis.
 2. **PvP** (deathmatch par équipes) : prédiction client + compensation de lag (fournies par Fusion), matchmaking/lobbies, **rééquilibrage obligatoire** (le TTK actuel est pensé contre des bots), anti-triche (dégâts validés côté serveur).
@@ -110,6 +110,12 @@ Netcode : **Photon Fusion** (décidé, rien à coder avant cette phase). Dans l'
 La save passe côté serveur (sinon triche triviale). Options : Unity Cloud Save, PlayFab, Firebase.
 
 **Jalon :** un match PvP complet entre deux téléphones réels.
+
+**✅ Livré (2026-07-11/12, branche `claude/online-mode-autonomy-mtrdnj`) — le CŒUR LOGIQUE de la coop en ligne, hôte autoritaire, indépendant du transport :** nouvel assembly **`Game.Net`** (engine-free, testé) contenant la simulation coop complète — registre de joueurs, directeur de vagues rééquilibré par nombre de joueurs (`CoopScaling`, réutilise `WaveRules`), validation des dégâts côté hôte (`DamageValidator`), boucle **down → relève → respawn → wipe**, `WorldSnapshot`, et un **`LoopbackTransport`** en mémoire pour tests/hôte-seul. Le tout derrière une interface **`INetTransport`** : **Photon n'est qu'un adaptateur** (`Game.Net.Photon`, **inerte** tant que Fusion n'est pas installé — contrainte de define `FUSION2`, aucun impact sur le build actuel). ≈35 tests EditMode (`Assets/_Game/Tests/Net/`) ; la partie engine-free a aussi été **exécutée** hors éditeur (`mcs`/`mono`, 41 assertions vertes). Spec : `docs/superpowers/specs/2026-07-11-online-coop-mode-design.md` · Plan : `docs/superpowers/plans/2026-07-11-online-coop-mode.md`.
+
+**Reste pour la coop jouable :** vérifier la compilation/les tests **en éditeur** (MCP) ; écrire le **binder de scène** (instancier les ennemis sur `CoopRunner.EnemySpawnRequested`, réconcilier avec `EnemyHealth`/`EnemyController`, appliquer les snapshots côté client) ; **installer Photon Fusion 2** + App ID et compléter `FusionTransport` (voir `Assets/_Game/Scripts/Net/Photon/README.md`) ; régler l'équilibrage coop (`// TODO(coop-balance)`).
+
+> ⚠️ Ordre voulu de la roadmap : le solo complet (Phases 3–5) sort **avant** le réseau. Ce cœur coop a été livré en avance à la demande de Nathan (« fais le mode en ligne ») ; il ne bloque pas les phases 3–5 (assembly séparé, aucun code existant modifié hormis l'ajout d'une référence à `Game.Runtime`).
 
 ### Phase 7 — Qualité & sortie 🔜
 
@@ -149,5 +155,6 @@ Unity 6 + C#, URP (pas Built-in/HDRP/Unreal) · Android + iOS · solo d'abord (v
 |---|---|---|
 | 2026-07-06 | Pipeline d'import JSON → ScriptableObjects (91 assets, 31 tests) | mergé dans `main` |
 | 2026-07-06 | Vertical slice solo jouable (83 + 2 tests) | branche `feat/vertical-slice-solo` |
+| 2026-07-12 | Cœur logique du mode en ligne coop (assembly `Game.Net`, hôte autoritaire, ~35 tests + seam Photon inerte) | branche `claude/online-mode-autonomy-mtrdnj` |
 
 Détails d'archive : specs dans `docs/superpowers/specs/`, plans dans `docs/superpowers/plans/`, journal de l'import dans `.superpowers/sdd/progress.md`, dette technique de l'import dans `docs/superpowers/tech-debt-import-pipeline.md`.

@@ -18,7 +18,8 @@ Le plan complet (8 phases, 0 à 7, du gel du jeu web jusqu'à la sortie sur les 
 
 - ✅ **Phase 1 (fondations + import des données)** : mergée dans `main`. Menu **`Tools/Game/Import Spec from JSON`** → 91 ScriptableObjects + `GameDatabase.asset`.
 - ✅ **Phase 2 (slice solo jouable, version minimale)** : terminée le 2026-07-06 sur la branche **`feat/vertical-slice-solo`** (pas encore mergée — en attente du test de Nathan). **Le jeu est jouable** : scène `Assets/_Game/Scenes/Slice.unity`, vue FPS, tir automatique, vagues fidèles au web, HUD, joysticks virtuels. 83 tests EditMode + 2 PlayMode verts.
-- ⬅️ **Prochaine étape :** Nathan teste et on merge, puis **Phase 3 en commençant par les animations** (ennemis : marche/attaque/mort ; joueur : arme en main, feedback, mort). Maps en dernier (utopia puis urban, portal abandonnée). Chaque phase démarre par son brainstorm + spec + plan. Voir la roadmap.
+- 🚧 **Phase 6 (multijoueur) — cœur coop démarré en avance** (branche `claude/online-mode-autonomy-mtrdnj`, à la demande de Nathan « fais le mode en ligne ») : nouvel assembly **`Game.Net`** = toute la simulation coop **hôte-autoritaire**, engine-free et testée (~35 tests EditMode + harness `mcs`/`mono`), derrière une interface `INetTransport`. **Photon n'est qu'un adaptateur inerte** (`Game.Net.Photon`, contrainte de define `FUSION2` → zéro impact sur le build tant que Fusion n'est pas installé). Reste : vérif en éditeur, binder de scène, install Photon. Détails : section Phase 6 de la roadmap + `docs/superpowers/specs/2026-07-11-online-coop-mode-design.md`.
+- ⬅️ **Prochaine étape (ordre normal) :** Nathan teste la slice et on merge, puis **Phase 3 en commençant par les animations** (ennemis : marche/attaque/mort ; joueur : arme en main, feedback, mort). Maps en dernier (utopia puis urban, portal abandonnée). Chaque phase démarre par son brainstorm + spec + plan. Voir la roadmap.
 
 ## Tous les fichiers `.md` du projet, à quoi ils servent
 
