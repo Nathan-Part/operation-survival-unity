@@ -1,0 +1,13 @@
+{
+    "name": "Game.Net.Tests",
+    "rootNamespace": "Game.Net.Tests",
+    "references": [
+        "Game.Net",
+        "Game.Data"
+    ],
+    "includePlatforms": ["Editor"],
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "defineConstraints": ["UNITY_INCLUDE_TESTS"],
+    "optionalUnityReferences": ["TestAssemblies"]
+}
