@@ -1,0 +1,19 @@
+{
+    "name": "Game.Net.Photon",
+    "rootNamespace": "Game.Net.Photon",
+    "references": [
+        "Game.Net",
+        "Game.Data"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "FUSION2"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -3,6 +3,7 @@
     "rootNamespace": "Game.Runtime",
     "references": [
         "Game.Data",
+        "Game.Net",
         "Unity.InputSystem",
         "Unity.AI.Navigation"
     ],
