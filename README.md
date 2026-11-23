@@ -8,7 +8,7 @@
 
 Pick an operator, kit them out in the armory, then hold the line against endless waves of enemies that get smarter, tougher and stranger every round. Made for Android and iOS, fully playable with mouse and keyboard in the editor.
 
-[Features](#features) · [Controls](#controls) · [Tech stack](#tech-stack) · [Getting started](#getting-started) · [Built with AI](#built-with-ai-assistance) · [Roadmap](#roadmap)
+[Features](#features) · [**Installation**](#installation) · [Controls](#controls) · [Tech stack](#tech-stack) · [Built with AI](#built-with-ai-assistance) · [Roadmap](#roadmap)
 
 ![Unity](https://img.shields.io/badge/Unity-6000.5-000000?logo=unity&logoColor=white)
 ![C#](https://img.shields.io/badge/C%23-.NET-512bd4?logo=dotnet&logoColor=white)
@@ -52,6 +52,45 @@ Pick an operator, kit them out in the armory, then hold the line against endless
 - **Combo multiplier**, kill bonuses and an end-of-run report with a letter grade.
 - **Difficulty levels**, hardcore and training modes, and in-game settings (sensitivity, volume, camera view).
 - **Local save** that persists between sessions, with automatic migrations between versions.
+
+## Installation
+
+### Requirements
+
+- [Unity Hub](https://unity.com/download) with **Unity 6000.5.2f1** (other Unity 6 versions may work but are not tested).
+- [Git](https://git-scm.com/), which Unity also needs to fetch one package referenced by URL.
+- About 3 GB of free disk space for the project and the Unity cache.
+
+### Run the game
+
+```bash
+git clone https://github.com/Nathan-Part/FPS.git
+```
+
+1. Open **Unity Hub → Add → Add project from disk** and select the cloned folder.
+2. Open the project. The first import takes several minutes while Unity builds its `Library/` cache.
+3. In the **Project** window, open `Assets/_Game/Scenes/Home.unity`.
+4. Press **Play**. From the home screen you can visit the armory, pick a map and press **Déployer** to start a run.
+
+To test the gameplay without the menus, open `Assets/_Game/Scenes/Slice.unity` instead.
+
+### Useful editor menus
+
+| Menu | Description |
+| --- | --- |
+| **Tools → Game → Import Spec from JSON** | Regenerate all gameplay data from `unity-spec/*.json` |
+| **Tools → Game → Build Home Scene** | Rebuild the home screen scene |
+| **Tools → Game → Build Utopia Scene** | Rebuild the Utopia map scene and its NavMesh |
+| **Tools → Game → Build Slice Scene** | Rebuild the gameplay test scene |
+| **Tools → Game → Assign Imported Art** | Link imported models and animations to their data entries |
+
+### Run the tests
+
+Open **Window → General → Test Runner**, then run the **EditMode** tab (rules, economy, save, waves) and the **PlayMode** tab (scene smoke tests).
+
+### Build for mobile
+
+Install the **Android Build Support** or **iOS Build Support** module from Unity Hub, then use **File → Build Profiles**. `Home.unity` is already the first scene in the build list.
 
 ## Controls
 
@@ -100,45 +139,6 @@ The game plays with touch controls on mobile. In the editor, the keyboard layout
 - **Separate assemblies** (`Game.Data`, `Game.Runtime`, their editor and test assemblies) keep data, gameplay and tooling decoupled and compile times short.
 - **Animation without Animator Controllers**: a small Playables-based driver handles locomotion, attacks, death and crossfades in code.
 - **Asynchronous map loading** with a real progress bar.
-
-## Getting started
-
-### Requirements
-
-- [Unity Hub](https://unity.com/download) with **Unity 6000.5.2f1** (other Unity 6 versions may work but are not tested).
-- [Git](https://git-scm.com/), which Unity also needs to fetch one package referenced by URL.
-- About 3 GB of free disk space for the project and the Unity cache.
-
-### Run the game
-
-```bash
-git clone https://github.com/Nathan-Part/FPS.git
-```
-
-1. Open **Unity Hub → Add → Add project from disk** and select the cloned folder.
-2. Open the project. The first import takes several minutes while Unity builds its `Library/` cache.
-3. In the **Project** window, open `Assets/_Game/Scenes/Home.unity`.
-4. Press **Play**. From the home screen you can visit the armory, pick a map and press **Déployer** to start a run.
-
-To test the gameplay without the menus, open `Assets/_Game/Scenes/Slice.unity` instead.
-
-### Useful editor menus
-
-| Menu | Description |
-| --- | --- |
-| **Tools → Game → Import Spec from JSON** | Regenerate all gameplay data from `unity-spec/*.json` |
-| **Tools → Game → Build Home Scene** | Rebuild the home screen scene |
-| **Tools → Game → Build Utopia Scene** | Rebuild the Utopia map scene and its NavMesh |
-| **Tools → Game → Build Slice Scene** | Rebuild the gameplay test scene |
-| **Tools → Game → Assign Imported Art** | Link imported models and animations to their data entries |
-
-### Run the tests
-
-Open **Window → General → Test Runner**, then run the **EditMode** tab (rules, economy, save, waves) and the **PlayMode** tab (scene smoke tests).
-
-### Build for mobile
-
-Install the **Android Build Support** or **iOS Build Support** module from Unity Hub, then use **File → Build Profiles**. `Home.unity` is already the first scene in the build list.
 
 ## Project structure
 
