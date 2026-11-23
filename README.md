@@ -148,6 +148,7 @@ Assets/_Game/
 ├── UI/                   # UI Toolkit documents and style sheets
 ├── Scripts/
 │   ├── Data/             # Data types, pure gameplay rules and the save system
+│   ├── Net/              # Online co-op core: host-authoritative session, transport, Photon adapter
 │   ├── Runtime/
 │   │   ├── Player/       # Movement, look, health, aiming
 │   │   ├── Combat/       # Weapons, hit zones, throwables, power-ups, killstreaks
@@ -180,7 +181,8 @@ You don't need the MCP bridge to open, play or modify the project. Unity downloa
 - [x] Utopia map
 - [ ] Cleaner map colliders and baked lighting
 - [ ] More enemy models and a second map
-- [ ] Online co-op against waves (Photon Fusion)
+- [x] Online co-op netcode core (host-authoritative simulation, transport-agnostic, tested)
+- [ ] Playable online co-op against waves (scene binding + Photon Fusion)
 - [ ] Team deathmatch PvP
 - [ ] Release on Google Play and the App Store
 
