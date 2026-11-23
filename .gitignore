@@ -75,3 +75,15 @@ crashlytics-build.properties
 # Captures de verification visuelle (manage_camera MCP) - transitoires, jamais versionnees
 /[Aa]ssets/[Ss]creenshots/
 /[Aa]ssets/[Ss]creenshots.meta
+
+# Outils d'assistance IA et notes de session locales (jamais versionnes)
+.claude/
+.superpowers/
+CLAUDE.md
+docs/superpowers/
+
+# Divers OS / editeurs
+.DS_Store
+Thumbs.db
+.idea/
+*.swp

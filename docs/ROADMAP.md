@@ -1,6 +1,6 @@
 # ROADMAP — le plan complet du projet, du début à la sortie
 
-> **C'est LE fichier de suivi unique du projet** (avec `CLAUDE.md` pour le contexte des sessions Claude). Les anciens `docs/migration-unity.md` et `unity-spec/NEXT-STEPS.md` ont été fusionnés ici (2026-07-07) — ils n'existent plus.
+> **C'est LE fichier de suivi unique du projet**. Les anciens `docs/migration-unity.md` et `unity-spec/NEXT-STEPS.md` ont été fusionnés ici (2026-07-07) — ils n'existent plus.
 
 **Le projet en une phrase :** porter le jeu de tir web (Three.js, presque fini) vers **Unity C#** pour une sortie mobile **Android + iOS**, avec du solo (vagues d'ennemis) puis du multijoueur (coop, puis PvP), niveau visuel visé « Guns of Boom ».
 
