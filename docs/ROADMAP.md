@@ -245,9 +245,9 @@ Geler le design du jeu web pour que Unity ait une référence stable : refactors
 
 **Jalon Phase 5 bis bis :** Nathan rejoue ces 6 points et ne trouve plus d'écart ; alors seulement, re-validation globale de la 5.1 puis merge. *(État 2026-07-11 : points 1-5 corrigés, point 6 = re-export Blender chez Nathan ; vérifs de nuit listées dans `.superpowers/sdd/pending-verifications-phase5bisbis.md`.)*
 
-### Phase 6 — Multijoueur 🔜
+### Phase 6 — Multijoueur 🚧 (cœur coop démarré)
 
-Netcode : **Photon Fusion** (décidé, rien à coder avant cette phase). Dans l'ordre :
+Netcode : **Photon Fusion** (décidé). Dans l'ordre :
 
 1. **Coop contre vagues** (2–4 joueurs) : l'hôte fait autorité sur les ennemis.
 2. **PvP** (deathmatch par équipes) : prédiction client + compensation de lag (fournies par Fusion), matchmaking/lobbies, **rééquilibrage obligatoire** (le TTK actuel est pensé contre des bots), anti-triche (dégâts validés côté serveur).
@@ -255,6 +255,12 @@ Netcode : **Photon Fusion** (décidé, rien à coder avant cette phase). Dans l'
 La save passe côté serveur (sinon triche triviale). Options : Unity Cloud Save, PlayFab, Firebase.
 
 **Jalon :** un match PvP complet entre deux téléphones réels.
+
+**✅ Livré (2026-07-11/12, branche `feat/online-coop`, mergée dans `main` le 2026-11-23) — le CŒUR LOGIQUE de la coop en ligne, hôte autoritaire, indépendant du transport :** nouvel assembly **`Game.Net`** (engine-free, testé) contenant la simulation coop complète — registre de joueurs, directeur de vagues rééquilibré par nombre de joueurs (`CoopScaling`, réutilise `WaveRules`), validation des dégâts côté hôte (`DamageValidator`), boucle **down → relève → respawn → wipe**, `WorldSnapshot`, et un **`LoopbackTransport`** en mémoire pour tests/hôte-seul. Le tout derrière une interface **`INetTransport`** : **Photon n'est qu'un adaptateur** (`Game.Net.Photon`, **inerte** tant que Fusion n'est pas installé — contrainte de define `FUSION2`, aucun impact sur le build actuel). ≈35 tests EditMode (`Assets/_Game/Tests/Net/`) ; la partie engine-free a aussi été **exécutée** hors éditeur (`mcs`/`mono`, 41 assertions vertes). Spec : `docs/superpowers/specs/2026-07-11-online-coop-mode-design.md` · Plan : `docs/superpowers/plans/2026-07-11-online-coop-mode.md`.
+
+**Reste pour la coop jouable :** vérifier la compilation/les tests **en éditeur** (MCP) ; écrire le **binder de scène** (instancier les ennemis sur `CoopRunner.EnemySpawnRequested`, réconcilier avec `EnemyHealth`/`EnemyController`, appliquer les snapshots côté client) ; **installer Photon Fusion 2** + App ID et compléter `FusionTransport` (voir `Assets/_Game/Scripts/Net/Photon/README.md`) ; régler l'équilibrage coop (`// TODO(coop-balance)`).
+
+> ⚠️ Ordre voulu de la roadmap : le solo complet (Phases 3–5) sort **avant** le réseau. Ce cœur coop a été livré en avance à la demande de Nathan (« fais le mode en ligne ») ; il ne bloque pas les phases 3–5 (assembly séparé, aucun code existant modifié hormis l'ajout d'une référence à `Game.Runtime`).
 
 ### Phase 7 — Qualité & sortie 🔜
 
@@ -429,5 +435,6 @@ Unity 6 + C#, URP (pas Built-in/HDRP/Unreal) · Android + iOS · solo d'abord (v
 | 2026-07-09 | **Phase 5 complète** (16 tâches) : accueil UI Toolkit reproduit à l'identique du web (lobby, boutique 5 onglets, Map/Réglages/Loadout/Comment-jouer, Deploy, retour Menu). Task 16 : passe de vérification dédiée (`HomeSmokeTests`, 279 EditMode + 9 PlayMode, cycle complet Home→Shop→Deploy→Utopia→mort→Home vérifié via MCP, parité écran par écran confirmée) | branche `feat/phase5-home-ui` |
 | 2026-07-09 (nuit) | **Phase 5.1 complète** (9 chantiers, 20 tâches, en autonomie complète) : fondations tactiques (`Painter2D`), accueil/boutique restylés (thème clair, coins coupés), Map/Réglages/Loadout/Comment-jouer en modales, HUD nettoyé (widget Défis, marqueur radar), avatar 3e personne recollé au sol, écran de fin de partie riche (12 cartes + rang + classement), équilibrage armure/régén corrigé (valeurs réelles web), chargement async + barre de progression. 279 EditMode + 7/9 PlayMode (2 skips connus), 0 échec | branche `feat/phase5.1-visual-parity` |
 | 2026-07-10 (matin) | **Passe corrective Phase 5.1 après capture de Nathan**, vérifiée par captures d'écran MCP : Shop.uss mort depuis la Phase 5 (`:not()` non supporté → fichier entier invalidé, vraie cause du « boutons partout »), rendu Painter2D réparé (bandes de dégradé, fond bouton par défaut, contentRect vs padding), fond lobby ajusté au frustum (`LobbyBackgroundFitter`), Déployer/vie/bouclier/textes réalignés sur homepage.png + hud.png. 279 + 7/9, 0 régression | même branche |
+| 2026-07-12 | Cœur logique du mode en ligne coop (assembly `Game.Net`, hôte autoritaire, ~35 tests + seam Photon inerte) | branche `feat/online-coop`, mergée dans `main` (2026-11-23) |
 
 Détails d'archive : specs dans `docs/superpowers/specs/`, plans dans `docs/superpowers/plans/`, journal de l'import dans `.superpowers/sdd/progress.md`, dette technique de l'import dans `docs/superpowers/tech-debt-import-pipeline.md`.
