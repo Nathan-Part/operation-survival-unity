@@ -39,7 +39,7 @@ Operation Survival exists in two versions that share the same design, the same b
 
 | | Web version | Unity version (this repository) |
 | --- | --- | --- |
-| Repository | [Nathan-Part/operation-survival-web](https://github.com/Nathan-Part/operation-survival-web) | [Nathan-Part/FPS](https://github.com/Nathan-Part/FPS) |
+| Repository | [Nathan-Part/operation-survival-web](https://github.com/Nathan-Part/operation-survival-web) | [Nathan-Part/operation-survival-unity](https://github.com/Nathan-Part/operation-survival-unity) |
 | Platform | Any modern desktop browser | Android and iOS, also playable in the Unity editor with mouse and keyboard |
 | Tech | Three.js r160, vanilla JavaScript, no build step | Unity 6, C#, URP, UI Toolkit |
 | Status | Complete solo game, the reference implementation | Port in progress: solo game complete, online co-op core started |
@@ -82,7 +82,7 @@ When a behaviour is unclear, the web version is the source of truth: the Unity p
 ### Run the game
 
 ```bash
-git clone https://github.com/Nathan-Part/FPS.git
+git clone https://github.com/Nathan-Part/operation-survival-unity.git
 ```
 
 1. Open **Unity Hub → Add → Add project from disk** and select the cloned folder.
