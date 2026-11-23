@@ -8,13 +8,14 @@
 
 Pick an operator, kit them out in the armory, then hold the line against endless waves of enemies that get smarter, tougher and stranger every round. Made for Android and iOS, fully playable with mouse and keyboard in the editor.
 
-[Features](#features) · [Controls](#controls) · [Tech stack](#tech-stack) · [Getting started](#getting-started) · [Roadmap](#roadmap)
+[Features](#features) · [Controls](#controls) · [Tech stack](#tech-stack) · [Getting started](#getting-started) · [Built with AI](#built-with-ai-assistance) · [Roadmap](#roadmap)
 
 ![Unity](https://img.shields.io/badge/Unity-6000.5-000000?logo=unity&logoColor=white)
 ![C#](https://img.shields.io/badge/C%23-.NET-512bd4?logo=dotnet&logoColor=white)
 ![URP](https://img.shields.io/badge/Render_pipeline-URP_17-7c4dff)
 ![Platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS-3ddc84?logo=android&logoColor=white)
 ![Tests](https://img.shields.io/badge/tests-270%2B-22c55e)
+![Built with Claude](https://img.shields.io/badge/built_with-Claude_Code_%2B_Unity_MCP-d97757?logo=claude&logoColor=white)
 [![License: MIT](https://img.shields.io/badge/License-MIT-22c55e)](LICENSE)
 
 </div>
@@ -161,6 +162,14 @@ Assets/_Game/
 unity-spec/               # Gameplay data in JSON, the source of truth for balancing
 docs/                     # Roadmap, UI references and screenshots
 ```
+
+## Built with AI assistance
+
+This game was built with [Claude Code](https://claude.com/claude-code) working directly inside the Unity Editor through the [MCP for Unity](https://github.com/CoplayDev/unity-mcp) bridge (the `com.coplaydev.unity-mcp` package in `Packages/manifest.json`). Through this bridge Claude created and edited scripts, scenes and assets, ran the EditMode and PlayMode tests, read the editor console and took in-editor screenshots to check the result visually.
+
+Game design, art direction, the Utopia map and playtesting are by Nathan-Part.
+
+You don't need the MCP bridge to open, play or modify the project. Unity downloads the package automatically from GitHub when the project opens, which is why Git must be installed.
 
 ## Roadmap
 
