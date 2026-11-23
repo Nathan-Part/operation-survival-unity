@@ -6,11 +6,11 @@
 
 **A mobile wave-survival shooter built with Unity, set in a sunlit utopian city.**
 
-Unity version · [Web version, playable in your browser →](https://github.com/Nathan-Part/games)
+Unity version · [Web version, playable in your browser →](https://github.com/Nathan-Part/operation-survival-web)
 
 Pick an operator, kit them out in the armory, then hold the line against endless waves of enemies that get smarter, tougher and stranger every round. Made for Android and iOS, fully playable with mouse and keyboard in the editor.
 
-[**Try the web demo**](https://nathan-part.github.io/games/) · [Two versions](#two-versions-of-the-game) · [Features](#features) · [Installation](#installation) · [Controls](#controls) · [Tech stack](#tech-stack) · [Built with AI](#built-with-ai-assistance) · [Roadmap](#roadmap)
+[**Try the web demo**](https://nathan-part.github.io/operation-survival-web/) · [Two versions](#two-versions-of-the-game) · [Features](#features) · [Installation](#installation) · [Controls](#controls) · [Tech stack](#tech-stack) · [Built with AI](#built-with-ai-assistance) · [Roadmap](#roadmap)
 
 ![Unity](https://img.shields.io/badge/Unity-6000.5-000000?logo=unity&logoColor=white)
 ![C#](https://img.shields.io/badge/C%23-.NET-512bd4?logo=dotnet&logoColor=white)
@@ -31,7 +31,7 @@ Pick an operator, kit them out in the armory, then hold the line against endless
 
 > **Status: in development.** The full solo experience is playable (waves, armory, progression, HUD, Utopia map). Online co-op and PvP come next. The interface is in French, where the game is called *Opération Survie*.
 >
-> Want to try the game right now? **[Play the web version in your browser](https://nathan-part.github.io/games/)**, no installation needed.
+> Want to try the game right now? **[Play the web version in your browser](https://nathan-part.github.io/operation-survival-web/)**, no installation needed.
 
 ## Two versions of the game
 
@@ -39,11 +39,11 @@ Operation Survival exists in two versions that share the same design, the same b
 
 | | Web version | Unity version (this repository) |
 | --- | --- | --- |
-| Repository | [Nathan-Part/games](https://github.com/Nathan-Part/games) | [Nathan-Part/FPS](https://github.com/Nathan-Part/FPS) |
+| Repository | [Nathan-Part/operation-survival-web](https://github.com/Nathan-Part/operation-survival-web) | [Nathan-Part/FPS](https://github.com/Nathan-Part/FPS) |
 | Platform | Any modern desktop browser | Android and iOS, also playable in the Unity editor with mouse and keyboard |
 | Tech | Three.js r160, vanilla JavaScript, no build step | Unity 6, C#, URP, UI Toolkit |
 | Status | Complete solo game, the reference implementation | Port in progress: solo game complete, online co-op core started |
-| Try it | [Live demo](https://nathan-part.github.io/games/) or a local server | Open the project in Unity (see [Installation](#installation)) |
+| Try it | [Live demo](https://nathan-part.github.io/operation-survival-web/) or a local server | Open the project in Unity (see [Installation](#installation)) |
 
 **How they relate.** The web version came first and serves as the reference. All of its gameplay data (weapons, enemies, waves, economy, power-ups, achievements, daily contracts) was extracted into the JSON files of [`unity-spec/`](unity-spec/), which this project imports into ScriptableObjects with **Tools → Game → Import Spec from JSON**. Both versions therefore use exactly the same numbers. The characters, animations and the Utopia map were reused from the web version too. On top of that, the Unity version brings native mobile performance, touch controls with auto-fire and, later, online co-op and PvP.
 
