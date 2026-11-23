@@ -28,6 +28,8 @@ Pick an operator, kit them out in the armory, then hold the line against endless
 </p>
 
 > **Status: in development.** The full solo experience is playable (waves, armory, progression, HUD, Utopia map). Online co-op and PvP come next. The interface is in French.
+>
+> This is a port of the original browser version of the game, [Nathan-Part/games](https://github.com/Nathan-Part/games) (Three.js), which also provides all the gameplay data in `unity-spec/`.
 
 ## Features
 
